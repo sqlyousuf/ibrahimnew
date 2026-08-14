@@ -18,8 +18,6 @@ export const site = {
     url: "https://payments.madinaapps.com/masjidibrahimtx",
     zelle: "admin@kleinislamiccenter.org",
   },
-  prayerWidget:
-    "https://timing.athanplus.com/masjid/widgets/embed?theme=1&masjid_id=zKz3YnLO",
   social: {
     // Add links when available
   },

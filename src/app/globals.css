@@ -2,36 +2,217 @@
 @tailwind components;
 @tailwind utilities;
 
-html {
-  scroll-behavior: smooth;
+/* ---------------------------------------------------------------------------
+   Base
+   --------------------------------------------------------------------------- */
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    /* Keeps anchored/skip-link targets clear of the sticky header. */
+    scroll-padding-top: 6rem;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-cream-100 font-body text-navy-900 antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Serif display face needs optical tightening the sans doesn't. */
+  .font-display {
+    font-feature-settings: "kern" 1, "liga" 1;
+  }
+
+  /* One visible focus treatment everywhere, tuned to pass 3:1 against both
+     the cream/white surfaces and the navy ones. */
+  :focus-visible {
+    outline: 2px solid theme("colors.gold.500");
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  /* Never let a long unbroken string (emails, URLs) push a phone viewport
+     sideways — the single most common mobile overflow source. */
+  a,
+  dd,
+  p,
+  li,
+  h1,
+  h2,
+  h3 {
+    overflow-wrap: break-word;
+  }
+
+  iframe {
+    max-width: 100%;
+  }
 }
 
-body {
-  @apply bg-cream-100 text-navy-900 font-body;
+/* ---------------------------------------------------------------------------
+   Layout rhythm
+   --------------------------------------------------------------------------- */
+
+@layer components {
+  /* Every page gutter comes from here, so left edges align across all pages.
+     20px on phones is the comfortable minimum against a 375px screen. */
+  .container-page {
+    @apply mx-auto w-full max-w-7xl px-5 sm:px-6 lg:px-8;
+  }
+
+  /* Two vertical rhythm steps, used site-wide instead of ad-hoc py values. */
+  .section {
+    @apply py-16 sm:py-20 lg:py-28;
+  }
+
+  .section-tight {
+    @apply py-12 sm:py-16 lg:py-20;
+  }
+
+  /* Comfortable reading measure for long-form copy. */
+  .measure {
+    max-width: 64ch;
+  }
+
+  .measure-narrow {
+    max-width: 52ch;
+  }
+
+  /* ---- Surfaces -----------------------------------------------------------
+     One card system: same radius, same resting shadow, same hairline.
+     The hairline is what keeps a white card legible on cream. */
+  .card {
+    @apply rounded-2xl bg-white shadow-soft ring-1 ring-navy-900/5;
+  }
+
+  .card-dark {
+    @apply rounded-2xl bg-navy-900 text-cream-100 shadow-panel ring-1 ring-white/10;
+  }
+
+  .card-interactive {
+    @apply transition duration-300 ease-entrance hover:-translate-y-1 hover:shadow-lift;
+  }
+
+  .panel {
+    @apply rounded-3xl bg-white shadow-panel ring-1 ring-navy-900/5;
+  }
+
+  /* Mihrab / dome framing device, echoing the arch in the masjid logo. */
+  .arch {
+    border-radius: 50% 50% 1.25rem 1.25rem / 34% 34% 1.25rem 1.25rem;
+  }
+
+  .arch-sm {
+    border-radius: 50% 50% 1rem 1rem / 22% 22% 1rem 1rem;
+  }
+
+  /* ---- Type ---------------------------------------------------------------- */
+  /* items-start (not center) so a long eyebrow that wraps to two lines keeps
+     its rule aligned to the first line rather than floating mid-block. */
+  .section-eyebrow {
+    @apply inline-flex items-start gap-3 text-[0.6875rem] font-semibold uppercase leading-[1.4] tracking-[0.22em] text-gold-600 sm:text-xs sm:tracking-[0.25em];
+  }
+
+  .section-eyebrow::before {
+    content: "";
+    @apply mt-[0.65em] h-px w-6 shrink-0 bg-gold-500 sm:w-8;
+  }
+
+  /* ---- Buttons -------------------------------------------------------------
+     min-h 48px clears the 44px tap-target floor on every button on the site. */
+  .btn-base {
+    @apply inline-flex min-h-[3rem] items-center justify-center gap-2 rounded-full px-6 text-center text-sm font-semibold uppercase tracking-wide transition duration-300 ease-entrance sm:px-7;
+  }
+
+  .btn-primary {
+    @apply btn-base bg-gold-500 text-navy-950 shadow-soft hover:bg-gold-400 hover:shadow-lift active:translate-y-0 sm:hover:-translate-y-0.5;
+  }
+
+  .btn-outline {
+    @apply btn-base border border-white/50 bg-white/5 text-white backdrop-blur-sm hover:border-gold-300 hover:bg-white/10 hover:text-gold-200 sm:hover:-translate-y-0.5;
+  }
+
+  .btn-outline-navy {
+    @apply btn-base border border-navy-900/20 bg-white/60 text-navy-900 hover:border-gold-500 hover:bg-white hover:text-gold-700 hover:shadow-soft sm:hover:-translate-y-0.5;
+  }
+
+  /* Inline text links that need an affordance without shouting. */
+  .link-underline {
+    @apply underline decoration-gold-500/40 underline-offset-4 transition-colors hover:decoration-gold-500;
+  }
 }
 
-.section-eyebrow {
-  @apply inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-gold-600;
-}
+/* ---------------------------------------------------------------------------
+   Islamic geometric texture
+   Eight-point star (khatim) tessellation built from two overlapping squares,
+   drawn as an inline SVG tile so it costs no network request.
+   --------------------------------------------------------------------------- */
 
-.section-eyebrow::before {
-  content: "";
-  @apply h-px w-8 bg-gold-500;
-}
-
-.btn-primary {
-  @apply inline-flex items-center justify-center gap-2 rounded-full bg-gold-500 px-7 py-3 text-sm font-semibold uppercase tracking-wide text-navy-950 shadow-soft transition hover:bg-gold-400 hover:-translate-y-0.5;
-}
-
-.btn-outline {
-  @apply inline-flex items-center justify-center gap-2 rounded-full border border-white/40 px-7 py-3 text-sm font-semibold uppercase tracking-wide text-white transition hover:border-gold-400 hover:text-gold-300;
-}
-
-.btn-outline-navy {
-  @apply inline-flex items-center justify-center gap-2 rounded-full border border-navy-800/30 px-7 py-3 text-sm font-semibold uppercase tracking-wide text-navy-900 transition hover:border-gold-500 hover:text-gold-600;
+.pattern-stars {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56'%3E%3Cg fill='none' stroke='%23b8863a' stroke-width='1'%3E%3Crect x='14' y='14' width='28' height='28'/%3E%3Crect x='14' y='14' width='28' height='28' transform='rotate(45 28 28)'/%3E%3Crect x='-14' y='-14' width='28' height='28'/%3E%3Crect x='-14' y='-14' width='28' height='28' transform='rotate(45 0 0)'/%3E%3Crect x='42' y='-14' width='28' height='28'/%3E%3Crect x='42' y='-14' width='28' height='28' transform='rotate(45 56 0)'/%3E%3Crect x='-14' y='42' width='28' height='28'/%3E%3Crect x='-14' y='42' width='28' height='28' transform='rotate(45 0 56)'/%3E%3Crect x='42' y='42' width='28' height='28'/%3E%3Crect x='42' y='42' width='28' height='28' transform='rotate(45 56 56)'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 56px 56px;
 }
 
 .pattern-overlay {
-  background-image: radial-gradient(circle at 1px 1px, rgba(184, 134, 58, 0.35) 1px, transparent 0);
+  background-image: radial-gradient(
+    circle at 1px 1px,
+    rgba(184, 134, 58, 0.35) 1px,
+    transparent 0
+  );
   background-size: 28px 28px;
+}
+
+/* Mobile chrome coordination: the sticky prayer bar slides away while the
+   phone menu is open so the two never stack on top of each other. */
+html[data-menu-open="true"] .prayer-quick-bar {
+  transform: translateY(110%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ---------------------------------------------------------------------------
+   Scroll reveal
+
+   `reveal-ready` is added to <html> by a tiny inline script only when
+   IntersectionObserver exists AND the visitor has not asked for reduced
+   motion. Without that class nothing is ever hidden, so content can never be
+   trapped behind failed JS or a motion preference.
+   --------------------------------------------------------------------------- */
+
+.reveal-ready [data-reveal] {
+  opacity: 0;
+  transform: translate3d(0, 16px, 0);
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+.reveal-ready [data-reveal][data-revealed="true"] {
+  opacity: 1;
+  transform: none;
+  will-change: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  [data-reveal],
+  .reveal-ready [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

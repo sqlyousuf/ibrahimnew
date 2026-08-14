@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import PageHero from "@/components/PageHero";
+import Reveal from "@/components/Reveal";
+import { StarDivider } from "@/components/Ornament";
 import { events, site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -16,54 +18,57 @@ export default function EventsPage() {
         title="Events & Announcements"
         description="Join us for community programs, halaqas, and seasonal celebrations."
         image="https://images.unsplash.com/photo-1743417597339-f4bc72e2a8ba?auto=format&fit=crop&w=2000&q=80"
-        imageAlt="Community gathered together"
+        imageAlt="Community members gathered together at the masjid"
+        imagePosition="object-center"
       />
 
-      <section className="mx-auto max-w-4xl px-5 py-24 lg:px-8">
+      <section className="section container-page max-w-3xl">
         {events.length > 0 ? (
-          <div className="space-y-6">
-            {events.map((event) => (
-              <div
-                key={event.title}
-                className="rounded-2xl bg-white p-8 shadow-soft"
-              >
-                <p className="text-sm font-semibold uppercase tracking-wide text-gold-600">
-                  {event.date}
-                  {event.time ? ` · ${event.time}` : ""}
-                </p>
-                <h3 className="mt-2 font-display text-2xl font-semibold text-navy-900">
-                  {event.title}
-                </h3>
-                <p className="mt-3 leading-relaxed text-navy-700">
-                  {event.description}
-                </p>
-              </div>
+          <div className="space-y-5 sm:space-y-6">
+            {events.map((event, i) => (
+              <Reveal key={event.title} delay={i * 70}>
+                <article className="card p-5 sm:p-7">
+                  <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.16em] text-gold-700">
+                    {event.date}
+                    {event.time ? ` · ${event.time}` : ""}
+                  </p>
+                  <h2 className="mt-2 font-display text-xl font-semibold text-navy-900 sm:text-2xl">
+                    {event.title}
+                  </h2>
+                  <p className="mt-3 leading-relaxed text-navy-700">
+                    {event.description}
+                  </p>
+                </article>
+              </Reveal>
             ))}
           </div>
         ) : (
-          <div className="rounded-3xl bg-white p-12 text-center shadow-soft">
-            <p className="section-eyebrow justify-center">Stay Tuned</p>
-            <h2 className="mt-3 font-display text-2xl font-semibold text-navy-900 sm:text-3xl">
-              Our Events Calendar Is Coming Soon
-            </h2>
-            <p className="mx-auto mt-4 max-w-xl leading-relaxed text-navy-700">
-              We&apos;re putting together our upcoming programs, Ramadan and
-              Eid celebrations, and community halaqas. In the meantime, the
-              best way to stay updated is to reach out directly or ask about
-              our WhatsApp community groups.
-            </p>
-            <div className="mt-8 flex flex-wrap justify-center gap-4">
-              <a href={site.contact.phoneHref} className="btn-primary">
-                Call {site.contact.phone}
-              </a>
-              <a
-                href={`mailto:${site.contact.adminEmail}`}
-                className="btn-outline-navy"
-              >
-                Email the Masjid
-              </a>
+          <Reveal>
+            <div className="panel px-5 py-10 text-center sm:px-10 sm:py-14">
+              <StarDivider className="mb-7" />
+              <p className="section-eyebrow justify-center">Stay Tuned</p>
+              <h2 className="mt-3 text-balance font-display text-display-sm font-semibold text-navy-900">
+                Our Events Calendar Is Coming Soon
+              </h2>
+              <p className="measure mx-auto mt-4 leading-relaxed text-navy-700">
+                We&apos;re putting together our upcoming programs, Ramadan and
+                Eid celebrations, and community halaqas. In the meantime, the
+                best way to stay updated is to reach out directly or ask about
+                our WhatsApp community groups.
+              </p>
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:justify-center sm:gap-4">
+                <a href={site.contact.phoneHref} className="btn-primary">
+                  Call {site.contact.phone}
+                </a>
+                <a
+                  href={`mailto:${site.contact.adminEmail}`}
+                  className="btn-outline-navy"
+                >
+                  Email the Masjid
+                </a>
+              </div>
             </div>
-          </div>
+          </Reveal>
         )}
       </section>
     </>
