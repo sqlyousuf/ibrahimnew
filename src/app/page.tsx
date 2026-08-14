@@ -17,7 +17,7 @@ export default function HomePage() {
           Deliberately short on phones: the prayer schedule below it is the
           number-one reason someone opens this site on a phone, so the hero
           must not consume the whole first screen. */}
-      <section className="relative flex min-h-[23rem] items-center overflow-hidden bg-navy-950 sm:min-h-[30rem] lg:min-h-[42rem]">
+      <section className="relative flex min-h-[25rem] items-center overflow-hidden bg-navy-950 sm:min-h-[32rem] lg:min-h-[44rem]">
         <Image
           src="https://images.unsplash.com/photo-1577561426384-62154a1e9457?auto=format&fit=crop&w=2000&q=80"
           alt="The prayer hall at Masjid Ibrahim, lined with warm arches"
@@ -32,7 +32,7 @@ export default function HomePage() {
         />
         <PatternField opacity={0.08} />
 
-        <div className="container-page relative z-10 py-10 sm:py-20 lg:py-32">
+        <div className="container-page relative z-10 pt-10 pb-16 sm:pt-20 sm:pb-28 lg:pt-32 lg:pb-40">
           {/* No dir="rtl" — Arabic shapes correctly from its own Unicode
               directionality, and this keeps it flush with the left-aligned
               hero stack instead of drifting to the right edge. */}
@@ -49,7 +49,7 @@ export default function HomePage() {
             Serving Spring, Texas with daily salah, Islamic education, and a
             welcoming home for families to grow in faith together.
           </p>
-          <div className="mt-5 flex justify-center sm:mt-8">
+          <div className="mt-6 flex justify-center sm:mt-10">
             <Link href="/donate" className="btn-primary w-full sm:w-auto">
               Support the Masjid
             </Link>
