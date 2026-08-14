@@ -77,6 +77,11 @@ export default function RootLayout({
       lang="en"
       data-scroll-behavior="smooth"
       className={`${inter.variable} ${playfair.variable} ${amiri.variable}`}
+      // The inline script below mutates this element's classList before React
+      // hydrates (that's the point — it must run pre-paint to avoid a flash of
+      // un-revealed content). That intentional, expected mismatch is exactly
+      // what suppressHydrationWarning exists for.
+      suppressHydrationWarning
     >
       <body className="flex min-h-screen flex-col">
         <script dangerouslySetInnerHTML={{ __html: revealReady }} />
