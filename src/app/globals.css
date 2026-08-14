@@ -1,0 +1,37 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-cream-100 text-navy-900 font-body;
+}
+
+.section-eyebrow {
+  @apply inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-gold-600;
+}
+
+.section-eyebrow::before {
+  content: "";
+  @apply h-px w-8 bg-gold-500;
+}
+
+.btn-primary {
+  @apply inline-flex items-center justify-center gap-2 rounded-full bg-gold-500 px-7 py-3 text-sm font-semibold uppercase tracking-wide text-navy-950 shadow-soft transition hover:bg-gold-400 hover:-translate-y-0.5;
+}
+
+.btn-outline {
+  @apply inline-flex items-center justify-center gap-2 rounded-full border border-white/40 px-7 py-3 text-sm font-semibold uppercase tracking-wide text-white transition hover:border-gold-400 hover:text-gold-300;
+}
+
+.btn-outline-navy {
+  @apply inline-flex items-center justify-center gap-2 rounded-full border border-navy-800/30 px-7 py-3 text-sm font-semibold uppercase tracking-wide text-navy-900 transition hover:border-gold-500 hover:text-gold-600;
+}
+
+.pattern-overlay {
+  background-image: radial-gradient(circle at 1px 1px, rgba(184, 134, 58, 0.35) 1px, transparent 0);
+  background-size: 28px 28px;
+}
