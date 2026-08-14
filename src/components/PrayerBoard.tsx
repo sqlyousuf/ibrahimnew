@@ -34,7 +34,7 @@ export default function PrayerBoard({
       <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 border-b border-navy-900/[0.07] bg-cream-100 px-4 py-3 sm:px-6">
         <p className="flex items-center gap-2 text-[0.6875rem] font-semibold uppercase tracking-[0.16em] text-gold-700">
           <StarGlyph className="h-4 w-4 shrink-0" />
-          Prayer Times
+          Salah Times
         </p>
         {todayLabel && (
           <p className="text-xs font-medium text-navy-700">{todayLabel}</p>
@@ -51,7 +51,7 @@ export default function PrayerBoard({
               scope="col"
               className="px-3 py-2 text-[0.625rem] font-semibold uppercase tracking-[0.14em] text-navy-500 sm:px-6"
             >
-              Prayer
+              Salah
             </th>
             <th
               scope="col"

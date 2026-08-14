@@ -46,16 +46,11 @@ export default function HomePage() {
             A Place of Worship, Learning &amp; Community
           </h1>
           <p className="measure-narrow mt-3 text-[0.9375rem] leading-relaxed text-cream-100/85 sm:mt-6 sm:text-lede">
-            Serving Spring, Texas with daily prayer, Islamic education, and a
+            Serving Spring, Texas with daily salah, Islamic education, and a
             welcoming home for families to grow in faith together.
           </p>
-          {/* Full-width stacked buttons on phones — comfortably tappable and
-              never crowded against each other. */}
-          <div className="mt-6 flex flex-col gap-3 sm:mt-10 sm:flex-row sm:flex-wrap sm:gap-4">
-            <Link href="/prayer-times" className="btn-primary">
-              View Prayer Times
-            </Link>
-            <Link href="/donate" className="btn-outline">
+          <div className="mt-5 flex justify-center sm:mt-8">
+            <Link href="/donate" className="btn-primary w-full sm:w-auto">
               Support the Masjid
             </Link>
           </div>
@@ -94,15 +89,15 @@ export default function HomePage() {
 
           <div className="lg:col-start-1 lg:row-start-2">
             <p className="measure-narrow leading-relaxed text-cream-100/80">
-              Adhan marks the start of each prayer window; iqamah is when the
+              Adhan marks the start of each salah window; iqamah is when the
               congregation lines up. Jumu&apos;ah timings, sunrise, and the week
-              ahead are on the prayer times page.
+              ahead are on the salah times page.
             </p>
             <Link
               href="/prayer-times"
               className="btn-primary mt-6 w-full sm:w-auto"
             >
-              View Full Prayer Schedule
+              View Full Salah Schedule
             </Link>
           </div>
         </div>
@@ -116,7 +111,7 @@ export default function HomePage() {
             <div className="arch relative aspect-[4/5] w-full overflow-hidden shadow-panel">
               <Image
                 src="https://images.unsplash.com/photo-1761640864240-f793d7ec8348?auto=format&fit=crop&w=1200&q=80"
-                alt="Congregants standing shoulder to shoulder in prayer"
+                alt="Congregants standing shoulder to shoulder in salah"
                 fill
                 className="object-cover"
                 sizes="(min-width: 1024px) 40vw, 90vw"
@@ -128,7 +123,7 @@ export default function HomePage() {
                 5x
               </p>
               <p className="mt-1.5 text-[0.6875rem] font-semibold uppercase leading-snug tracking-wide text-navy-700">
-                Daily congregational prayers
+                Daily congregational salah
               </p>
             </div>
           </Reveal>
@@ -141,13 +136,13 @@ export default function HomePage() {
             <div className="measure mt-5 space-y-4 leading-relaxed text-navy-700">
               <p>
                 At Masjid Ibrahim, we are committed to fostering a strong and
-                connected Muslim community through prayer, education, and
+                connected Muslim community through salah, education, and
                 service. Our masjid is a sanctuary where individuals and
                 families come together to seek knowledge, strengthen their
                 faith, and engage in meaningful worship.
               </p>
               <p>
-                Beyond being a place of prayer, we serve as a center for
+                Beyond being a place of salah, we serve as a center for
                 learning, personal growth, and community development &mdash;
                 instilling Islamic values, promoting unity, and offering a
                 space for spiritual enrichment for every generation.

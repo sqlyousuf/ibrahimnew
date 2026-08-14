@@ -29,7 +29,7 @@ export default function Footer() {
             مسجد إبراهيم
           </p>
           <p className="measure-narrow mt-3 text-sm leading-relaxed text-cream-100/75">
-            {site.tagline}. A center for prayer, learning, and service in
+            {site.tagline}. A center for salah, learning, and service in
             Spring, Texas.
           </p>
         </div>
@@ -84,7 +84,7 @@ export default function Footer() {
             Support the Masjid
           </h2>
           <p className="mt-3 text-sm leading-relaxed text-cream-100/75 lg:mt-4">
-            Your generosity sustains our prayers, programs, and community
+            Your generosity sustains our salah, programs, and community
             services.
           </p>
           <Link href="/donate" className="btn-primary mt-5 w-full sm:w-auto">

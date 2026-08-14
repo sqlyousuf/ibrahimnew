@@ -26,7 +26,7 @@ export const site = {
 export const navLinks = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },
-  { href: "/prayer-times", label: "Prayer Times" },
+  { href: "/prayer-times", label: "Salah Times" },
   { href: "/institute", label: "Institute" },
   { href: "/events", label: "Events" },
   { href: "/gallery", label: "Gallery" },

@@ -13,7 +13,7 @@ import {
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Prayer Times",
+  title: "Salah Times",
   description:
     "Daily adhan and iqamah times, Jumu'ah timings, and the week ahead for Masjid Ibrahim in Spring, Texas.",
 };
@@ -28,10 +28,10 @@ export default function PrayerTimesPage() {
     <>
       <PageHero
         eyebrow="Salah Times"
-        title="Prayer Times"
-        description="Adhan and iqamah timings for the five daily prayers and Jumu'ah at Masjid Ibrahim."
+        title="Salah Times"
+        description="Adhan and iqamah timings for the five daily salah and Jumu'ah at Masjid Ibrahim."
         image="https://images.unsplash.com/photo-1761640864240-f793d7ec8348?auto=format&fit=crop&w=2000&q=80"
-        imageAlt="Congregants standing shoulder to shoulder in prayer"
+        imageAlt="Congregants standing shoulder to shoulder in salah"
         imagePosition="object-center"
       />
 
@@ -61,8 +61,8 @@ export default function PrayerTimesPage() {
               Adhan and iqamah
             </h2>
             <p className="mt-2 text-sm leading-relaxed text-navy-700">
-              Adhan is the call that opens each prayer window. Iqamah is the
-              second call, given as the congregation lines up and the prayer
+              Adhan is the call that opens each salah window. Iqamah is the
+              second call, given as the congregation lines up and the salah
               begins &mdash; arrive before it to join the first row.
             </p>
           </div>

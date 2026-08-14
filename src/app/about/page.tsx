@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 const values = [
   {
     title: "Worship",
-    body: "A welcoming sanctuary for the five daily prayers, Jumu'ah, and the spiritual life of every believer.",
+    body: "A welcoming sanctuary for the five daily salah, Jumu'ah, and the spiritual life of every believer.",
   },
   {
     title: "Education",
@@ -53,13 +53,13 @@ export default function AboutPage() {
           <div className="mt-6 space-y-5 leading-[1.75] text-navy-700 sm:text-center sm:text-lede">
             <p>
               At Masjid Ibrahim, we are committed to fostering a strong and
-              connected Muslim community through prayer, education, and
+              connected Muslim community through salah, education, and
               service. Our masjid is a sanctuary where individuals and families
               come together to seek knowledge, strengthen their faith, and
               engage in meaningful worship.
             </p>
             <p>
-              Beyond being a place of prayer, we serve as a center for learning,
+              Beyond being a place of salah, we serve as a center for learning,
               personal growth, and community development. Through our various
               programs and initiatives, we aim to instill Islamic values,
               promote unity, and provide a space for spiritual enrichment.
@@ -75,7 +75,7 @@ export default function AboutPage() {
           <StarDivider className="my-8 sm:my-10" />
 
           <p className="text-balance text-center font-display text-xl italic leading-snug text-navy-900 sm:text-2xl">
-            We invite you to join us in prayer, learning, and giving, as we work
+            We invite you to join us in salah, learning, and giving, as we work
             together to build a stronger, more connected ummah.
           </p>
         </Reveal>

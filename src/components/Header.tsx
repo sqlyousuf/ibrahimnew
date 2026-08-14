@@ -195,7 +195,7 @@ export default function Header() {
               <StarGlyph className="h-5 w-5 shrink-0 text-gold-300" />
               <span className="min-w-0 flex-1">
                 <span className="block text-base font-semibold uppercase tracking-wide">
-                  Prayer Times
+                  Salah Times
                 </span>
                 <span className="block text-[0.6875rem] font-medium uppercase tracking-[0.18em] text-gold-300">
                   Today&apos;s full schedule

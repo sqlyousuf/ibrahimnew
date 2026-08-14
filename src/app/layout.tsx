@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     template: `%s | ${site.name}`,
   },
   description:
-    "Masjid Ibrahim in Spring, Texas is a center for prayer, Islamic education, and community — home to daily salah, Quran Maktab, WISE Sunday School, and YM Ibrahim youth programs.",
+    "Masjid Ibrahim in Spring, Texas is a center for salah, Islamic education, and community — home to Quran Maktab, WISE Sunday School, and YM Ibrahim youth programs.",
   openGraph: {
     title: site.name,
     description: site.tagline,

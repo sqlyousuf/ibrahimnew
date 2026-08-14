@@ -40,7 +40,7 @@ export default function PrayerQuickBar({ board }: { board: PrayerBoard }) {
             <Link
               href={PRAYER_HREF}
               className="block px-3 py-2"
-              aria-label="Today's adhan and iqamah times — open the full prayer schedule"
+              aria-label="Today's adhan and iqamah times — open the full salah schedule"
             >
               {/* The legend is styled exactly like the two rows below it, so
                   the muted line reads as Adhan and the bold line as Iqamah

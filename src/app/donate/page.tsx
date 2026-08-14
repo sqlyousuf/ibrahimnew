@@ -7,13 +7,13 @@ import { site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Donate",
   description:
-    "Support Masjid Ibrahim's prayers, Institute programs, and community services with a donation or Zelle transfer.",
+    "Support Masjid Ibrahim's salah, Institute programs, and community services with a donation or Zelle transfer.",
 };
 
 const causes = [
   {
     title: "Masjid Operations",
-    body: "Utilities, maintenance, and upkeep so our doors stay open for every prayer.",
+    body: "Utilities, maintenance, and upkeep so our doors stay open for every salah.",
   },
   {
     title: "Institute Programs",
