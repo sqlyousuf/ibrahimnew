@@ -110,7 +110,7 @@ export const programs = [
     cta: "Join WhatsApp Group",
     enrollUrl: "https://chat.whatsapp.com/KjXpwInKxQiH6Ha6Z2Vr3O",
     image:
-      "https://images.unsplash.com/photo-1743417597339-f4bc72e2a8ba?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1652751207500-d390a94e38e7?auto=format&fit=crop&w=1200&q=80",
   },
 ];
 
@@ -155,14 +155,9 @@ export type MasjidEvent = {
   description: string;
 };
 
-export const events: MasjidEvent[] = [
-  {
-    title: "Superwomen in Islamic History",
-    date: "Every third Friday of the month",
-    description:
-      "Trailblazers of Faith, Courage, and Knowledge — a monthly look at the women who shaped Islamic history.",
-  },
-];
+// Kept empty for now — add entries here when the client is ready to
+// publish events. The Events page already handles this state gracefully.
+export const events: MasjidEvent[] = [];
 
 export const galleryImages = [
   {
