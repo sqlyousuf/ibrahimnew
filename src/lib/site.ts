@@ -110,7 +110,7 @@ export const programs = [
     cta: "Join WhatsApp Group",
     enrollUrl: "https://chat.whatsapp.com/KjXpwInKxQiH6Ha6Z2Vr3O",
     image:
-      "https://images.unsplash.com/photo-1652751207500-d390a94e38e7?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1779903596788-0004e2a2680c?auto=format&fit=crop&w=1200&q=80",
   },
 ];
 
