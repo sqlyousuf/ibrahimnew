@@ -4,7 +4,7 @@ import Link from "next/link";
 import PageHero from "@/components/PageHero";
 import Reveal from "@/components/Reveal";
 import { StarGlyph } from "@/components/Ornament";
-import { programs, site } from "@/lib/site";
+import { programs, services, site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Institute",
@@ -98,12 +98,20 @@ export default function InstitutePage() {
                       value={program.supervisors.join(", ")}
                     />
                   )}
+                  {program.price && (
+                    <Detail label="Tuition" value={program.price} />
+                  )}
                 </dl>
 
                 {/* Stacked with a real gap on phones so the two adjacent
                     targets can't be mis-tapped. */}
                 <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-4">
-                  <a href={site.contact.phoneHref} className="btn-primary">
+                  <a
+                    href={program.enrollUrl ?? site.contact.phoneHref}
+                    target={program.enrollUrl ? "_blank" : undefined}
+                    rel={program.enrollUrl ? "noopener noreferrer" : undefined}
+                    className="btn-primary"
+                  >
                     {program.cta ?? "Contact Us"}
                   </a>
                   <Link href="/contact" className="btn-outline-navy">
@@ -114,6 +122,39 @@ export default function InstitutePage() {
             </article>
           </Reveal>
         ))}
+      </section>
+
+      <section className="section-tight relative overflow-hidden bg-cream-200">
+        <div className="container-page relative max-w-4xl">
+          <Reveal className="mx-auto max-w-2xl text-center">
+            <p className="section-eyebrow justify-center">Additional Services</p>
+            <h2 className="mt-3 font-display text-display-sm font-semibold text-navy-900">
+              Beyond the Classroom
+            </h2>
+          </Reveal>
+
+          <div className="mt-10 grid gap-5 sm:grid-cols-2 sm:gap-6">
+            {services.map((service, i) => (
+              <Reveal key={service.slug} delay={i * 80} className="h-full">
+                <div className="card h-full p-6 sm:p-7">
+                  <StarGlyph className="h-5 w-5 text-gold-500" />
+                  <h3 className="mt-3 font-display text-lg font-semibold text-navy-900">
+                    {service.name}
+                  </h3>
+                  <p className="mt-2 text-sm leading-relaxed text-navy-700">
+                    {service.description}
+                  </p>
+                  <a
+                    href={site.contact.phoneHref}
+                    className="link-underline mt-4 inline-block text-sm font-semibold text-gold-700"
+                  >
+                    Call {site.contact.phone}
+                  </a>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
       </section>
     </>
   );

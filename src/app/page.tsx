@@ -5,7 +5,7 @@ import Reveal from "@/components/Reveal";
 import PrayerBoard from "@/components/PrayerBoard";
 import { PatternField, StarDivider, StarGlyph } from "@/components/Ornament";
 import { formatMasjidToday, getPrayerBoard } from "@/lib/prayerTimes";
-import { programs, site } from "@/lib/site";
+import { programs, site, testimonials } from "@/lib/site";
 
 export default function HomePage() {
   const board = getPrayerBoard();
@@ -224,6 +224,41 @@ export default function HomePage() {
               Meet Our Imams
             </Link>
           </Reveal>
+        </div>
+      </section>
+
+      {/* ---------------------------------------------------------- Testimonials */}
+      <section className="section relative overflow-hidden bg-cream-200">
+        <PatternField opacity={0.05} />
+        <div className="container-page relative">
+          <Reveal className="mx-auto max-w-2xl text-center">
+            <p className="section-eyebrow justify-center">
+              What Our Community Says
+            </p>
+            <h2 className="mt-3 font-display text-display-md font-semibold text-navy-900">
+              Strengthening Faith Together
+            </h2>
+          </Reveal>
+
+          <div className="mt-10 grid gap-5 sm:grid-cols-3 sm:gap-6 lg:mt-14">
+            {testimonials.map((testimonial, i) => (
+              <Reveal
+                key={testimonial.name}
+                delay={i * 90}
+                className="h-full"
+              >
+                <figure className="card flex h-full flex-col p-6 sm:p-7">
+                  <StarGlyph className="h-5 w-5 shrink-0 text-gold-500" />
+                  <blockquote className="mt-3 flex-1 text-sm leading-relaxed text-navy-700">
+                    &ldquo;{testimonial.quote}&rdquo;
+                  </blockquote>
+                  <figcaption className="mt-4 text-sm font-semibold text-navy-900">
+                    {testimonial.name}
+                  </figcaption>
+                </figure>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </section>
 

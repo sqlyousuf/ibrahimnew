@@ -6,6 +6,42 @@ import { PatternField, StarGlyph } from "@/components/Ornament";
 const linkClass =
   "inline-flex min-h-[2.75rem] items-center text-cream-100/80 transition-colors hover:text-gold-300 lg:min-h-0 lg:py-1";
 
+const socialLinks = [
+  {
+    label: "YouTube",
+    href: site.social.youtube,
+    icon: (
+      <path
+        fill="currentColor"
+        stroke="none"
+        d="M21.6 7.2a2.7 2.7 0 0 0-1.9-1.9C18 5 12 5 12 5s-6 0-7.7.3a2.7 2.7 0 0 0-1.9 1.9A28 28 0 0 0 2 12a28 28 0 0 0 .4 4.8 2.7 2.7 0 0 0 1.9 1.9C6 19 12 19 12 19s6 0 7.7-.3a2.7 2.7 0 0 0 1.9-1.9A28 28 0 0 0 22 12a28 28 0 0 0-.4-4.8ZM10 15V9l5 3-5 3Z"
+      />
+    ),
+  },
+  {
+    label: "Facebook",
+    href: site.social.facebook,
+    icon: (
+      <path
+        fill="currentColor"
+        stroke="none"
+        d="M13.5 21v-7.5h2.5l.4-3h-2.9V8.4c0-.9.2-1.5 1.5-1.5h1.6V4.2C16.3 4.1 15.3 4 14.2 4c-2.4 0-4.1 1.5-4.1 4.1v2.4H7.5v3H10V21h3.5Z"
+      />
+    ),
+  },
+  {
+    label: "Instagram",
+    href: site.social.instagram,
+    icon: (
+      <>
+        <rect x="3.5" y="3.5" width="17" height="17" rx="4.5" />
+        <circle cx="12" cy="12" r="4" />
+        <circle cx="17.2" cy="6.8" r="1" fill="currentColor" stroke="none" />
+      </>
+    ),
+  },
+];
+
 export default function Footer() {
   return (
     <footer className="relative overflow-hidden bg-navy-950 text-cream-100">
@@ -94,10 +130,38 @@ export default function Footer() {
       </div>
 
       <div className="relative border-t border-white/10">
-        <div className="container-page flex flex-col items-center justify-between gap-2 py-6 text-xs text-cream-100/70 sm:flex-row">
+        <div className="container-page flex flex-col items-center justify-between gap-5 py-6 text-xs text-cream-100/70 sm:flex-row sm:gap-4">
           <p>
             &copy; {new Date().getFullYear()} {site.name}. All rights reserved.
           </p>
+
+          <ul className="flex items-center gap-2 order-first sm:order-none">
+            {socialLinks.map((social) => (
+              <li key={social.label}>
+                <a
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${site.name} on ${social.label}`}
+                  className="flex h-10 w-10 items-center justify-center rounded-full text-cream-100/80 transition-colors hover:bg-white/10 hover:text-gold-300"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                    className="h-[1.15rem] w-[1.15rem]"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.4"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    {social.icon}
+                  </svg>
+                </a>
+              </li>
+            ))}
+          </ul>
+
           <p>Built with care for our community.</p>
         </div>
       </div>

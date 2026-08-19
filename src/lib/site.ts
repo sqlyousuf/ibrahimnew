@@ -17,9 +17,16 @@ export const site = {
   donate: {
     url: "https://payments.madinaapps.com/masjidibrahimtx",
     zelle: "admin@kleinislamiccenter.org",
+    campaign: {
+      name: "Construction Phase 3",
+      description: "Community Hall, Wudu Area & Restrooms",
+      url: "https://www.zeffy.com/en-US/donation-form/masjid-ibrahim-construction-phase-3-community-hall-wudu-area-restrooms",
+    },
   },
   social: {
-    // Add links when available
+    youtube: "https://youtube.com/@masjidibrahimspring?si=kQO_mJbvC_37BC9f",
+    facebook: "https://www.facebook.com/KICMASJID",
+    instagram: "https://www.instagram.com/masjid.ibrahim.spring.tx?igsh=NW51anNuZGcwdG9v",
   },
 };
 
@@ -67,7 +74,10 @@ export const programs = [
     schedule: "Monday to Thursday, 5:30 PM – 7:30 PM",
     location: "5500 FM 2920 Rd, Spring, TX 77388",
     supervisors: ["Ustadh Shaykh Yousuf Ahmed", "Ustadha Sajida Lashkarwala"],
+    price: "$75/month per child",
     cta: "Enroll Now",
+    enrollUrl:
+      "https://docs.google.com/forms/d/e/1FAIpQLSfsdSi_SULF16vhWa4NVXXOv-LTksnqVphvah0gdSWqCMQ2Xw/viewform?usp=send_form",
     image:
       "https://images.unsplash.com/photo-1703492897922-befb3b3d148c?auto=format&fit=crop&w=1200&q=80",
   },
@@ -80,6 +90,10 @@ export const programs = [
     location: "Masjid Ibrahim, 5500 Farm to Market 2920, Spring, TX 77388",
     description:
       "To nurture a love for Islam while building foundational knowledge in Quran, Islamic Studies, and Arabic in an engaging and developmentally appropriate manner.",
+    price: "$50/month",
+    cta: "Enroll Now",
+    enrollUrl:
+      "https://docs.google.com/forms/u/0/d/1YiDp7cjhhnoAUcP---u3n8nc6A82e3j1JdjW-QypSCk/viewform?edit_requested=true",
     image:
       "https://images.unsplash.com/photo-1684335269060-55d7440b5d8c?auto=format&fit=crop&w=1200&q=80",
   },
@@ -92,8 +106,45 @@ export const programs = [
     location: "5500 FM 2920, Spring, TX 77388 · 11815 Adel Rd, Houston, TX 77067",
     description:
       "Activities, halaqa, and food. For up-to-date locations and timings, join the WhatsApp group.",
+    price: "Free",
+    cta: "Join WhatsApp Group",
+    enrollUrl: "https://chat.whatsapp.com/KjXpwInKxQiH6Ha6Z2Vr3O",
     image:
       "https://images.unsplash.com/photo-1743417597339-f4bc72e2a8ba?auto=format&fit=crop&w=1200&q=80",
+  },
+];
+
+// Administrative services alongside the youth/education programs above.
+export const services = [
+  {
+    slug: "nikah",
+    name: "Nikah Service",
+    description:
+      "Islamic marriage ceremonies officiated by our imams, with guidance through the process from start to finish.",
+  },
+  {
+    slug: "financial-aid",
+    name: "Financial Aid Application",
+    description:
+      "Support for community members facing financial hardship. Reach out to the masjid office to start an application.",
+  },
+];
+
+export const testimonials = [
+  {
+    name: "Ahmed S.",
+    quote:
+      "The Sunday School and youth classes have been a blessing for my children. They not only learn Quranic teachings but also develop strong moral values that guide them in their daily lives.",
+  },
+  {
+    name: "Omar R.",
+    quote:
+      "Masjid Ibrahim has been more than just a place of worship for me and my family. The knowledgeable teachers and engaging programs have helped us grow spiritually and strengthen our connection with Islam.",
+  },
+  {
+    name: "Muhammad H.",
+    quote:
+      "From daily prayers to community events, Masjid Ibrahim has provided a space where I truly feel at home. The sense of brotherhood and support here is unmatched.",
   },
 ];
 
@@ -104,8 +155,14 @@ export type MasjidEvent = {
   description: string;
 };
 
-// No recurring events published yet — add entries here as they're confirmed.
-export const events: MasjidEvent[] = [];
+export const events: MasjidEvent[] = [
+  {
+    title: "Superwomen in Islamic History",
+    date: "Every third Friday of the month",
+    description:
+      "Trailblazers of Faith, Courage, and Knowledge — a monthly look at the women who shaped Islamic history.",
+  },
+];
 
 export const galleryImages = [
   {

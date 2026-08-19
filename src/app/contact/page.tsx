@@ -91,7 +91,7 @@ export default function ContactPage() {
                           {site.contact.imamEmail}
                         </span>
                         <span className="block text-xs text-navy-500">
-                          Imam
+                          Ask Imam
                         </span>
                       </span>
                     </a>
