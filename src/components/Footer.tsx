@@ -44,8 +44,9 @@ const socialLinks = [
 
 export default function Footer() {
   return (
-    <footer className="relative overflow-hidden bg-navy-950 text-cream-100">
+    <footer className="relative overflow-hidden bg-navy-975 text-cream-100">
       <PatternField opacity={0.05} />
+      <div aria-hidden="true" className="grain absolute inset-0" />
       <span
         aria-hidden="true"
         className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold-500/40 to-transparent"

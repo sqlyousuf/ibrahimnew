@@ -4,6 +4,10 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PrayerQuickBar from "@/components/PrayerQuickBar";
+import SmoothScrollProvider from "@/components/motion/SmoothScrollProvider";
+import CustomCursor from "@/components/motion/CustomCursor";
+import Preloader from "@/components/motion/Preloader";
+import ScrollProgressStar from "@/components/motion/ScrollProgressStar";
 import { getPrayerBoard } from "@/lib/prayerTimes";
 import { site } from "@/lib/site";
 
@@ -61,9 +65,12 @@ export const viewport: Viewport = {
 };
 
 /**
- * Opt into scroll-reveal only when the browser can drive it and the visitor
- * has not asked for reduced motion. Without this class the reveal styles in
- * globals.css never apply, so content can't be hidden by a JS failure.
+ * Gates the entire cinematic motion system (Reveal, ParallaxLayer,
+ * HorizontalRail, the custom cursor, Lenis) — see motionGate.ts. Runs before
+ * hydration so there's never a flash of motion-ready content that then has
+ * to be walked back. Without this class nothing animates and everything
+ * renders in its normal, final state, so content can't be hidden by a JS
+ * failure or a reduced-motion preference.
  */
 const revealReady = `try{if('IntersectionObserver' in window&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.classList.add('reveal-ready')}}catch(e){}`;
 
@@ -91,12 +98,17 @@ export default function RootLayout({
         >
           Skip to content
         </a>
-        <Header />
-        <main id="main" className="flex-1">
-          {children}
-        </main>
-        <Footer />
-        <PrayerQuickBar board={getPrayerBoard()} />
+        <SmoothScrollProvider>
+          <Preloader />
+          <CustomCursor />
+          <ScrollProgressStar />
+          <Header />
+          <main id="main" className="flex-1">
+            {children}
+          </main>
+          <Footer />
+          <PrayerQuickBar board={getPrayerBoard()} />
+        </SmoothScrollProvider>
       </body>
     </html>
   );

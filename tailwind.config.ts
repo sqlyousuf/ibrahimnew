@@ -17,6 +17,9 @@ const config: Config = {
           800: "#16213d",
           900: "#101a30",
           950: "#0a1122",
+          // Cinematic ground — the resting-black behind full-bleed scenes.
+          // Darker than 950 so gold light reads as the one source in frame.
+          975: "#050810",
         },
         gold: {
           50: "#fbf7ee",
@@ -29,6 +32,9 @@ const config: Config = {
           700: "#7a5528",
           800: "#654625",
           900: "#563c22",
+          // Hot highlight — cursor glow, light-beam edges, loader trace.
+          // Used sparingly; the working palette otherwise stops at 50-900.
+          glow: "#f6dfae",
         },
         cream: {
           50: "#fdfcfa",
@@ -44,6 +50,12 @@ const config: Config = {
       // Fluid display scale — one ramp shared by every page so headings
       // stay in proportion from 375px phones up to wide desktops.
       fontSize: {
+        // Cinematic hero scale only — one step above display-xl, reserved
+        // for signature pinned-hero headlines.
+        "display-hero": [
+          "clamp(2.75rem, 9vw, 6.75rem)",
+          { lineHeight: "1.02", letterSpacing: "-0.025em" },
+        ],
         "display-xl": [
           "clamp(2.125rem, 6.4vw, 4.25rem)",
           { lineHeight: "1.08", letterSpacing: "-0.021em" },
@@ -76,18 +88,29 @@ const config: Config = {
         lift: "0 2px 6px rgba(16,26,48,0.05), 0 28px 50px -24px rgba(16,26,48,0.38)",
         panel:
           "0 2px 4px rgba(16,26,48,0.04), 0 32px 64px -28px rgba(16,26,48,0.42)",
+        // Warm bloom for the one light source in a cinematic frame — cursor
+        // dot, active nav glyph, loader star.
+        glow: "0 0 1px rgba(246,223,174,0.8), 0 0 40px rgba(205,156,71,0.35)",
       },
       transitionTimingFunction: {
         entrance: "cubic-bezier(0.22, 1, 0.36, 1)",
+        // Slower, more weighted than `entrance` — the GSAP-timeline pairing
+        // for pinned/scrubbed cinematic reveals rather than quick UI hovers.
+        cinematic: "cubic-bezier(0.16, 1, 0.3, 1)",
       },
       keyframes: {
         "fade-up": {
           from: { opacity: "0", transform: "translate3d(0, 14px, 0)" },
           to: { opacity: "1", transform: "translate3d(0, 0, 0)" },
         },
+        "star-spin": {
+          from: { transform: "rotate(0deg)" },
+          to: { transform: "rotate(360deg)" },
+        },
       },
       animation: {
         "fade-up": "fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both",
+        "star-spin": "star-spin 16s linear infinite",
       },
     },
   },

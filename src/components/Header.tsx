@@ -63,6 +63,7 @@ export default function Header() {
 
   return (
     <header
+      style={{ viewTransitionName: "site-header" }}
       className={`sticky top-0 z-50 border-b bg-white/90 backdrop-blur-md transition-[box-shadow,border-color,background-color] duration-300 ${
         scrolled || open
           ? "border-navy-900/10 shadow-soft"
@@ -78,6 +79,7 @@ export default function Header() {
       <div className="container-page flex items-center justify-between gap-3 py-2.5 sm:py-3">
         <Link
           href="/"
+          transitionTypes={["nav-back"]}
           className="group flex items-center gap-2.5 rounded-lg sm:gap-3"
           aria-label={`${site.name} — home`}
         >
@@ -108,6 +110,7 @@ export default function Header() {
               <Link
                 key={link.href}
                 href={link.href}
+                transitionTypes={[link.href === "/" ? "nav-back" : "nav-forward"]}
                 aria-current={active ? "page" : undefined}
                 className={`group relative py-2 text-sm font-semibold uppercase tracking-wide transition-colors ${
                   active ? "text-gold-700" : "text-navy-800 hover:text-gold-700"
@@ -188,6 +191,7 @@ export default function Header() {
                 than sitting as one of seven equal-weight links. */}
             <Link
               href={PRAYER_HREF}
+              transitionTypes={["nav-forward"]}
               onClick={() => setOpen(false)}
               aria-current={pathname === PRAYER_HREF ? "page" : undefined}
               className="mt-2 flex min-h-[3.5rem] items-center gap-3 rounded-2xl bg-navy-950 px-4 text-cream-100 shadow-soft ring-1 ring-gold-500/30 transition-colors active:bg-navy-900"
@@ -213,6 +217,7 @@ export default function Header() {
                   <li key={link.href}>
                     <Link
                       href={link.href}
+                      transitionTypes={[link.href === "/" ? "nav-back" : "nav-forward"]}
                       aria-current={active ? "page" : undefined}
                       onClick={() => setOpen(false)}
                       className={`flex min-h-[3.25rem] items-center gap-3 text-base font-semibold uppercase tracking-wide transition-colors ${

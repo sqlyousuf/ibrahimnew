@@ -143,6 +143,163 @@
 }
 
 /* ---------------------------------------------------------------------------
+   Cinematic photo treatment
+   One warm grade + vignette applied to every full-bleed photograph so stock
+   imagery reads as a continuous film rather than a stack of unrelated shots.
+   --------------------------------------------------------------------------- */
+
+.cinematic-photo {
+  filter: saturate(1.08) contrast(1.06) brightness(0.97) sepia(0.08);
+}
+
+.cinematic-vignette {
+  background: radial-gradient(
+    120% 100% at 50% 30%,
+    transparent 40%,
+    rgba(5, 8, 16, 0.55) 100%
+  );
+}
+
+/* Film grain — same inline-SVG-noise approach as .pattern-stars, so it costs
+   no network request. Kept very low opacity; it should read as texture on
+   the dark cinematic grounds, not as visible static. */
+.grain {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 120px 120px;
+  mix-blend-mode: overlay;
+  opacity: 0.05;
+}
+
+/* ---------------------------------------------------------------------------
+   Custom cursor
+   Only mounted by CustomCursor.tsx on fine-pointer devices, and only once
+   motion is allowed — see the reveal-ready gate below. `data-cursor-ready`
+   swaps the system cursor for the bespoke dot/ring so the two never show
+   at once.
+   --------------------------------------------------------------------------- */
+
+html[data-cursor-ready="true"],
+html[data-cursor-ready="true"] a,
+html[data-cursor-ready="true"] button {
+  cursor: none;
+}
+
+.cinematic-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 200;
+  pointer-events: none;
+  will-change: transform;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+html[data-cursor-visible="true"] .cinematic-cursor {
+  opacity: 1;
+}
+
+.cinematic-cursor__dot {
+  position: absolute;
+  height: 8px;
+  width: 8px;
+  margin: -4px;
+  border-radius: 9999px;
+  background: theme("colors.gold.glow");
+  box-shadow: theme("boxShadow.glow");
+  transition: transform 0.15s theme("transitionTimingFunction.entrance");
+}
+
+.cinematic-cursor__ring {
+  position: absolute;
+  height: 40px;
+  width: 40px;
+  margin: -20px;
+  border-radius: 9999px;
+  border: 1px solid rgba(246, 223, 174, 0.5);
+  transition:
+    transform 0.4s theme("transitionTimingFunction.cinematic"),
+    opacity 0.4s theme("transitionTimingFunction.cinematic");
+}
+
+html[data-cursor-hover="true"] .cinematic-cursor__ring {
+  transform: scale(1.6);
+  opacity: 0.5;
+}
+
+/* ---------------------------------------------------------------------------
+   View transitions
+   Directional page-to-page motion via React's <ViewTransition>. The header
+   is named so it never slides — see PageTransition.tsx / Header.tsx.
+   --------------------------------------------------------------------------- */
+
+::view-transition {
+  pointer-events: none;
+}
+
+::view-transition-group(site-header) {
+  animation: none;
+  z-index: 100;
+}
+::view-transition-old(site-header) {
+  display: none;
+}
+::view-transition-new(site-header) {
+  animation: none;
+}
+
+::view-transition-old(.nav-forward) {
+  --slide-offset: -60px;
+  animation:
+    150ms ease-in both view-fade reverse,
+    400ms ease-in-out both view-slide reverse;
+}
+::view-transition-new(.nav-forward) {
+  --slide-offset: 60px;
+  animation:
+    210ms ease-out 150ms both view-fade,
+    400ms ease-in-out both view-slide;
+}
+::view-transition-old(.nav-back) {
+  --slide-offset: 60px;
+  animation:
+    150ms ease-in both view-fade reverse,
+    400ms ease-in-out both view-slide reverse;
+}
+::view-transition-new(.nav-back) {
+  --slide-offset: -60px;
+  animation:
+    210ms ease-out 150ms both view-fade,
+    400ms ease-in-out both view-slide;
+}
+
+@keyframes view-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes view-slide {
+  from {
+    translate: var(--slide-offset);
+  }
+  to {
+    translate: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-group(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
+}
+
+/* ---------------------------------------------------------------------------
    Islamic geometric texture
    Eight-point star (khatim) tessellation built from two overlapping squares,
    drawn as an inline SVG tile so it costs no network request.
@@ -173,38 +330,16 @@ html[data-menu-open="true"] .prayer-quick-bar {
 /* ---------------------------------------------------------------------------
    Scroll reveal
 
-   `reveal-ready` is added to <html> by a tiny inline script only when
-   IntersectionObserver exists AND the visitor has not asked for reduced
-   motion. Without that class nothing is ever hidden, so content can never be
-   trapped behind failed JS or a motion preference.
+   `reveal-ready` is added to <html> by a tiny inline script only when the
+   visitor has not asked for reduced motion. Reveal.tsx and the rest of the
+   GSAP-driven motion system check for that class before animating anything,
+   so content can never be trapped behind failed JS or a motion preference —
+   see motionGate.ts.
    --------------------------------------------------------------------------- */
-
-.reveal-ready [data-reveal] {
-  opacity: 0;
-  transform: translate3d(0, 16px, 0);
-  transition:
-    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
-  transition-delay: var(--reveal-delay, 0ms);
-  will-change: opacity, transform;
-}
-
-.reveal-ready [data-reveal][data-revealed="true"] {
-  opacity: 1;
-  transform: none;
-  will-change: auto;
-}
 
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
-  }
-
-  [data-reveal],
-  .reveal-ready [data-reveal] {
-    opacity: 1 !important;
-    transform: none !important;
-    transition: none !important;
   }
 
   *,

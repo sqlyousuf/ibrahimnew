@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import PageHero from "@/components/PageHero";
 import Reveal from "@/components/Reveal";
 import PrayerBoard from "@/components/PrayerBoard";
+import PageTransition from "@/components/motion/PageTransition";
 import { StarDivider, StarGlyph } from "@/components/Ornament";
 import { formatEffectiveDate, formatMaghribOffset } from "@/lib/iqamah";
 import {
@@ -25,7 +26,7 @@ export default function PrayerTimesPage() {
   const { iqamahRecord } = board;
 
   return (
-    <>
+    <PageTransition>
       <PageHero
         eyebrow="Salah Times"
         title="Salah Times"
@@ -171,6 +172,6 @@ export default function PrayerTimesPage() {
           </p>
         </Reveal>
       </section>
-    </>
+    </PageTransition>
   );
 }

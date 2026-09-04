@@ -2,39 +2,18 @@
 
 import { useEffect, useRef } from "react";
 import type { ElementType, ReactNode } from "react";
+import { gsap } from "@/lib/gsap";
+import { motionAllowed } from "@/lib/motionGate";
 
 /**
- * Lightweight scroll-reveal. No animation library — one shared
- * IntersectionObserver for the whole document, and each element is
- * unobserved as soon as it has played.
+ * Scroll-triggered reveal, driven by GSAP/ScrollTrigger.
  *
- * The hiding styles live behind `.reveal-ready` on <html> (set by an inline
- * script in the root layout), so content is never hidden when JS is
- * unavailable or the visitor prefers reduced motion.
+ * Only animates when `motionAllowed()` is true (see motionGate.ts) — the
+ * same reveal-ready gate the rest of the motion system uses. Without it,
+ * this component is a no-op wrapper and children render in their normal,
+ * final state: content can never be hidden by failed JS or a reduced-motion
+ * preference.
  */
-
-let sharedObserver: IntersectionObserver | null = null;
-
-function getObserver(): IntersectionObserver | null {
-  if (typeof window === "undefined" || !("IntersectionObserver" in window)) {
-    return null;
-  }
-
-  sharedObserver ??= new IntersectionObserver(
-    (entries) => {
-      for (const entry of entries) {
-        if (entry.isIntersecting) {
-          entry.target.setAttribute("data-revealed", "true");
-          sharedObserver?.unobserve(entry.target);
-        }
-      }
-    },
-    { rootMargin: "0px 0px -8% 0px", threshold: 0.08 },
-  );
-
-  return sharedObserver;
-}
-
 export default function Reveal({
   as: Tag = "div",
   children,
@@ -51,25 +30,34 @@ export default function Reveal({
 
   useEffect(() => {
     const node = ref.current;
-    if (!node) return;
+    if (!node || !motionAllowed()) return;
 
-    const observer = getObserver();
-    if (!observer) {
-      node.setAttribute("data-revealed", "true");
-      return;
-    }
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        node,
+        { autoAlpha: 0, y: 20 },
+        {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.9,
+          delay: delay / 1000,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: node,
+            start: "top 90%",
+            toggleActions: "play none none none",
+          },
+        },
+      );
+    }, node);
 
-    observer.observe(node);
-    return () => observer.unobserve(node);
-  }, []);
+    // gsap.context tracks every tween/ScrollTrigger created inside it, so
+    // revert() tears both down together.
+    return () => ctx.revert();
+  }, [delay]);
 
   return (
-    <Tag
-      ref={ref}
-      data-reveal=""
-      className={className}
-      style={delay ? ({ "--reveal-delay": `${delay}ms` } as React.CSSProperties) : undefined}
-    >
+    <Tag ref={ref} className={className}>
       {children}
     </Tag>
   );

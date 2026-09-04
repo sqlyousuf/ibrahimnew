@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" role="img" aria-label="Placeholder flier">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#101a30"/>
+      <stop offset="100%" stop-color="#050810"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="1000" fill="url(#bg)"/>
+  <rect x="40" y="40" width="720" height="920" fill="none" stroke="#b8863a" stroke-width="2" opacity="0.55"/>
+  <g transform="translate(400,420)" stroke="#cd9c47" stroke-width="2" fill="none" opacity="0.85">
+    <rect x="-60" y="-60" width="120" height="120"/>
+    <rect x="-60" y="-60" width="120" height="120" transform="rotate(45)"/>
+  </g>
+  <text x="400" y="620" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="44" fill="#faf7f0">Sample Flier</text>
+  <text x="400" y="666" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" letter-spacing="2" fill="#dcb56a">REPLACE IN src/lib/site.ts</text>
+</svg>

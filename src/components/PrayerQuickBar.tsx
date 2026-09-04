@@ -35,7 +35,7 @@ export default function PrayerQuickBar({ board }: { board: PrayerBoard }) {
       <div aria-hidden="true" className="h-[5.75rem] lg:hidden" />
 
       <div className="prayer-quick-bar fixed inset-x-0 bottom-0 z-40 transition-[transform,opacity] duration-300 ease-entrance lg:hidden">
-        <div className="border-t border-gold-500/30 bg-navy-950/95 backdrop-blur-md">
+        <div className="border-t border-gold-500/30 bg-navy-975/95 backdrop-blur-md">
           <div className="pb-[env(safe-area-inset-bottom)]">
             <Link
               href={PRAYER_HREF}

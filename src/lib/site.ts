@@ -35,7 +35,7 @@ export const navLinks = [
   { href: "/about", label: "About" },
   { href: "/prayer-times", label: "Salah Times" },
   { href: "/institute", label: "Institute" },
-  { href: "/events", label: "Events" },
+  { href: "/events", label: "This Week" },
   { href: "/gallery", label: "Gallery" },
   { href: "/contact", label: "Contact" },
 ];
@@ -148,16 +148,51 @@ export const testimonials = [
   },
 ];
 
-export type MasjidEvent = {
+export type WeeklyEvent = {
+  slug: string;
   title: string;
+  /** Display string, e.g. "Friday, September 12" or "Every Saturday". */
   date: string;
+  /** e.g. "7:00 PM – 8:30 PM" or "After Maghrib". */
   time?: string;
+  location?: string;
   description: string;
+  /**
+   * The poster/flier graphic itself, if there is one. `alt` should describe
+   * the flier's content in words (screen readers can't read text baked into
+   * an image) — the card's title/date/time/description fields also carry
+   * that information as real text, so nothing here is image-only.
+   */
+  flier?: { src: string; alt: string };
 };
 
-// Kept empty for now — add entries here when the client is ready to
-// publish events. The Events page already handles this state gracefully.
-export const events: MasjidEvent[] = [];
+/**
+ * "This Week at Masjid Ibrahim" — replace these two placeholder entries with
+ * real fliers/details, or add/remove entries freely; the page (and its
+ * empty state) handles any length, including zero. Put flier images in
+ * `public/fliers/` and reference them as `/fliers/whatever.jpg`.
+ */
+export const weeklyEvents: WeeklyEvent[] = [
+  {
+    slug: "placeholder-1",
+    title: "Replace me — Friday Halaqa",
+    date: "Every Friday",
+    time: "After Maghrib",
+    location: "Main Prayer Hall",
+    description:
+      "Placeholder entry. Swap in this week's real flier and details, or delete this entry — see weeklyEvents in src/lib/site.ts.",
+  },
+  {
+    slug: "placeholder-2",
+    title: "Replace me — Guest Speaker Night",
+    date: "Saturday, TBD",
+    time: "7:00 PM – 8:30 PM",
+    location: "Masjid Ibrahim",
+    description:
+      "Placeholder entry with a flier slot. Add a flier image at public/fliers/ and reference it here as { src: \"/fliers/your-file.jpg\", alt: \"...\" }.",
+    flier: { src: "/fliers/placeholder.svg", alt: "Placeholder event flier" },
+  },
+];
 
 export const galleryImages = [
   {

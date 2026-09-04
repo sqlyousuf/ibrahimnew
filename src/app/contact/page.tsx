@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import PageHero from "@/components/PageHero";
 import Reveal from "@/components/Reveal";
+import PageTransition from "@/components/motion/PageTransition";
 import { StarGlyph } from "@/components/Ornament";
 import { site } from "@/lib/site";
 
@@ -15,7 +16,7 @@ const contactLinkClass =
 
 export default function ContactPage() {
   return (
-    <>
+    <PageTransition>
       <PageHero
         eyebrow="Get In Touch"
         title="Contact Us"
@@ -130,6 +131,6 @@ export default function ContactPage() {
           </div>
         </div>
       </section>
-    </>
+    </PageTransition>
   );
 }

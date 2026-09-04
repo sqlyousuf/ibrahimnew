@@ -1,5 +1,6 @@
-import Image from "next/image";
 import { PatternField } from "@/components/Ornament";
+import Reveal from "@/components/Reveal";
+import CinematicImage from "@/components/motion/CinematicImage";
 
 export default function PageHero({
   eyebrow,
@@ -21,13 +22,13 @@ export default function PageHero({
   imagePosition?: string;
 }) {
   return (
-    <section className="relative flex min-h-[20rem] items-end overflow-hidden bg-navy-950 sm:min-h-[24rem] lg:min-h-[28rem]">
-      <Image
+    <section className="relative flex min-h-[20rem] items-end overflow-hidden bg-navy-975 sm:min-h-[24rem] lg:min-h-[28rem]">
+      <CinematicImage
         src={image}
         alt={imageAlt}
-        fill
         priority
-        className={`object-cover ${imagePosition}`}
+        speed={0.25}
+        className={imagePosition}
         sizes="100vw"
       />
 
@@ -35,10 +36,11 @@ export default function PageHero({
           text block, plus a flat tint so bright skies never blow out. */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-gradient-to-t from-navy-950 via-navy-950/75 to-navy-950/30"
+        className="absolute inset-0 bg-gradient-to-t from-navy-975 via-navy-975/75 to-navy-975/30"
       />
-      <div aria-hidden="true" className="absolute inset-0 bg-navy-950/20" />
+      <div aria-hidden="true" className="absolute inset-0 bg-navy-975/20" />
       <PatternField opacity={0.09} />
+      <div aria-hidden="true" className="grain absolute inset-0" />
 
       {/* Gold hairline tying the hero to the header's brand thread. */}
       <span
@@ -46,7 +48,10 @@ export default function PageHero({
         className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-gold-500/50 to-transparent"
       />
 
-      <div className="container-page relative z-10 pb-10 pt-24 sm:pb-14 sm:pt-28 lg:pb-16">
+      <Reveal
+        as="div"
+        className="container-page relative z-10 pb-10 pt-24 sm:pb-14 sm:pt-28 lg:pb-16"
+      >
         <p className="section-eyebrow text-gold-300 before:bg-gold-400">
           {eyebrow}
         </p>
@@ -58,7 +63,7 @@ export default function PageHero({
             {description}
           </p>
         )}
-      </div>
+      </Reveal>
     </section>
   );
 }

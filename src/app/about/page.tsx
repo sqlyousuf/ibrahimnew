@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import PageHero from "@/components/PageHero";
 import Reveal from "@/components/Reveal";
+import PageTransition from "@/components/motion/PageTransition";
+import CinematicImage from "@/components/motion/CinematicImage";
 import { PatternField, StarDivider, StarGlyph } from "@/components/Ornament";
 import { leadership } from "@/lib/site";
 
@@ -32,7 +33,7 @@ const values = [
 
 export default function AboutPage() {
   return (
-    <>
+    <PageTransition>
       <PageHero
         eyebrow="About Masjid Ibrahim"
         title="A Place of Worship, Learning, and Community"
@@ -123,11 +124,10 @@ export default function AboutPage() {
                   i % 2 === 1 ? "lg:order-2" : "lg:order-1"
                 }`}
               >
-                <Image
+                <CinematicImage
                   src={leader.image}
                   alt={`${leader.name}, ${leader.role}`}
-                  fill
-                  className="object-cover"
+                  speed={0.15}
                   sizes="(min-width: 1024px) 30vw, 17rem"
                 />
               </div>
@@ -152,6 +152,6 @@ export default function AboutPage() {
           ))}
         </div>
       </section>
-    </>
+    </PageTransition>
   );
 }

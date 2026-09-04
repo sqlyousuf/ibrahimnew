@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import PageHero from "@/components/PageHero";
 import Reveal from "@/components/Reveal";
+import PageTransition from "@/components/motion/PageTransition";
+import CinematicImage from "@/components/motion/CinematicImage";
 import { StarGlyph } from "@/components/Ornament";
 import { programs, services, site } from "@/lib/site";
 
@@ -29,7 +30,7 @@ function Detail({ label, value }: { label: string; value: string }) {
 
 export default function InstitutePage() {
   return (
-    <>
+    <PageTransition>
       <PageHero
         eyebrow="Masjid Ibrahim Institute"
         title="Nurturing Faith Through Education"
@@ -62,11 +63,10 @@ export default function InstitutePage() {
                   i % 2 === 1 ? "lg:order-2" : ""
                 }`}
               >
-                <Image
+                <CinematicImage
                   src={program.image}
                   alt={`${program.name} at Masjid Ibrahim`}
-                  fill
-                  className="object-cover"
+                  speed={0.15}
                   sizes="(min-width: 1024px) 50vw, 100vw"
                 />
                 <div
@@ -156,6 +156,6 @@ export default function InstitutePage() {
           </div>
         </div>
       </section>
-    </>
+    </PageTransition>
   );
 }

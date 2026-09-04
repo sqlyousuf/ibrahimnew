@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import PageHero from "@/components/PageHero";
 import Reveal from "@/components/Reveal";
+import PageTransition from "@/components/motion/PageTransition";
 import { PatternField, StarGlyph } from "@/components/Ornament";
 import { site } from "@/lib/site";
 
@@ -27,7 +28,7 @@ const causes = [
 
 export default function DonatePage() {
   return (
-    <>
+    <PageTransition>
       <PageHero
         eyebrow="Sadaqah & Zakat"
         title="Support Masjid Ibrahim"
@@ -150,6 +151,6 @@ export default function DonatePage() {
           .
         </p>
       </section>
-    </>
+    </PageTransition>
   );
 }
