@@ -4,7 +4,7 @@ import Reveal from "@/components/Reveal";
 import PageTransition from "@/components/motion/PageTransition";
 import FlierCard from "@/components/events/FlierCard";
 import { StarGlyph } from "@/components/Ornament";
-import { site, weeklyEvents } from "@/lib/site";
+import { getActiveWeeklyEvents, site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "This Week",
@@ -13,6 +13,8 @@ export const metadata: Metadata = {
 };
 
 export default function EventsPage() {
+  const activeEvents = getActiveWeeklyEvents();
+
   return (
     <PageTransition>
       <PageHero
@@ -25,7 +27,7 @@ export default function EventsPage() {
       />
 
       <section className="section container-page">
-        {weeklyEvents.length > 0 ? (
+        {activeEvents.length > 0 ? (
           <>
             <Reveal className="mx-auto max-w-2xl text-center">
               <p className="section-eyebrow justify-center">This Week</p>
@@ -39,7 +41,7 @@ export default function EventsPage() {
             </Reveal>
 
             <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:mt-14 lg:grid-cols-3 lg:gap-8">
-              {weeklyEvents.map((event, i) => (
+              {activeEvents.map((event, i) => (
                 <FlierCard key={event.slug} event={event} delay={i * 70} />
               ))}
             </div>

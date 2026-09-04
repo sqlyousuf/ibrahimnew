@@ -164,13 +164,33 @@ export type WeeklyEvent = {
    * that information as real text, so nothing here is image-only.
    */
   flier?: { src: string; alt: string };
+  /**
+   * ISO date (YYYY-MM-DD) of a one-off event, used only to drop it from the
+   * page automatically once it's past — see `weeklyEvents` filtering in
+   * events/page.tsx. Leave unset for recurring entries ("Every Friday")
+   * that should stay until someone removes them by hand.
+   */
+  eventDate?: string;
 };
 
 /**
- * "This Week at Masjid Ibrahim" — replace these two placeholder entries with
- * real fliers/details, or add/remove entries freely; the page (and its
- * empty state) handles any length, including zero. Put flier images in
- * `public/fliers/` and reference them as `/fliers/whatever.jpg`.
+ * "This Week at Masjid Ibrahim" — content contract for both manual edits and
+ * the automated flier-intake routine (see README.md "Flier intake") that
+ * reads masjidfliers@gmail.com and appends entries here:
+ *
+ * - `slug` must be unique and URL/filename-safe (kebab-case).
+ * - `date`/`time` are free-text display strings — write them the way a
+ *   visitor should read them, not a machine format.
+ * - `eventDate`, if the email gives a specific one-off date, as ISO
+ *   YYYY-MM-DD — this is what lets a past event drop off automatically.
+ *   Omit it for recurring/no-specific-date entries.
+ * - A flier image attachment goes in `public/fliers/` (kebab-case
+ *   filename) and is referenced as `flier: { src: "/fliers/whatever.jpg",
+ *   alt: "..." }`. `alt` must describe the flier in words — never leave it
+ *   as a filename or generic placeholder, since screen readers can't read
+ *   text baked into the image itself.
+ * - Replace or delete the two placeholder entries below whenever; the page
+ *   (and its empty state) handles any length, including zero.
  */
 export const weeklyEvents: WeeklyEvent[] = [
   {
@@ -193,6 +213,13 @@ export const weeklyEvents: WeeklyEvent[] = [
     flier: { src: "/fliers/placeholder.svg", alt: "Placeholder event flier" },
   },
 ];
+
+/** Drops one-off entries whose `eventDate` has passed; recurring entries
+ * (no `eventDate`) always stay. */
+export function getActiveWeeklyEvents(referenceDate = new Date()): WeeklyEvent[] {
+  const today = referenceDate.toISOString().slice(0, 10);
+  return weeklyEvents.filter((event) => !event.eventDate || event.eventDate >= today);
+}
 
 export const galleryImages = [
   {

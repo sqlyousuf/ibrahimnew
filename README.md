@@ -21,10 +21,30 @@ Visit `http://localhost:3000`.
 
 ## Content notes
 
-- **Prayer times**: embedded live via the AthanPlus widget (`site.prayerWidget` in `src/lib/site.ts`). Update the `masjid_id` there if the AthanPlus account changes.
-- **Events**: `events` array in `src/lib/site.ts` is currently empty (shows a "check back soon" state). Add entries as `{ title, date, time, description }` once events are confirmed.
+- **Prayer times**: computed locally from `src/lib/prayerTimes.ts` / `salahTimes.ts` / `iqamah.ts` — no external widget.
+- **This Week (`/events`)**: the `weeklyEvents` array in `src/lib/site.ts` — see the doc comment directly above it for the exact entry shape (title, date, time, location, description, optional flier image, optional `eventDate` for auto-expiry). Empty array shows a "check back soon" state.
 - **Donations**: online payment link and Zelle address live in `site.donate` in `src/lib/site.ts`.
 - **Images**: stock photography from Unsplash (free to use, no attribution required) via `images.unsplash.com`, referenced directly by URL — no local copies needed. Swap any `src/lib/site.ts` image URL, or an inline `<Image src=... >` in a page file, for a real photo of the masjid once available. To use a real photo, drop it in `public/` and point the `src` at `/your-file.jpg`.
+
+### Flier intake
+
+Fliers can be added to "This Week" by emailing them to **masjidfliers@gmail.com**
+with the event's title, date, time, location, and description in the body
+(any format — plain English is fine) and the flier image attached.
+
+A scheduled Claude Code cloud routine checks that inbox once an hour. For
+each new email from a trusted sender (currently: `sqlyousuf@gmail.com`,
+`admin@kleinislamiccenter.org`, `imam@masjidibrahimspring.org`), it:
+
+1. Saves the flier image to `public/fliers/`.
+2. Adds an entry to `weeklyEvents` in `src/lib/site.ts` following the
+   contract documented there.
+3. Runs `npm run lint` and `npm run build` as a safety check.
+4. Commits and pushes to `main`, which Vercel auto-deploys.
+
+Emails from anyone not on the trusted list are left untouched. To change who's
+trusted, or the check frequency, update the routine at
+[claude.ai/code/routines](https://claude.ai/code/routines).
 
 ## Deploying to Vercel
 
