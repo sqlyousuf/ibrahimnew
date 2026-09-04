@@ -11,8 +11,12 @@ export const metadata: Metadata = {
     "This week's calendar of programs, halaqas, and events at Masjid Ibrahim in Spring, Texas.",
 };
 
-export default function EventsPage() {
-  const days = getWeekCalendar();
+// Ad-hoc entries now live in Vercel Blob, edited through /admin — always
+// render fresh rather than serving a stale cached copy after a save.
+export const dynamic = "force-dynamic";
+
+export default async function EventsPage() {
+  const days = await getWeekCalendar();
 
   return (
     <PageTransition>

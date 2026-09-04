@@ -1,7 +1,9 @@
 /**
  * Builds the "This Week at Masjid Ibrahim" calendar: the Institute's three
- * recurring programs plus one-off/ad-hoc entries from `calendarEvents`,
- * merged onto the 7 days (Sunday-Saturday) of the current week.
+ * recurring programs (static, from site.ts) plus one-off/ad-hoc entries
+ * managed through the /admin panel (live, from Vercel Blob via
+ * calendarStore.ts), merged onto the 7 days (Sunday-Saturday) of the
+ * current week.
  *
  * Dates are stepped from the masjid's own calendar day (`getMasjidDateKey`,
  * already used by the prayer-times week-ahead logic) rather than the
@@ -10,7 +12,8 @@
  */
 
 import { getMasjidDateKey } from "@/lib/prayerTimes";
-import { calendarEvents, programs } from "@/lib/site";
+import { getCalendarEvents } from "@/lib/calendarStore";
+import { programs } from "@/lib/site";
 
 export type CalendarDisplayEntry = {
   key: string;
@@ -39,7 +42,9 @@ export type CalendarDay = {
 
 const DAY_MS = 86_400_000;
 
-export function getWeekCalendar(referenceDate: Date = new Date()): CalendarDay[] {
+export async function getWeekCalendar(referenceDate: Date = new Date()): Promise<CalendarDay[]> {
+  const calendarEvents = await getCalendarEvents();
+
   const todayKey = getMasjidDateKey(referenceDate);
   const [y, m, d] = todayKey.split("-").map(Number);
   const todayUTC = Date.UTC(y, m - 1, d);

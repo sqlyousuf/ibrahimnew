@@ -187,53 +187,31 @@ type OneOffCalendarEvent = CalendarEventBase & {
   date: string;
 };
 
-export type CalendarEvent = RecurringCalendarEvent | OneOffCalendarEvent;
-
 /**
  * "This Week at Masjid Ibrahim" — one-off and ad-hoc-recurring entries for
  * the calendar (see WeekCalendar.tsx). The Institute's three core programs
  * (Quran Maktab, WISE, YM Ibrahim, above) also appear on the calendar
- * automatically via their own `calendar` field — don't duplicate them here.
+ * automatically via their own `calendar` field — this type doesn't cover
+ * them.
  *
- * - `slug` must be unique and URL/filename-safe (kebab-case).
- * - `time` is a free-text display string — write it the way a visitor
- *   should read it, not a machine format.
+ * Unlike the rest of this file, entries of this type are **not** stored
+ * here in code — they live in Vercel Blob, managed through the /admin
+ * panel (see src/lib/calendarStore.ts and src/app/admin/). This type is
+ * still the shared shape both sides agree on:
+ *
+ * - `slug` — unique, kebab-case.
+ * - `time` — a free-text display string, written the way a visitor should
+ *   read it, not a machine format.
  * - `recurrence: "once"` + `date` (ISO YYYY-MM-DD) for a specific-date
- *   happening — it only ever shows on the week containing that date, and
- *   drops off on its own afterward.
+ *   happening — it only shows on the week containing that date, and drops
+ *   off on its own afterward.
  * - `recurrence: "weekly"` + `daysOfWeek` for anything recurring that isn't
- *   already one of the three core programs above (e.g. a weekly halaqa).
- * - A flier image goes in `public/fliers/` (kebab-case filename) and is
- *   referenced as `flier: { src: "/fliers/whatever.jpg", alt: "..." }`.
- *   `alt` must describe the flier in words — never a filename or generic
- *   placeholder. Most entries won't have a flier, and that's fine — the
- *   calendar renders title/time/description either way.
- * - Replace, add, or delete entries freely; the calendar handles any
- *   length, including zero (recurring programs still show).
+ *   already one of the three core programs above.
+ * - `flier`'s `alt` must describe the flier in words — never a filename or
+ *   generic placeholder, since screen readers can't read text baked into
+ *   the image. Most entries won't have a flier at all, and that's fine.
  */
-export const calendarEvents: CalendarEvent[] = [
-  {
-    slug: "placeholder-1",
-    title: "Replace me — Friday Halaqa",
-    recurrence: "weekly",
-    daysOfWeek: [5],
-    time: "After Maghrib",
-    location: "Main Prayer Hall",
-    description:
-      "Placeholder entry with no flier — plenty of real entries won't have one either. Edit or delete in src/lib/site.ts.",
-  },
-  {
-    slug: "placeholder-2",
-    title: "Replace me — Guest Speaker Night",
-    recurrence: "once",
-    date: "2026-09-12",
-    time: "7:00 PM – 8:30 PM",
-    location: "Masjid Ibrahim",
-    description:
-      "Placeholder entry with a flier slot. Add a flier image at public/fliers/ and reference it here as { src: \"/fliers/your-file.jpg\", alt: \"...\" }.",
-    flier: { src: "/fliers/placeholder.svg", alt: "Placeholder event flier" },
-  },
-];
+export type CalendarEvent = RecurringCalendarEvent | OneOffCalendarEvent;
 
 export const galleryImages = [
   {
