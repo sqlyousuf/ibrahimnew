@@ -22,29 +22,9 @@ Visit `http://localhost:3000`.
 ## Content notes
 
 - **Prayer times**: computed locally from `src/lib/prayerTimes.ts` / `salahTimes.ts` / `iqamah.ts` — no external widget.
-- **This Week (`/events`)**: the `weeklyEvents` array in `src/lib/site.ts` — see the doc comment directly above it for the exact entry shape (title, date, time, location, description, optional flier image, optional `eventDate` for auto-expiry). Empty array shows a "check back soon" state.
+- **This Week (`/events`)**: a 7-day calendar built by `getWeekCalendar()` in `src/lib/calendar.ts`, which merges two sources — the Institute's three recurring programs (their `calendar: { daysOfWeek, time }` field in `src/lib/site.ts`) and the `calendarEvents` array in the same file for everything else (one-off events via `recurrence: "once"` + an ISO `date`, or other recurring items via `recurrence: "weekly"` + `daysOfWeek`). See the doc comment above `calendarEvents` for the full entry shape, including the optional flier image. A day with nothing scheduled just shows "Nothing scheduled" — there's no separate empty state for the page as a whole, since the recurring programs mean it's never really empty.
 - **Donations**: online payment link and Zelle address live in `site.donate` in `src/lib/site.ts`.
 - **Images**: stock photography from Unsplash (free to use, no attribution required) via `images.unsplash.com`, referenced directly by URL — no local copies needed. Swap any `src/lib/site.ts` image URL, or an inline `<Image src=... >` in a page file, for a real photo of the masjid once available. To use a real photo, drop it in `public/` and point the `src` at `/your-file.jpg`.
-
-### Flier intake
-
-Fliers can be added to "This Week" by emailing them to **masjidfliers@gmail.com**
-with the event's title, date, time, location, and description in the body
-(any format — plain English is fine) and the flier image attached.
-
-A scheduled Claude Code cloud routine checks that inbox once an hour. For
-each new email from a trusted sender (currently: `sqlyousuf@gmail.com`,
-`admin@kleinislamiccenter.org`, `imam@masjidibrahimspring.org`), it:
-
-1. Saves the flier image to `public/fliers/`.
-2. Adds an entry to `weeklyEvents` in `src/lib/site.ts` following the
-   contract documented there.
-3. Runs `npm run lint` and `npm run build` as a safety check.
-4. Commits and pushes to `main`, which Vercel auto-deploys.
-
-Emails from anyone not on the trusted list are left untouched. To change who's
-trusted, or the check frequency, update the routine at
-[claude.ai/code/routines](https://claude.ai/code/routines).
 
 ## Deploying to Vercel
 

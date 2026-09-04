@@ -74,6 +74,10 @@ export const programs = [
     subtitle: "Quran Nazira · Hifdh · Dua and Salat",
     audience: "Boys and girls, ages 5 and up",
     schedule: "Monday to Thursday, 5:30 PM – 7:30 PM",
+    // Structured recurrence for the This Week calendar (0=Sun..6=Sat) — keep
+    // in sync with `schedule` above, which is the human-readable version
+    // used on the Institute page.
+    calendar: { daysOfWeek: [1, 2, 3, 4], time: "5:30 PM – 7:30 PM" },
     location: "5500 FM 2920 Rd, Spring, TX 77388",
     supervisors: ["Ustadh Shaykh Yousuf Ahmed", "Ustadha Sajida Lashkarwala"],
     price: "$75/month per child",
@@ -89,6 +93,7 @@ export const programs = [
     subtitle: "Weekend Islamic School Education",
     audience: "Children ages 5–12",
     schedule: "Sundays, 11:00 AM – 2:00 PM",
+    calendar: { daysOfWeek: [0], time: "11:00 AM – 2:00 PM" },
     location: "Masjid Ibrahim, 5500 Farm to Market 2920, Spring, TX 77388",
     description:
       "To nurture a love for Islam while building foundational knowledge in Quran, Islamic Studies, and Arabic in an engaging and developmentally appropriate manner.",
@@ -105,6 +110,7 @@ export const programs = [
     subtitle: "Youth Ministry for Brothers 13–25",
     audience: "Brothers ages 13–25",
     schedule: "Every Saturday from 3:30 PM",
+    calendar: { daysOfWeek: [6], time: "From 3:30 PM" },
     location: "5500 FM 2920, Spring, TX 77388 · 11815 Adel Rd, Houston, TX 77067",
     description:
       "Activities, halaqa, and food. For up-to-date locations and timings, join the WhatsApp group.",
@@ -150,64 +156,77 @@ export const testimonials = [
   },
 ];
 
-export type WeeklyEvent = {
+type CalendarEventBase = {
   slug: string;
   title: string;
-  /** Display string, e.g. "Friday, September 12" or "Every Saturday". */
-  date: string;
   /** e.g. "7:00 PM – 8:30 PM" or "After Maghrib". */
   time?: string;
   location?: string;
   description: string;
   /**
-   * The poster/flier graphic itself, if there is one. `alt` should describe
-   * the flier's content in words (screen readers can't read text baked into
-   * an image) — the card's title/date/time/description fields also carry
-   * that information as real text, so nothing here is image-only.
+   * The poster/flier graphic itself, if there is one — most entries won't
+   * have one. `alt` should describe the flier's content in words (screen
+   * readers can't read text baked into an image); title/time/description
+   * carry that information as real text regardless, so nothing here is
+   * image-only.
    */
   flier?: { src: string; alt: string };
-  /**
-   * ISO date (YYYY-MM-DD) of a one-off event, used only to drop it from the
-   * page automatically once it's past — see `weeklyEvents` filtering in
-   * events/page.tsx. Leave unset for recurring entries ("Every Friday")
-   * that should stay until someone removes them by hand.
-   */
-  eventDate?: string;
 };
 
+/** Repeats every week on the given days. */
+type RecurringCalendarEvent = CalendarEventBase & {
+  recurrence: "weekly";
+  /** 0 = Sunday .. 6 = Saturday. */
+  daysOfWeek: number[];
+};
+
+/** A single, specific-date happening. */
+type OneOffCalendarEvent = CalendarEventBase & {
+  recurrence: "once";
+  /** ISO date, YYYY-MM-DD. */
+  date: string;
+};
+
+export type CalendarEvent = RecurringCalendarEvent | OneOffCalendarEvent;
+
 /**
- * "This Week at Masjid Ibrahim" — content contract for both manual edits and
- * the automated flier-intake routine (see README.md "Flier intake") that
- * reads masjidfliers@gmail.com and appends entries here:
+ * "This Week at Masjid Ibrahim" — one-off and ad-hoc-recurring entries for
+ * the calendar (see WeekCalendar.tsx). The Institute's three core programs
+ * (Quran Maktab, WISE, YM Ibrahim, above) also appear on the calendar
+ * automatically via their own `calendar` field — don't duplicate them here.
  *
  * - `slug` must be unique and URL/filename-safe (kebab-case).
- * - `date`/`time` are free-text display strings — write them the way a
- *   visitor should read them, not a machine format.
- * - `eventDate`, if the email gives a specific one-off date, as ISO
- *   YYYY-MM-DD — this is what lets a past event drop off automatically.
- *   Omit it for recurring/no-specific-date entries.
- * - A flier image attachment goes in `public/fliers/` (kebab-case
- *   filename) and is referenced as `flier: { src: "/fliers/whatever.jpg",
- *   alt: "..." }`. `alt` must describe the flier in words — never leave it
- *   as a filename or generic placeholder, since screen readers can't read
- *   text baked into the image itself.
- * - Replace or delete the two placeholder entries below whenever; the page
- *   (and its empty state) handles any length, including zero.
+ * - `time` is a free-text display string — write it the way a visitor
+ *   should read it, not a machine format.
+ * - `recurrence: "once"` + `date` (ISO YYYY-MM-DD) for a specific-date
+ *   happening — it only ever shows on the week containing that date, and
+ *   drops off on its own afterward.
+ * - `recurrence: "weekly"` + `daysOfWeek` for anything recurring that isn't
+ *   already one of the three core programs above (e.g. a weekly halaqa).
+ * - A flier image goes in `public/fliers/` (kebab-case filename) and is
+ *   referenced as `flier: { src: "/fliers/whatever.jpg", alt: "..." }`.
+ *   `alt` must describe the flier in words — never a filename or generic
+ *   placeholder. Most entries won't have a flier, and that's fine — the
+ *   calendar renders title/time/description either way.
+ * - Replace, add, or delete entries freely; the calendar handles any
+ *   length, including zero (recurring programs still show).
  */
-export const weeklyEvents: WeeklyEvent[] = [
+export const calendarEvents: CalendarEvent[] = [
   {
     slug: "placeholder-1",
     title: "Replace me — Friday Halaqa",
-    date: "Every Friday",
+    recurrence: "weekly",
+    daysOfWeek: [5],
     time: "After Maghrib",
     location: "Main Prayer Hall",
     description:
-      "Placeholder entry. Swap in this week's real flier and details, or delete this entry — see weeklyEvents in src/lib/site.ts.",
+      "Placeholder entry with no flier — plenty of real entries won't have one either. Edit or delete in src/lib/site.ts.",
   },
   {
     slug: "placeholder-2",
     title: "Replace me — Guest Speaker Night",
-    date: "Saturday, TBD",
+    recurrence: "once",
+    date: "2026-09-12",
     time: "7:00 PM – 8:30 PM",
     location: "Masjid Ibrahim",
     description:
@@ -215,13 +234,6 @@ export const weeklyEvents: WeeklyEvent[] = [
     flier: { src: "/fliers/placeholder.svg", alt: "Placeholder event flier" },
   },
 ];
-
-/** Drops one-off entries whose `eventDate` has passed; recurring entries
- * (no `eventDate`) always stay. */
-export function getActiveWeeklyEvents(referenceDate = new Date()): WeeklyEvent[] {
-  const today = referenceDate.toISOString().slice(0, 10);
-  return weeklyEvents.filter((event) => !event.eventDate || event.eventDate >= today);
-}
 
 export const galleryImages = [
   {
