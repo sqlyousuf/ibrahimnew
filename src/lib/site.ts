@@ -25,6 +25,8 @@ export const site = {
   },
   social: {
     youtube: "https://youtube.com/@masjidibrahimspring?si=kQO_mJbvC_37BC9f",
+    /** Live/past broadcast streams tab, used by the header's "Watch Live" button. */
+    youtubeLive: "https://www.youtube.com/@MasjidIbrahimSpring/streams",
     facebook: "https://www.facebook.com/KICMASJID",
     instagram: "https://www.instagram.com/masjid.ibrahim.spring.tx?igsh=NW51anNuZGcwdG9v",
   },

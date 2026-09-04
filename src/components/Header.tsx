@@ -11,6 +11,17 @@ const PRAYER_HREF = "/prayer-times";
 // Rendered separately as the featured entry in the phone menu.
 const otherLinks = navLinks.filter((link) => link.href !== PRAYER_HREF);
 
+function YouTubeGlyph({ className = "" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" className={className}>
+      <path
+        fill="currentColor"
+        d="M21.6 7.2a2.7 2.7 0 0 0-1.9-1.9C18 5 12 5 12 5s-6 0-7.7.3a2.7 2.7 0 0 0-1.9 1.9A28 28 0 0 0 2 12a28 28 0 0 0 .4 4.8 2.7 2.7 0 0 0 1.9 1.9C6 19 12 19 12 19s6 0 7.7-.3a2.7 2.7 0 0 0 1.9-1.9A28 28 0 0 0 22 12a28 28 0 0 0-.4-4.8ZM10 15V9l5 3-5 3Z"
+      />
+    </svg>
+  );
+}
+
 export default function Header() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
@@ -103,7 +114,7 @@ export default function Header() {
           </span>
         </Link>
 
-        <nav aria-label="Primary" className="hidden items-center gap-7 lg:flex xl:gap-8">
+        <nav aria-label="Primary" className="hidden items-center gap-4 lg:flex xl:gap-6">
           {navLinks.map((link) => {
             const active = pathname === link.href;
             return (
@@ -112,7 +123,7 @@ export default function Header() {
                 href={link.href}
                 transitionTypes={[link.href === "/" ? "nav-back" : "nav-forward"]}
                 aria-current={active ? "page" : undefined}
-                className={`group relative py-2 text-sm font-semibold uppercase tracking-wide transition-colors ${
+                className={`group relative whitespace-nowrap py-2 text-sm font-semibold uppercase tracking-wide transition-colors ${
                   active ? "text-gold-700" : "text-navy-800 hover:text-gold-700"
                 }`}
               >
@@ -129,12 +140,22 @@ export default function Header() {
           })}
         </nav>
 
-        <div className="hidden items-center gap-5 lg:flex">
+        <div className="hidden items-center gap-3 lg:flex xl:gap-5">
           <a
             href={site.contact.phoneHref}
-            className="text-sm font-semibold text-navy-800 transition-colors hover:text-gold-700"
+            className="hidden whitespace-nowrap text-sm font-semibold text-navy-800 transition-colors hover:text-gold-700 xl:inline"
           >
             {site.contact.phone}
+          </a>
+          <a
+            href={site.social.youtubeLive}
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Watch Live on YouTube"
+            aria-label="Watch live on YouTube"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-navy-900/15 text-navy-800 transition hover:border-red-600/40 hover:text-red-600"
+          >
+            <YouTubeGlyph className="h-4 w-4 shrink-0" />
           </a>
           <Link href="/donate" className="btn-primary">
             Donate
@@ -243,6 +264,15 @@ export default function Header() {
                 className="flex min-h-[3rem] items-center justify-center gap-2 rounded-full bg-cream-200 text-base font-semibold text-navy-900 transition-colors active:bg-cream-100"
               >
                 {site.contact.phone}
+              </a>
+              <a
+                href={site.social.youtubeLive}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex min-h-[3rem] items-center justify-center gap-2 rounded-full border border-navy-900/15 text-base font-semibold text-navy-800 transition-colors active:bg-cream-100"
+              >
+                <YouTubeGlyph className="h-4 w-4 shrink-0" />
+                Watch Live
               </a>
               <Link
                 href="/donate"

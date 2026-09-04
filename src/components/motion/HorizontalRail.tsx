@@ -6,11 +6,18 @@ import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { motionAllowed } from "@/lib/motionGate";
 
 /**
- * Pins the section and translates its inner row horizontally as the visitor
- * scrolls vertically — the site's signature "pinned rail" moment, used for
- * the Institute program showcase. Falls back to a plain horizontal-scroll
- * flex row (via the caller's own overflow-x styling) when motion is off, so
- * every card stays reachable either way.
+ * Sticky-based horizontal scroll — the site's signature "pinned rail"
+ * moment, used for the Institute program showcase. Falls back to a plain
+ * horizontal-scroll flex row (via the caller's own overflow-x styling) when
+ * motion is off, so every card stays reachable either way.
+ *
+ * Uses CSS `position: sticky`, not GSAP's `pin: true` — see the comment in
+ * HomeHero.tsx for why: ScrollTrigger's pin option inserts its own wrapper
+ * `<div>` into the DOM at runtime, which can desync from React's expected
+ * tree shape during a page-transition unmount and throw a `removeChild`
+ * error. The runway wrapper's height is set (and kept in sync on resize) to
+ * the sticky element's height plus the horizontal scroll distance, so
+ * scrolling through that extra height drives the track's translateX 1:1.
  */
 export default function HorizontalRail({
   children,
@@ -21,50 +28,60 @@ export default function HorizontalRail({
   className?: string;
   trackClassName?: string;
 }) {
-  const sectionRef = useRef<HTMLDivElement>(null);
+  const runwayRef = useRef<HTMLDivElement>(null);
+  const stickyRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const section = sectionRef.current;
+    const runway = runwayRef.current;
+    const sticky = stickyRef.current;
     const track = trackRef.current;
-    if (!section || !track) return;
+    if (!runway || !sticky || !track) return;
 
     if (!motionAllowed()) {
-      // No pin/scrub — let the row scroll natively so every card stays
+      // No scrub — let the row scroll natively so every card stays
       // reachable without GSAP.
       track.classList.add("overflow-x-auto", "snap-x", "snap-mandatory");
       return;
     }
 
     const ctx = gsap.context(() => {
-      const distance = () => track.scrollWidth - section.clientWidth;
+      const updateRunwayHeight = () => {
+        const dist = Math.max(track.scrollWidth - sticky.clientWidth, 0);
+        runway.style.height = `${sticky.offsetHeight + dist}px`;
+        return dist;
+      };
+
+      let distance = updateRunwayHeight();
 
       const trigger = ScrollTrigger.create({
-        trigger: section,
+        trigger: runway,
         start: "top top",
-        end: () => `+=${Math.max(distance(), 1)}`,
-        pin: true,
-        pinSpacing: true,
+        end: "bottom bottom",
         scrub: 1,
-        invalidateOnRefresh: true,
+        onRefreshInit: () => {
+          distance = updateRunwayHeight();
+        },
         onUpdate: (self) => {
-          gsap.set(track, { x: -distance() * self.progress });
+          gsap.set(track, { x: -distance * self.progress });
         },
       });
 
       return () => trigger.kill();
-    }, section);
+    }, runway);
 
     return () => ctx.revert();
   }, []);
 
   return (
-    <div ref={sectionRef} className={className}>
+    <div ref={runwayRef} className="relative">
       <div
-        ref={trackRef}
-        className={trackClassName ?? "flex gap-6 sm:gap-8"}
+        ref={stickyRef}
+        className={`sticky top-20 overflow-hidden ${className ?? ""}`}
       >
-        {children}
+        <div ref={trackRef} className={trackClassName ?? "flex gap-6 sm:gap-8"}>
+          {children}
+        </div>
       </div>
     </div>
   );
