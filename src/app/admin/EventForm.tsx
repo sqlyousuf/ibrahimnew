@@ -3,9 +3,13 @@
 import { useActionState, useState } from "react";
 import type { ChangeEvent } from "react";
 import Image from "next/image";
-import { upload } from "@vercel/blob/client";
 import { saveEvent } from "@/app/admin/actions";
 import type { CalendarEvent } from "@/lib/site";
+
+// Kept in sync with MAX_FLIER_BYTES in src/app/api/admin/upload/route.ts —
+// checked here too so an oversized file gets a clear message immediately
+// instead of waiting on a doomed upload.
+const MAX_FLIER_BYTES = 4 * 1024 * 1024;
 
 const DAYS = [
   { value: 0, label: "Sun" },
@@ -35,15 +39,24 @@ export default function EventForm({ initialEvent }: { initialEvent?: CalendarEve
     event.target.value = ""; // allow re-selecting the same file later
     if (!file) return;
 
+    if (file.size > MAX_FLIER_BYTES) {
+      setUploadError(
+        `That image is ${(file.size / (1024 * 1024)).toFixed(1)}MB — please use one under ${MAX_FLIER_BYTES / (1024 * 1024)}MB (most phone photos can be resized/compressed to fit).`,
+      );
+      return;
+    }
+
     setUploading(true);
     setUploadError(null);
     try {
-      const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
-      const blob = await upload(`fliers/${crypto.randomUUID()}.${ext}`, file, {
-        access: "public",
-        handleUploadUrl: "/api/admin/upload",
-      });
-      setFlierSrc(blob.url);
+      const body = new FormData();
+      body.set("file", file);
+      const res = await fetch("/api/admin/upload", { method: "POST", body });
+      const data: { src?: string; error?: string } = await res.json();
+      if (!res.ok || !data.src) {
+        throw new Error(data.error || "Upload failed. Please try again.");
+      }
+      setFlierSrc(data.src);
     } catch (err) {
       setUploadError(err instanceof Error ? err.message : "Upload failed. Please try again.");
     } finally {

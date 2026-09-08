@@ -1,44 +1,60 @@
+import { randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
-import { handleUpload } from "@vercel/blob/client";
-import type { HandleUploadBody } from "@vercel/blob/client";
+import { put } from "@vercel/blob";
 import { hasValidSession } from "@/lib/adminAuth";
 
+// Vercel's serverless functions cap the request body at roughly 4.5MB
+// regardless of framework config, so this is a hard ceiling, not just a
+// friendly suggestion — enforced both here and client-side in EventForm so
+// the admin gets a clear message before waiting on an upload that can't
+// succeed.
+export const MAX_FLIER_BYTES = 4 * 1024 * 1024;
+
 /**
- * Issues short-lived client tokens for flier uploads, so the browser can
- * upload straight to Vercel Blob instead of routing the file through a
- * Server Action — Server Actions cap request bodies at 1MB by default (and
- * Vercel's own function payload limit sits around 4.5MB regardless), which
- * a real photographed flier blows past easily. Every token request is
- * gated on the same admin session cookie everything else in /admin uses.
+ * Proxies flier uploads through this server rather than letting the browser
+ * upload directly to Vercel Blob. Vercel Blob's documented direct-upload
+ * flow (a client token + a browser-to-Blob PUT) is currently broken by a
+ * CORS bug on Vercel's own infrastructure — confirmed via their community
+ * forum, not something fixable from application code — so this proxies
+ * instead, landing on Vercel's ~4.5MB function-body ceiling rather than the
+ * unlimited size direct uploads would otherwise allow. Revisit direct
+ * uploads once that's fixed upstream.
  */
 export async function POST(request: Request): Promise<NextResponse> {
-  const body = (await request.json()) as HandleUploadBody;
+  if (!(await hasValidSession())) {
+    return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+  }
+
+  const formData = await request.formData();
+  const file = formData.get("file");
+
+  if (!(file instanceof File) || file.size === 0) {
+    return NextResponse.json({ error: "No file provided" }, { status: 400 });
+  }
+  if (!file.type.startsWith("image/")) {
+    return NextResponse.json({ error: "The flier must be an image file" }, { status: 400 });
+  }
+  if (file.size > MAX_FLIER_BYTES) {
+    return NextResponse.json(
+      { error: `That image is too large — please use one under ${MAX_FLIER_BYTES / (1024 * 1024)}MB.` },
+      { status: 413 },
+    );
+  }
+
+  const extMatch = /\.([a-zA-Z0-9]+)$/.exec(file.name);
+  const ext = extMatch ? extMatch[1].toLowerCase() : "jpg";
 
   try {
-    const jsonResponse = await handleUpload({
-      body,
-      request,
-      onBeforeGenerateToken: async (pathname) => {
-        if (!(await hasValidSession())) {
-          throw new Error("Not authenticated");
-        }
-        if (!pathname.startsWith("fliers/")) {
-          throw new Error("Invalid upload path");
-        }
-        return {
-          allowedContentTypes: ["image/*"],
-          addRandomSuffix: false,
-          allowOverwrite: false,
-          maximumSizeInBytes: 15 * 1024 * 1024,
-        };
-      },
+    const blob = await put(`fliers/${randomUUID()}.${ext}`, file, {
+      access: "public",
+      addRandomSuffix: false,
+      allowOverwrite: false,
     });
-
-    return NextResponse.json(jsonResponse);
+    return NextResponse.json({ src: blob.url });
   } catch (error) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Upload failed" },
-      { status: 400 },
+      { status: 500 },
     );
   }
 }
