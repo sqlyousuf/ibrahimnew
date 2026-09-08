@@ -105,9 +105,15 @@ export default function HomeHero({
         >
           {description}
         </p>
-        <div data-hero-item className="mt-6 flex justify-center sm:mt-10">
+        <div
+          data-hero-item
+          className="mt-6 flex flex-col items-center gap-3 sm:mt-10"
+        >
           <Link href={ctaHref} className="btn-primary w-full sm:w-auto">
             {ctaLabel}
+          </Link>
+          <Link href="/events" className="btn-primary w-full sm:w-auto">
+            This Week at Masjid Ibrahim
           </Link>
         </div>
       </div>
