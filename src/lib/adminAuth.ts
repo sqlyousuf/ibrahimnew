@@ -39,6 +39,13 @@ export async function verifySessionToken(token: string): Promise<boolean> {
   }
 }
 
+/** Read-only check, for contexts like Route Handlers where redirect() isn't the right tool. */
+export async function hasValidSession(): Promise<boolean> {
+  const store = await cookies();
+  const token = store.get(SESSION_COOKIE)?.value;
+  return token ? verifySessionToken(token) : false;
+}
+
 /**
  * Defense-in-depth check for Server Actions and admin pages — proxy.ts
  * already gates page navigation, but a Server Action can in principle be
@@ -46,10 +53,7 @@ export async function verifySessionToken(token: string): Promise<boolean> {
  * rather than trusting proxy.ts alone.
  */
 export async function requireSession(): Promise<void> {
-  const store = await cookies();
-  const token = store.get(SESSION_COOKIE)?.value;
-  const valid = token ? await verifySessionToken(token) : false;
-  if (!valid) {
+  if (!(await hasValidSession())) {
     redirect("/admin/login");
   }
 }

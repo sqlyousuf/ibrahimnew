@@ -4,12 +4,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import bcrypt from "bcryptjs";
 import { createSessionToken, requireSession, SESSION_COOKIE } from "@/lib/adminAuth";
-import {
-  getCalendarEvents,
-  saveCalendarEvents,
-  slugifyEventTitle,
-  uploadFlier,
-} from "@/lib/calendarStore";
+import { getCalendarEvents, saveCalendarEvents, slugifyEventTitle } from "@/lib/calendarStore";
 import type { CalendarEvent } from "@/lib/site";
 
 export type FormState = { error?: string } | undefined;
@@ -81,14 +76,17 @@ export async function saveEvent(_prevState: FormState, formData: FormData): Prom
   const description = String(formData.get("description") ?? "").trim();
   const recurrence = formData.get("recurrence") === "once" ? "once" : "weekly";
   const originalSlug = String(formData.get("originalSlug") ?? "");
-  const removeFlier = formData.get("removeFlier") === "on";
-  const existingFlierSrc = String(formData.get("existingFlierSrc") ?? "");
-  const existingFlierAlt = String(formData.get("existingFlierAlt") ?? "");
-  const flierAltInput = String(formData.get("flierAlt") ?? "").trim();
-  const flierFile = formData.get("flier");
+  // The flier, if any, was already uploaded straight to Blob from the
+  // browser (see EventForm's handleFlierChange / /api/admin/upload) — this
+  // field just carries the resulting URL, never the file itself.
+  const flierSrc = String(formData.get("flierSrc") ?? "").trim();
+  const flierAlt = String(formData.get("flierAlt") ?? "").trim();
 
   if (!title) return { error: "Title is required." };
   if (!description) return { error: "Description is required." };
+  if (flierSrc && !flierAlt) {
+    return { error: "A flier description (alt text) is required when a flier is attached." };
+  }
 
   let events: CalendarEvent[];
   try {
@@ -97,21 +95,7 @@ export async function saveEvent(_prevState: FormState, formData: FormData): Prom
     return { error: "Couldn't reach storage. Please try again in a moment." };
   }
 
-  let flier: { src: string; alt: string } | undefined;
-  if (!removeFlier) {
-    if (flierFile instanceof File && flierFile.size > 0) {
-      if (!flierAltInput) {
-        return { error: "A flier description (alt text) is required when uploading a flier." };
-      }
-      try {
-        flier = await uploadFlier(flierFile, flierAltInput);
-      } catch {
-        return { error: "Couldn't upload the flier. Please try again." };
-      }
-    } else if (existingFlierSrc) {
-      flier = { src: existingFlierSrc, alt: existingFlierAlt };
-    }
-  }
+  const flier = flierSrc ? { src: flierSrc, alt: flierAlt } : undefined;
 
   const base = {
     title,

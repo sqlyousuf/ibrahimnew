@@ -5,9 +5,13 @@
  * `calendarEvents`. Whole-file overwrite on every save: fine at this scale
  * (a handful of entries, occasional edits by a small team) — not worth a
  * real database's concurrency machinery.
+ *
+ * Flier images are uploaded separately, straight from the browser to Blob
+ * (see src/app/api/admin/upload/route.ts and EventForm.tsx) rather than
+ * through a helper here — routing a multi-MB photo through a Server Action
+ * hits Next's 1MB default body limit.
  */
 
-import { randomUUID } from "node:crypto";
 import { head, put } from "@vercel/blob";
 import type { CalendarEvent } from "@/lib/site";
 
@@ -33,18 +37,6 @@ export async function saveCalendarEvents(events: CalendarEvent[]): Promise<void>
     addRandomSuffix: false,
     allowOverwrite: true,
   });
-}
-
-/** Uploads a flier image and returns its public URL. `alt` is supplied by the caller — see the CalendarEvent doc comment on why it must be real, descriptive text. */
-export async function uploadFlier(file: File, alt: string): Promise<{ src: string; alt: string }> {
-  const extMatch = /\.([a-zA-Z0-9]+)$/.exec(file.name);
-  const ext = extMatch ? extMatch[1].toLowerCase() : "jpg";
-  const blob = await put(`fliers/${randomUUID()}.${ext}`, file, {
-    access: "public",
-    addRandomSuffix: false,
-    allowOverwrite: false,
-  });
-  return { src: blob.url, alt };
 }
 
 /** kebab-case, collision-safe against the current list. */

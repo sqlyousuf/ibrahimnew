@@ -1,7 +1,9 @@
 "use client";
 
 import { useActionState, useState } from "react";
+import type { ChangeEvent } from "react";
 import Image from "next/image";
+import { upload } from "@vercel/blob/client";
 import { saveEvent } from "@/app/admin/actions";
 import type { CalendarEvent } from "@/lib/site";
 
@@ -24,8 +26,30 @@ export default function EventForm({ initialEvent }: { initialEvent?: CalendarEve
   const [recurrence, setRecurrence] = useState<"weekly" | "once">(
     initialEvent?.recurrence ?? "weekly",
   );
-  const [removeFlier, setRemoveFlier] = useState(false);
-  const hasExistingFlier = !!initialEvent?.flier && !removeFlier;
+  const [flierSrc, setFlierSrc] = useState(initialEvent?.flier?.src ?? "");
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+
+  async function handleFlierChange(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    event.target.value = ""; // allow re-selecting the same file later
+    if (!file) return;
+
+    setUploading(true);
+    setUploadError(null);
+    try {
+      const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
+      const blob = await upload(`fliers/${crypto.randomUUID()}.${ext}`, file, {
+        access: "public",
+        handleUploadUrl: "/api/admin/upload",
+      });
+      setFlierSrc(blob.url);
+    } catch (err) {
+      setUploadError(err instanceof Error ? err.message : "Upload failed. Please try again.");
+    } finally {
+      setUploading(false);
+    }
+  }
 
   return (
     <form action={formAction} className="card space-y-5 p-6 sm:p-8">
@@ -148,38 +172,40 @@ export default function EventForm({ initialEvent }: { initialEvent?: CalendarEve
       <div>
         <label className={labelClass}>Flier (optional)</label>
 
-        {hasExistingFlier && initialEvent?.flier && (
+        {flierSrc && (
           <div className="mt-2 flex items-center gap-4">
             <div className="relative h-20 w-16 overflow-hidden rounded-md ring-1 ring-navy-900/10">
-              <Image
-                src={initialEvent.flier.src}
-                alt=""
-                fill
-                className="object-cover"
-                sizes="64px"
-              />
+              <Image src={flierSrc} alt="" fill className="object-cover" sizes="64px" />
             </div>
-            <label className="flex items-center gap-2 text-sm text-navy-700">
-              <input
-                type="checkbox"
-                checked={removeFlier}
-                onChange={(e) => setRemoveFlier(e.target.checked)}
-              />
+            <button
+              type="button"
+              onClick={() => setFlierSrc("")}
+              className="text-sm font-semibold text-red-600 hover:underline"
+            >
               Remove this flier
-            </label>
-            <input type="hidden" name="existingFlierSrc" value={initialEvent.flier.src} />
-            <input type="hidden" name="existingFlierAlt" value={initialEvent.flier.alt} />
+            </button>
           </div>
         )}
 
+        <input type="hidden" name="flierSrc" value={flierSrc} />
+
+        {/* Uploads straight to Blob from the browser (see handleFlierChange) —
+            not through the form submission, since a real photographed flier
+            easily exceeds the 1MB default Server Action body limit. */}
         <input
-          name="flier"
           type="file"
           accept="image/*"
+          disabled={uploading}
+          onChange={handleFlierChange}
           className="mt-2 block w-full text-sm text-navy-700"
         />
+        {uploading && <p className="mt-1.5 text-xs text-navy-500">Uploading…</p>}
+        {uploadError && (
+          <p className="mt-1.5 text-xs font-medium text-red-600">{uploadError}</p>
+        )}
+
         <label htmlFor="flierAlt" className={`${labelClass} mt-3 block`}>
-          Flier description (for accessibility — required if uploading a flier)
+          Flier description (for accessibility — required if a flier is attached)
         </label>
         <input
           id="flierAlt"
@@ -198,7 +224,7 @@ export default function EventForm({ initialEvent }: { initialEvent?: CalendarEve
       )}
 
       <div className="flex gap-3">
-        <button type="submit" disabled={pending} className="btn-primary">
+        <button type="submit" disabled={pending || uploading} className="btn-primary">
           {pending ? "Saving…" : initialEvent ? "Save Changes" : "Create Entry"}
         </button>
         <a href="/admin" className="btn-outline-navy">
