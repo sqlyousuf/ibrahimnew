@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { PatternField } from "@/components/Ornament";
 import Reveal from "@/components/Reveal";
 import CinematicImage from "@/components/motion/CinematicImage";
@@ -12,7 +13,8 @@ export default function PageHero({
 }: {
   eyebrow?: string;
   title: string;
-  description?: string;
+  /** Plain text, or JSX (e.g. for inline emphasis like <strong>). */
+  description?: ReactNode;
   image: string;
   imageAlt: string;
   /**

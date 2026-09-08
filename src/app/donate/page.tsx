@@ -31,7 +31,20 @@ export default function DonatePage() {
     <PageTransition>
       <PageHero
         title="Support Masjid Ibrahim"
-        description="With your generous contributions, we can continue expanding our services, maintaining our facilities, and offering valuable programs to our community."
+        description={
+          <>
+            Your support helps strengthen our masjid, expand community
+            programs, and serve families for generations to come.{" "}
+            <strong className="font-semibold text-white">
+              American Waqf Foundation
+            </strong>{" "}
+            is a tax-exempt charitable organization in{" "}
+            <strong className="font-semibold text-white">
+              Spring, Texas (EIN 84-2645759)
+            </strong>
+            .
+          </>
+        }
         image="https://images.unsplash.com/photo-1593113646773-028c64a8f1b8?auto=format&fit=crop&w=2000&q=80"
         imageAlt="Volunteers preparing boxes of donated goods"
         imagePosition="object-center"
