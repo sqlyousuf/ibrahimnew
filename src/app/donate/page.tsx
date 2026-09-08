@@ -50,7 +50,7 @@ export default function DonatePage() {
         imagePosition="object-center"
       />
 
-      <section className="section container-page max-w-5xl">
+      <section className="container-page max-w-5xl pb-16 pt-8 sm:pb-20 sm:pt-10 lg:pb-28 lg:pt-14">
         <Reveal>
           <div className="relative overflow-hidden rounded-3xl bg-navy-900 p-6 text-cream-100 shadow-panel ring-1 ring-white/10 sm:p-8 lg:p-10">
             <PatternField opacity={0.07} />
