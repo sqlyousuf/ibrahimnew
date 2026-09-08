@@ -127,6 +127,9 @@ export default function Footer() {
           <Link href="/donate" className="btn-primary mt-5 w-full sm:w-auto">
             Donate Now
           </Link>
+          <Link href="/events" className="btn-primary mt-3 w-full sm:w-auto">
+            Events This Week
+          </Link>
         </div>
       </div>
 

@@ -39,23 +39,34 @@ export default function DonatePage() {
       />
 
       <section className="section container-page max-w-5xl">
-        <div className="grid gap-5 sm:grid-cols-3 sm:gap-6">
-          {causes.map((cause, i) => (
-            <Reveal key={cause.title} delay={i * 80} className="h-full">
-              <div className="card h-full p-5 sm:p-6">
-                <StarGlyph className="h-5 w-5 text-gold-500" />
-                <h2 className="mt-3 font-display text-lg font-semibold text-navy-900">
-                  {cause.title}
-                </h2>
-                <p className="mt-2 text-sm leading-relaxed text-navy-700">
-                  {cause.body}
-                </p>
-              </div>
-            </Reveal>
-          ))}
-        </div>
+        <Reveal>
+          <div className="relative overflow-hidden rounded-3xl bg-navy-900 p-6 text-cream-100 shadow-panel ring-1 ring-white/10 sm:p-8 lg:p-10">
+            <PatternField opacity={0.07} />
+            <div className="relative">
+              <p className="section-eyebrow text-gold-300 before:bg-gold-400">
+                Give Online
+              </p>
+              <h2 className="mt-3 font-display text-display-sm font-semibold text-white">
+                Secure Online Donation
+              </h2>
+              <p className="mt-4 leading-relaxed text-cream-100/80">
+                Give a one-time or recurring donation securely online. Every
+                contribution goes directly toward sustaining our masjid and
+                Institute.
+              </p>
+              <a
+                href={site.donate.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-primary mt-7 w-full sm:w-auto"
+              >
+                Donate Online
+              </a>
+            </div>
+          </div>
+        </Reveal>
 
-        <Reveal className="mt-10 lg:mt-14">
+        <Reveal className="mt-6 lg:mt-8">
           <div className="relative overflow-hidden rounded-3xl bg-gold-500 p-6 text-navy-950 shadow-panel sm:p-8 lg:p-10">
             <PatternField opacity={0.1} />
             <div className="relative sm:flex sm:items-center sm:justify-between sm:gap-8">
@@ -79,57 +90,44 @@ export default function DonatePage() {
           </div>
         </Reveal>
 
-        <div className="mt-6 grid gap-6 lg:grid-cols-2 lg:gap-8">
-          <Reveal className="h-full">
-            <div className="relative h-full overflow-hidden rounded-3xl bg-navy-900 p-6 text-cream-100 shadow-panel ring-1 ring-white/10 sm:p-8 lg:p-10">
-              <PatternField opacity={0.07} />
-              <div className="relative">
-                <p className="section-eyebrow text-gold-300 before:bg-gold-400">
-                  Give Online
-                </p>
-                <h2 className="mt-3 font-display text-display-sm font-semibold text-white">
-                  Secure Online Donation
-                </h2>
-                <p className="mt-4 leading-relaxed text-cream-100/80">
-                  Give a one-time or recurring donation securely online. Every
-                  contribution goes directly toward sustaining our masjid and
-                  Institute.
-                </p>
-                <a
-                  href={site.donate.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn-primary mt-7 w-full sm:w-auto"
-                >
-                  Donate Online
-                </a>
-              </div>
-            </div>
-          </Reveal>
-
-          <Reveal delay={80} className="h-full">
-            <div className="card h-full p-6 sm:p-8 lg:p-10">
-              <p className="section-eyebrow">Give by Zelle</p>
-              <h2 className="mt-3 font-display text-display-sm font-semibold text-navy-900">
-                Zelle Transfer
-              </h2>
-              <p className="mt-4 leading-relaxed text-navy-700">
-                You can also send your donation directly via Zelle &mdash; no
-                fees, 100% goes to the masjid.
+        <Reveal className="mt-6 lg:mt-8">
+          <div className="card p-6 sm:p-8 lg:p-10">
+            <p className="section-eyebrow">Give by Zelle</p>
+            <h2 className="mt-3 font-display text-display-sm font-semibold text-navy-900">
+              Zelle Transfer
+            </h2>
+            <p className="mt-4 leading-relaxed text-navy-700">
+              You can also send your donation directly via Zelle &mdash; no
+              fees, 100% goes to the masjid.
+            </p>
+            {/* Stacked block rather than an inline pill: the address is a
+                single 28-character token that cannot wrap, and the old pill
+                overflowed the viewport at 375px. */}
+            <div className="mt-7 max-w-sm rounded-2xl bg-cream-200 p-4 ring-1 ring-navy-900/5 sm:p-5">
+              <p className="text-[0.625rem] font-semibold uppercase tracking-[0.18em] text-gold-700">
+                Zelle Recipient
               </p>
-              {/* Stacked block rather than an inline pill: the address is a
-                  single 28-character token that cannot wrap, and the old pill
-                  overflowed the viewport at 375px. */}
-              <div className="mt-7 rounded-2xl bg-cream-200 p-4 ring-1 ring-navy-900/5 sm:p-5">
-                <p className="text-[0.625rem] font-semibold uppercase tracking-[0.18em] text-gold-700">
-                  Zelle Recipient
-                </p>
-                <p className="mt-1.5 break-all font-semibold text-navy-900">
-                  {site.donate.zelle}
+              <p className="mt-1.5 break-all font-semibold text-navy-900">
+                {site.donate.zelle}
+              </p>
+            </div>
+          </div>
+        </Reveal>
+
+        <div className="mt-10 grid gap-5 sm:grid-cols-3 sm:gap-6 lg:mt-14">
+          {causes.map((cause, i) => (
+            <Reveal key={cause.title} delay={i * 80} className="h-full">
+              <div className="card h-full p-5 sm:p-6">
+                <StarGlyph className="h-5 w-5 text-gold-500" />
+                <h2 className="mt-3 font-display text-lg font-semibold text-navy-900">
+                  {cause.title}
+                </h2>
+                <p className="mt-2 text-sm leading-relaxed text-navy-700">
+                  {cause.body}
                 </p>
               </div>
-            </div>
-          </Reveal>
+            </Reveal>
+          ))}
         </div>
 
         <p className="measure mx-auto mt-10 text-center text-sm leading-relaxed text-navy-700/90">

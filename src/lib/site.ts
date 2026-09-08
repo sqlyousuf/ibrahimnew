@@ -117,8 +117,10 @@ export const programs = [
     price: "Free",
     cta: "Join WhatsApp Group",
     enrollUrl: "https://chat.whatsapp.com/KjXpwInKxQiH6Ha6Z2Vr3O",
+    // A minaret against the sky, not a photo of the brothers themselves —
+    // keeps the card generic/Islamic rather than tied to specific faces.
     image:
-      "https://images.unsplash.com/photo-1779903596788-0004e2a2680c?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1755518346374-8698aef237b8?auto=format&fit=crop&w=1200&q=80",
   },
 ];
 

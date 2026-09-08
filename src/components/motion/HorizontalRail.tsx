@@ -1,23 +1,22 @@
 "use client";
 
-import { useEffect, useRef } from "react";
 import type { ReactNode } from "react";
-import { gsap, ScrollTrigger } from "@/lib/gsap";
-import { motionAllowed } from "@/lib/motionGate";
+import Reveal from "@/components/Reveal";
 
 /**
- * Sticky-based horizontal scroll — the site's signature "pinned rail"
- * moment, used for the Institute program showcase. Falls back to a plain
- * horizontal-scroll flex row (via the caller's own overflow-x styling) when
- * motion is off, so every card stays reachable either way.
+ * A horizontally-scrollable row (native `overflow-x`, with scroll-snap for
+ * a tidy stopping point per card) — used for the Institute program
+ * showcase. Every card is always reachable by a plain swipe/scroll,
+ * regardless of motion preference.
  *
- * Uses CSS `position: sticky`, not GSAP's `pin: true` — see the comment in
- * HomeHero.tsx for why: ScrollTrigger's pin option inserts its own wrapper
- * `<div>` into the DOM at runtime, which can desync from React's expected
- * tree shape during a page-transition unmount and throw a `removeChild`
- * error. The runway wrapper's height is set (and kept in sync on resize) to
- * the sticky element's height plus the horizontal scroll distance, so
- * scrolling through that extra height drives the track's translateX 1:1.
+ * This used to scroll horizontally in lockstep with vertical scroll,
+ * pinned via `position: sticky` while the user scrolled through it. That
+ * broke under this page's `<ViewTransition>` wrapper — sticky silently
+ * stopped engaging (see the fuller writeup in HomeHero.tsx, which hit the
+ * same issue) — and GSAP's `pin: true` has its own DOM-mutation conflict
+ * with React's unmount there too. Rather than chase a third pinning
+ * strategy, this just scrolls natively; Reveal still gives it a fade-in
+ * entrance so it doesn't feel static.
  */
 export default function HorizontalRail({
   children,
@@ -28,61 +27,13 @@ export default function HorizontalRail({
   className?: string;
   trackClassName?: string;
 }) {
-  const runwayRef = useRef<HTMLDivElement>(null);
-  const stickyRef = useRef<HTMLDivElement>(null);
-  const trackRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const runway = runwayRef.current;
-    const sticky = stickyRef.current;
-    const track = trackRef.current;
-    if (!runway || !sticky || !track) return;
-
-    if (!motionAllowed()) {
-      // No scrub — let the row scroll natively so every card stays
-      // reachable without GSAP.
-      track.classList.add("overflow-x-auto", "snap-x", "snap-mandatory");
-      return;
-    }
-
-    const ctx = gsap.context(() => {
-      const updateRunwayHeight = () => {
-        const dist = Math.max(track.scrollWidth - sticky.clientWidth, 0);
-        runway.style.height = `${sticky.offsetHeight + dist}px`;
-        return dist;
-      };
-
-      let distance = updateRunwayHeight();
-
-      const trigger = ScrollTrigger.create({
-        trigger: runway,
-        start: "top top",
-        end: "bottom bottom",
-        scrub: 1,
-        onRefreshInit: () => {
-          distance = updateRunwayHeight();
-        },
-        onUpdate: (self) => {
-          gsap.set(track, { x: -distance * self.progress });
-        },
-      });
-
-      return () => trigger.kill();
-    }, runway);
-
-    return () => ctx.revert();
-  }, []);
-
   return (
-    <div ref={runwayRef} className="relative">
+    <Reveal className={className}>
       <div
-        ref={stickyRef}
-        className={`sticky top-20 overflow-hidden ${className ?? ""}`}
+        className={`overflow-x-auto snap-x snap-mandatory ${trackClassName ?? "flex gap-6 sm:gap-8"}`}
       >
-        <div ref={trackRef} className={trackClassName ?? "flex gap-6 sm:gap-8"}>
-          {children}
-        </div>
+        {children}
       </div>
-    </div>
+    </Reveal>
   );
 }
