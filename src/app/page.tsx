@@ -19,7 +19,7 @@ export default function HomePage() {
     <PageTransition>
       <HomeHero
         eyebrow={`Welcome to ${site.name}`}
-        title="A Place of Worship, Learning & Community"
+        title="Pray Together. Learn Together. Grow Together."
         description="Serving Spring, Texas with daily salah, Islamic education, and a welcoming home for families to grow in faith together."
         ctaLabel="Support the Masjid"
         ctaHref="/donate"
