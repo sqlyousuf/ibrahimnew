@@ -30,7 +30,6 @@ export default function DonatePage() {
   return (
     <PageTransition>
       <PageHero
-        eyebrow="Sadaqah & Zakat"
         title="Support Masjid Ibrahim"
         description="With your generous contributions, we can continue expanding our services, maintaining our facilities, and offering valuable programs to our community."
         image="https://images.unsplash.com/photo-1593113646773-028c64a8f1b8?auto=format&fit=crop&w=2000&q=80"
