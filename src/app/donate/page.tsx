@@ -45,8 +45,8 @@ export default function DonatePage() {
             .
           </>
         }
-        image="https://images.unsplash.com/photo-1593113646773-028c64a8f1b8?auto=format&fit=crop&w=2000&q=80"
-        imageAlt="Volunteers preparing boxes of donated goods"
+        image="https://images.unsplash.com/photo-1758618079913-b6b631637ad9?auto=format&fit=crop&w=2000&q=80"
+        imageAlt="The dome and minaret of a mosque against an open sky"
         imagePosition="object-center"
       />
 
