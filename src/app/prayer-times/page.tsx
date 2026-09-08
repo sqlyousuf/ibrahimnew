@@ -96,9 +96,12 @@ export default function PrayerTimesPage() {
               until the next scheduled change.
             </p>
 
-            <div className="mt-6 overflow-hidden rounded-2xl bg-white shadow-soft ring-1 ring-navy-900/5">
+            <div className="relative mt-6 overflow-hidden rounded-2xl bg-white shadow-soft ring-1 ring-navy-900/5">
               {/* Scrolls inside its own container rather than pushing the page
-                  sideways on a narrow phone. */}
+                  sideways on a narrow phone. Below sm, the table (36rem min)
+                  is wider than the viewport, so Maghrib/Isha sit off to the
+                  right with nothing else hinting they're there — this fade
+                  is the only cue to swipe for them. */}
               <div className="overflow-x-auto">
                 <table className="w-full min-w-[36rem] text-left text-sm">
                   <caption className="sr-only">
@@ -153,6 +156,11 @@ export default function PrayerTimesPage() {
                   </tbody>
                 </table>
               </div>
+
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-white to-transparent sm:hidden"
+              />
             </div>
           </Reveal>
         )}

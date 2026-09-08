@@ -327,6 +327,21 @@ html[data-menu-open="true"] .prayer-quick-bar {
   pointer-events: none;
 }
 
+/* The header and prayer bar both use backdrop-filter, which can composite
+   above the gallery lightbox's fixed overlay regardless of z-index (see
+   GalleryLightbox.tsx) — so hide them outright while it's open rather than
+   relying on stacking order. */
+html[data-lightbox-open="true"] header {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 200ms ease-entrance;
+}
+html[data-lightbox-open="true"] .prayer-quick-bar {
+  transform: translateY(110%);
+  opacity: 0;
+  pointer-events: none;
+}
+
 /* ---------------------------------------------------------------------------
    Scroll reveal
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
 import Reveal from "@/components/Reveal";
 
@@ -27,6 +28,13 @@ export default function GalleryLightbox({
 
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+    // The sticky header and fixed prayer bar both use backdrop-filter, which
+    // promotes them to their own compositing layer — in both Chromium and
+    // WebKit that layer can render above a fixed overlay mounted afterward,
+    // regardless of z-index (same class of bug already worked around for
+    // the phone menu via data-menu-open in globals.css). Reuse that pattern
+    // here instead of fighting z-index for something z-index can't fix.
+    document.documentElement.dataset.lightboxOpen = "true";
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") setOpenIndex(null);
     };
@@ -34,6 +42,7 @@ export default function GalleryLightbox({
 
     return () => {
       document.body.style.overflow = previousOverflow;
+      document.documentElement.dataset.lightboxOpen = "false";
       window.removeEventListener("keydown", onKey);
     };
   }, [openIndex]);
@@ -76,33 +85,35 @@ export default function GalleryLightbox({
         })}
       </div>
 
-      {openIndex !== null && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-label={images[openIndex].alt}
-          className="fixed inset-0 z-[250] flex animate-fade-up items-center justify-center bg-navy-975/95 p-4 duration-300 sm:p-10"
-          onClick={() => setOpenIndex(null)}
-        >
-          <Image
-            src={images[openIndex].src}
-            alt={images[openIndex].alt}
-            width={1600}
-            height={1200}
-            sizes="90vw"
-            className="cinematic-photo max-h-[85vh] w-auto max-w-full rounded-lg object-contain shadow-panel"
-            onClick={(e) => e.stopPropagation()}
-          />
-          <button
-            type="button"
+      {openIndex !== null &&
+        createPortal(
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label={images[openIndex].alt}
+            className="fixed inset-0 z-[250] flex animate-fade-up items-center justify-center bg-navy-975/95 p-4 duration-300 sm:p-10"
             onClick={() => setOpenIndex(null)}
-            aria-label="Close"
-            className="absolute right-5 top-5 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-xl leading-none text-white transition hover:bg-white/20"
           >
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-      )}
+            <Image
+              src={images[openIndex].src}
+              alt={images[openIndex].alt}
+              width={1600}
+              height={1200}
+              sizes="90vw"
+              className="cinematic-photo max-h-[85vh] w-auto max-w-full rounded-lg object-contain shadow-panel"
+              onClick={(e) => e.stopPropagation()}
+            />
+            <button
+              type="button"
+              onClick={() => setOpenIndex(null)}
+              aria-label="Close"
+              className="absolute right-5 top-5 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-xl leading-none text-white transition hover:bg-white/20"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>,
+          document.body,
+        )}
     </>
   );
 }
