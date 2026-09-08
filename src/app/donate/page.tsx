@@ -79,30 +79,6 @@ export default function DonatePage() {
         </Reveal>
 
         <Reveal className="mt-6 lg:mt-8">
-          <div className="relative overflow-hidden rounded-3xl bg-gold-500 p-6 text-navy-950 shadow-panel sm:p-8 lg:p-10">
-            <PatternField opacity={0.1} />
-            <div className="relative sm:flex sm:items-center sm:justify-between sm:gap-8">
-              <div>
-                <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.18em] text-navy-800">
-                  Active Campaign &middot; {site.donate.campaign.name}
-                </p>
-                <h2 className="mt-2 font-display text-xl font-semibold sm:text-2xl">
-                  {site.donate.campaign.description}
-                </h2>
-              </div>
-              <a
-                href={site.donate.campaign.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-6 inline-flex min-h-[3rem] w-full items-center justify-center rounded-full bg-navy-950 px-7 text-sm font-semibold uppercase tracking-wide text-cream-100 transition hover:bg-navy-900 sm:mt-0 sm:w-auto sm:shrink-0"
-              >
-                Give to This Campaign
-              </a>
-            </div>
-          </div>
-        </Reveal>
-
-        <Reveal className="mt-6 lg:mt-8">
           <div className="card p-6 sm:p-8 lg:p-10">
             <p className="section-eyebrow">Give by Zelle</p>
             <h2 className="mt-3 font-display text-display-sm font-semibold text-navy-900">
