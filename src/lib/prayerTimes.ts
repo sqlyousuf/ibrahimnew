@@ -1,30 +1,21 @@
 /**
- * Composition layer pairing the two prayer datasets into the board format a
- * masjid actually displays: Adhan (when the prayer window starts) next to
- * Iqamah (when the congregation stands).
- *
- * `./salahTimes` supplies Adhan, `./iqamah` supplies Iqamah. Both are plain
- * data modules; all the joining logic lives here.
+ * Composition layer pairing Masjidal's Adhan and Iqamah data into the board
+ * format a masjid actually displays. `./masjidal` supplies the raw per-day
+ * timings; all the joining/formatting logic lives here.
  */
 
 import {
-  formatMaghribOffset,
-  getCurrentIqamah,
-  getMasjidDateKey,
-  MASJID_TIMEZONE,
-  type IqamahRecord,
-} from "./iqamah";
-import {
-  getStartTimesFor,
-  getTodayStartTimes,
-  type SalahStartTimes,
-} from "./salahTimes";
+  fetchMasjidalDay,
+  fetchMasjidalWeek,
+  type MasjidalDayTimings,
+} from "./masjidal";
+import { getMasjidDateKey, MASJID_TIMEZONE } from "./iqamah";
 
-export { MASJID_TIMEZONE };
+export { MASJID_TIMEZONE, getMasjidDateKey };
 
 export type PrayerRow = {
   name: string;
-  /** Start of the prayer window. Null if the calendar has no entry. */
+  /** Start of the prayer window. Null if the data wasn't available. */
   adhan: string | null;
   /** When the congregation stands. */
   iqamah: string | null;
@@ -44,25 +35,22 @@ function toMinutes(time: string): number | null {
   return (hour + (isPm ? 12 : 0)) * 60 + minute;
 }
 
-/** Formats minutes past midnight as "8:10 PM". */
-function fromMinutes(total: number): string {
-  const wrapped = ((total % 1440) + 1440) % 1440;
-  const hour24 = Math.floor(wrapped / 60);
-  const minute = wrapped % 60;
-  const hour12 = hour24 % 12 === 0 ? 12 : hour24 % 12;
-  const suffix = hour24 < 12 ? "AM" : "PM";
-  return `${hour12}:${String(minute).padStart(2, "0")} ${suffix}`;
+/** Minutes between two "H:MM AM/PM" times, wrapping past midnight. Null if either is unparseable. */
+function diffMinutes(from: string, to: string): number | null {
+  const a = toMinutes(from);
+  const b = toMinutes(to);
+  if (a === null || b === null) return null;
+  return ((b - a + 1440) % 1440);
 }
 
-/** Normalises "05:55 AM" to "5:55 AM" so both datasets render alike. */
+export function formatMaghribOffset(minutes: number): string {
+  return `${minutes} min after Adhan`;
+}
+
+/** Masjidal already formats times as "5:55 AM" with no leading zero — this
+ * is an identity pass-through kept so callers don't need to know that. */
 export function formatTime(time: string): string {
-  const minutes = toMinutes(time);
-  return minutes === null ? time : fromMinutes(minutes);
-}
-
-export function addMinutes(time: string, minutes: number): string | null {
-  const base = toMinutes(time);
-  return base === null ? null : fromMinutes(base + minutes);
+  return time;
 }
 
 export type PrayerBoard = {
@@ -70,63 +58,51 @@ export type PrayerBoard = {
   /** Informational — the end of the Fajr window, not a prayer. */
   sunrise: string | null;
   jummah: string[];
-  iqamahRecord: IqamahRecord;
-  startTimes: SalahStartTimes | null;
+  /** Minutes between Maghrib Adhan and Iqamah, when both are known. */
+  maghribOffsetMinutes: number | null;
 };
 
-/**
- * Today's full board. Maghrib's iqamah is derived by applying the record's
- * offset to today's Maghrib adhan, so it shows a real clock time rather than
- * only a rule — with the rule kept as a note.
- */
-export function getPrayerBoard(date: Date = new Date()): PrayerBoard {
-  const iqamahRecord = getCurrentIqamah(date);
-  const startTimes = getTodayStartTimes(date);
+function boardFromDay(day: MasjidalDayTimings | null): PrayerBoard {
+  if (!day) {
+    return {
+      rows: ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"].map((name) => ({
+        name,
+        adhan: null,
+        iqamah: null,
+        iqamahNote: null,
+      })),
+      sunrise: null,
+      jummah: [],
+      maghribOffsetMinutes: null,
+    };
+  }
 
-  const maghribIqamah = startTimes
-    ? addMinutes(startTimes.maghrib, iqamahRecord.maghribOffsetMinutes)
-    : null;
+  const maghribOffset = diffMinutes(day.salah.maghrib, day.iqamah.maghrib);
 
   const rows: PrayerRow[] = [
-    {
-      name: "Fajr",
-      adhan: startTimes ? formatTime(startTimes.fajr) : null,
-      iqamah: formatTime(iqamahRecord.fajr),
-      iqamahNote: null,
-    },
-    {
-      name: "Dhuhr",
-      adhan: startTimes ? formatTime(startTimes.dhuhr) : null,
-      iqamah: formatTime(iqamahRecord.dhuhr),
-      iqamahNote: null,
-    },
-    {
-      name: "Asr",
-      adhan: startTimes ? formatTime(startTimes.asr) : null,
-      iqamah: formatTime(iqamahRecord.asr),
-      iqamahNote: null,
-    },
+    { name: "Fajr", adhan: day.salah.fajr, iqamah: day.iqamah.fajr, iqamahNote: null },
+    { name: "Dhuhr", adhan: day.salah.zuhr, iqamah: day.iqamah.zuhr, iqamahNote: null },
+    { name: "Asr", adhan: day.salah.asr, iqamah: day.iqamah.asr, iqamahNote: null },
     {
       name: "Maghrib",
-      adhan: startTimes ? formatTime(startTimes.maghrib) : null,
-      iqamah: maghribIqamah,
-      iqamahNote: formatMaghribOffset(iqamahRecord.maghribOffsetMinutes),
+      adhan: day.salah.maghrib,
+      iqamah: day.iqamah.maghrib,
+      iqamahNote: maghribOffset !== null ? formatMaghribOffset(maghribOffset) : null,
     },
-    {
-      name: "Isha",
-      adhan: startTimes ? formatTime(startTimes.isha) : null,
-      iqamah: formatTime(iqamahRecord.isha),
-      iqamahNote: null,
-    },
+    { name: "Isha", adhan: day.salah.isha, iqamah: day.iqamah.isha, iqamahNote: null },
   ];
 
-  return {
-    rows,
-    sunrise: startTimes ? formatTime(startTimes.sunrise) : null,
-    jummah: iqamahRecord.jummah.map(formatTime),
-    iqamahRecord,
-    startTimes,
-  };
+  const jummah = [day.iqamah.jummah1, day.iqamah.jummah2, day.iqamah.jummah3].filter(
+    (t): t is string => Boolean(t) && t !== "N/A",
+  );
+
+  return { rows, sunrise: day.salah.sunrise, jummah, maghribOffsetMinutes: maghribOffset };
+}
+
+/** Today's full board, live from Masjidal. */
+export async function getPrayerBoard(date: Date = new Date()): Promise<PrayerBoard> {
+  const day = await fetchMasjidalDay(getMasjidDateKey(date));
+  return boardFromDay(day);
 }
 
 export type DayStartTimes = {
@@ -135,27 +111,42 @@ export type DayStartTimes = {
   /** e.g. "Fri, Aug 14". */
   label: string;
   isToday: boolean;
-  times: SalahStartTimes | null;
+  times: {
+    fajr: string;
+    sunrise: string;
+    dhuhr: string;
+    asr: string;
+    maghrib: string;
+    isha: string;
+  } | null;
 };
 
 /**
- * Adhan times for today and the following days. Dates are stepped in UTC from
- * the masjid's current calendar date, so the sequence never skips or repeats a
- * day due to the visitor's own timezone.
+ * Adhan times for today and the following days, live from Masjidal.
  */
-export function getWeekAhead(
+export async function getWeekAhead(
   date: Date = new Date(),
   days = 7,
-): DayStartTimes[] {
+): Promise<DayStartTimes[]> {
   const todayKey = getMasjidDateKey(date);
+  const week = await fetchMasjidalWeek(todayKey, days);
+  const byKey = new Map(
+    (week ?? []).map((day, i) => {
+      const [y, m, d] = todayKey.split("-").map(Number);
+      const key = new Date(Date.UTC(y, m - 1, d) + i * 86_400_000)
+        .toISOString()
+        .slice(0, 10);
+      return [key, day];
+    }),
+  );
+
   const [year, month, day] = todayKey.split("-").map(Number);
   const start = Date.UTC(year, month - 1, day);
 
   return Array.from({ length: days }, (_, offset) => {
     const current = new Date(start + offset * 86_400_000);
-    const m = current.getUTCMonth() + 1;
-    const d = current.getUTCDate();
-    const key = `${current.getUTCFullYear()}-${String(m).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+    const key = current.toISOString().slice(0, 10);
+    const entry = byKey.get(key);
 
     return {
       key,
@@ -166,7 +157,16 @@ export function getWeekAhead(
         timeZone: "UTC",
       }).format(current),
       isToday: offset === 0,
-      times: getStartTimesFor(m, d),
+      times: entry
+        ? {
+            fajr: entry.salah.fajr,
+            sunrise: entry.salah.sunrise,
+            dhuhr: entry.salah.zuhr,
+            asr: entry.salah.asr,
+            maghrib: entry.salah.maghrib,
+            isha: entry.salah.isha,
+          }
+        : null,
     };
   });
 }
@@ -183,5 +183,3 @@ export function formatMasjidToday(
     timeZone: MASJID_TIMEZONE,
   }).format(date);
 }
-
-export { getMasjidDateKey };

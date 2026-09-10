@@ -76,11 +76,13 @@ export const viewport: Viewport = {
  */
 const revealReady = `try{if('IntersectionObserver' in window&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.classList.add('reveal-ready')}}catch(e){}`;
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const prayerBoard = await getPrayerBoard();
+
   return (
     <html
       lang="en"
@@ -109,7 +111,7 @@ export default function RootLayout({
             {children}
           </main>
           <Footer />
-          <PrayerQuickBar board={getPrayerBoard()} />
+          <PrayerQuickBar board={prayerBoard} />
         </SmoothScrollProvider>
       </body>
     </html>

@@ -11,8 +11,8 @@ import HorizontalRail from "@/components/motion/HorizontalRail";
 import { formatMasjidToday, getPrayerBoard } from "@/lib/prayerTimes";
 import { programs, site, testimonials } from "@/lib/site";
 
-export default function HomePage() {
-  const board = getPrayerBoard();
+export default async function HomePage() {
+  const board = await getPrayerBoard();
   const todayLabel = formatMasjidToday(new Date(), "short");
 
   return (

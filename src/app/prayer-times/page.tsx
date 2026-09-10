@@ -4,8 +4,8 @@ import Reveal from "@/components/Reveal";
 import PrayerBoard from "@/components/PrayerBoard";
 import PageTransition from "@/components/motion/PageTransition";
 import { StarDivider, StarGlyph } from "@/components/Ornament";
-import { formatEffectiveDate, formatMaghribOffset } from "@/lib/iqamah";
 import {
+  formatMaghribOffset,
   formatMasjidToday,
   formatTime,
   getPrayerBoard,
@@ -19,11 +19,10 @@ export const metadata: Metadata = {
     "Daily adhan and iqamah times, Jumu'ah timings, and the week ahead for Masjid Ibrahim in Spring, Texas.",
 };
 
-export default function PrayerTimesPage() {
-  const board = getPrayerBoard();
-  const week = getWeekAhead().slice(1);
+export default async function PrayerTimesPage() {
+  const board = await getPrayerBoard();
+  const week = (await getWeekAhead()).slice(1);
   const todayLabel = formatMasjidToday();
-  const { iqamahRecord } = board;
 
   return (
     <PageTransition>
@@ -45,14 +44,6 @@ export default function PrayerTimesPage() {
           emphasis
           showSunrise
         />
-
-        <p className="mt-4 text-center text-xs leading-relaxed text-navy-700/80">
-          Iqamah times took effect on{" "}
-          <span className="font-semibold text-navy-800">
-            {formatEffectiveDate(iqamahRecord.effectiveFrom)}
-          </span>{" "}
-          and hold until the next scheduled change.
-        </p>
 
         {/* -------------------------------------------------- What this means */}
         <Reveal className="mt-10 grid gap-4 sm:mt-14 sm:grid-cols-2 sm:gap-5">
@@ -76,7 +67,9 @@ export default function PrayerTimesPage() {
               Maghrib follows sunset, which moves a little each day, so its
               iqamah is set as{" "}
               <span className="font-semibold text-navy-900">
-                {formatMaghribOffset(iqamahRecord.maghribOffsetMinutes)}
+                {board.maghribOffsetMinutes !== null
+                  ? formatMaghribOffset(board.maghribOffsetMinutes)
+                  : "a short offset"}
               </span>{" "}
               rather than a fixed clock time.
             </p>
