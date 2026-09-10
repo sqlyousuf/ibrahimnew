@@ -29,9 +29,11 @@ const playfair = Playfair_Display({
   display: "swap",
 });
 
+// Only weight 400 is ever used (see font-arabic usages) — bold was dead
+// weight on every page load.
 const amiri = Amiri({
   subsets: ["arabic"],
-  weight: ["400", "700"],
+  weight: ["400"],
   variable: "--font-amiri",
   display: "swap",
 });

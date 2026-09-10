@@ -52,17 +52,20 @@ export default function Preloader() {
       },
     });
 
+    // Scroll is locked for this whole timeline (see below), so its length is
+    // a direct tax on how long a visitor's first scroll attempt goes
+    // nowhere — kept snappy rather than lingering for its own sake.
     tl.fromTo(
       starRef.current,
       { autoAlpha: 0, scale: 0.8, rotate: -25 },
-      { autoAlpha: 1, scale: 1, rotate: 0, duration: 1, ease: "power3.out" },
+      { autoAlpha: 1, scale: 1, rotate: 0, duration: 0.7, ease: "power3.out" },
     )
-      .to(starRef.current, { rotate: 180, duration: 1.4, ease: "power2.inOut" }, "<")
+      .to(starRef.current, { rotate: 180, duration: 1, ease: "power2.inOut" }, "<")
       .to(rootRef.current, {
         autoAlpha: 0,
-        duration: 0.7,
+        duration: 0.5,
         ease: "power2.inOut",
-        delay: 0.15,
+        delay: 0.1,
       });
 
     return () => {

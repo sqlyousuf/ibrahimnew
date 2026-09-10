@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
+    // AVIF first — meaningfully smaller than WebP for photography, and
+    // every browser this site needs to support decodes it.
+    formats: ["image/avif", "image/webp"],
     remotePatterns: [
       {
         protocol: "https",
