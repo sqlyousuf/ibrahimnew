@@ -17,10 +17,24 @@ import type { CalendarEvent } from "@/lib/site";
 
 const EVENTS_PATHNAME = "data/calendar-events.json";
 
-export async function getCalendarEvents(): Promise<CalendarEvent[]> {
+/**
+ * @param revalidateSeconds Omit for always-fresh (`no-store` — what /events
+ * needs, since a save should be visible immediately). Pass a duration to
+ * allow static generation with ISR instead — for callers like the homepage
+ * where a few minutes of staleness on a new flier is an acceptable trade
+ * for not forcing the whole page dynamic.
+ */
+export async function getCalendarEvents(
+  revalidateSeconds?: number,
+): Promise<CalendarEvent[]> {
   try {
     const blob = await head(EVENTS_PATHNAME);
-    const res = await fetch(blob.url, { cache: "no-store" });
+    const res = await fetch(
+      blob.url,
+      revalidateSeconds === undefined
+        ? { cache: "no-store" }
+        : { next: { revalidate: revalidateSeconds } },
+    );
     if (!res.ok) return [];
     const data: unknown = await res.json();
     return Array.isArray(data) ? (data as CalendarEvent[]) : [];

@@ -43,6 +43,57 @@ export type CalendarDay = {
 
 const DAY_MS = 86_400_000;
 
+export type UpcomingFlierEvent = {
+  slug: string;
+  title: string;
+  dateKey: string;
+  /** e.g. "Saturday, Sep 12". */
+  dateLabel: string;
+  time?: string;
+  location?: string;
+  flier: { src: string; alt: string };
+};
+
+/**
+ * One-off events, today or later, that have a flier attached — soonest
+ * first. Feeds the homepage flier slider (HeroFlierSlider.tsx). Recurring
+ * programs and one-off events without a flier never appear here; this is
+ * deliberately narrower than getWeekCalendar's "everything this week".
+ */
+export async function getUpcomingEventFliers(
+  referenceDate: Date = new Date(),
+  limit = 8,
+): Promise<UpcomingFlierEvent[]> {
+  // 5-minute revalidate — keeps this page statically generated (ISR)
+  // instead of forcing it fully dynamic, at the cost of a new admin-
+  // uploaded flier taking up to a few minutes to appear live.
+  const calendarEvents = await getCalendarEvents(300);
+  const todayKey = getMasjidDateKey(referenceDate);
+
+  return calendarEvents
+    .filter((event) => event.recurrence === "once" && event.date >= todayKey && event.flier?.src)
+    .sort((a, b) => (a as { date: string }).date.localeCompare((b as { date: string }).date))
+    .slice(0, limit)
+    .map((event) => {
+      const e = event as typeof event & { date: string; flier: { src: string; alt: string } };
+      const [y, m, d] = e.date.split("-").map(Number);
+      return {
+        slug: e.slug,
+        title: e.title,
+        dateKey: e.date,
+        dateLabel: new Intl.DateTimeFormat("en-US", {
+          weekday: "long",
+          month: "short",
+          day: "numeric",
+          timeZone: "UTC",
+        }).format(new Date(Date.UTC(y, m - 1, d))),
+        time: e.time,
+        location: e.location,
+        flier: e.flier,
+      };
+    });
+}
+
 export async function getWeekCalendar(referenceDate: Date = new Date()): Promise<CalendarDay[]> {
   const calendarEvents = await getCalendarEvents();
 

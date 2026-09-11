@@ -4,26 +4,33 @@ import Reveal from "@/components/Reveal";
 import PrayerBoard from "@/components/PrayerBoard";
 import { PatternField, StarDivider, StarGlyph } from "@/components/Ornament";
 import HomeHero from "@/components/home/HomeHero";
+import HeroFlierSlider from "@/components/home/HeroFlierSlider";
 import TestimonialCarousel from "@/components/home/TestimonialCarousel";
 import PageTransition from "@/components/motion/PageTransition";
 import CinematicImage from "@/components/motion/CinematicImage";
 import HorizontalRail from "@/components/motion/HorizontalRail";
+import { getUpcomingEventFliers } from "@/lib/calendar";
 import { formatMasjidToday, getPrayerBoard } from "@/lib/prayerTimes";
 import { programs, site, testimonials } from "@/lib/site";
 
 export default async function HomePage() {
   const board = await getPrayerBoard();
   const todayLabel = formatMasjidToday(new Date(), "short");
+  const flierEvents = await getUpcomingEventFliers();
 
   return (
     <PageTransition>
-      <HomeHero
-        eyebrow={`Welcome to ${site.name}`}
-        title="Pray Together. Learn Together. Grow Together."
-        description="Serving Spring, Texas with daily salah, Islamic education, and a welcoming home for families to grow in faith together."
-        ctaLabel="Support the Masjid"
-        ctaHref="/donate"
-      />
+      {flierEvents.length > 0 ? (
+        <HeroFlierSlider events={flierEvents} />
+      ) : (
+        <HomeHero
+          eyebrow={`Welcome to ${site.name}`}
+          title="Pray Together. Learn Together. Grow Together."
+          description="Serving Spring, Texas with daily salah, Islamic education, and a welcoming home for families to grow in faith together."
+          ctaLabel="Support the Masjid"
+          ctaHref="/donate"
+        />
+      )}
 
       {/* ------------------------------------------------------- Prayer times
           First section after the hero on every viewport, rendered from local
