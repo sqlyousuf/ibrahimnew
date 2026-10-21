@@ -25,19 +25,23 @@ export default async function HomePage() {
         <HeroFlierSlider events={flierEvents} />
       ) : (
         <HomeHero
-          eyebrow={`Welcome to ${site.name}`}
+          eyebrow={`Under Construction · ${site.donate.campaign.name.replace("Construction ", "")}`}
           title={
             <>
-              Pray Together.
-              <br />
-              <span className="text-foil italic">Learn</span> Together.
-              <br />
-              Grow Together.
+              Help us <span className="text-foil italic">build</span> the
+              House of Allah
             </>
           }
-          description="Serving Spring, Texas with daily salah, Islamic education, and a welcoming home for families to grow in faith together."
-          ctaLabel="Support the Masjid"
-          ctaHref="/donate"
+          hadith={{
+            text: "Whoever builds a masjid for Allah, Allah will build for him a house in Paradise.",
+            source: "Sahih al-Bukhari & Sahih Muslim",
+          }}
+          description="Masjid Ibrahim is growing, and our construction is underway. Give generously today and share in the reward of every salah, every lesson, and every gathering held within these walls."
+          highlights={site.donate.campaign.description.split(/\s*(?:,|&)\s*/)}
+          ctaLabel="Donate to Construction"
+          ctaHref={site.donate.campaign.url}
+          secondaryLabel="Other Ways to Give"
+          secondaryHref="/donate"
         />
       )}
 
@@ -310,19 +314,30 @@ export default async function HomePage() {
         <Reveal className="container-page section relative z-10 mx-auto max-w-3xl text-center">
           <SectionHeading
             arabic="صدقة جارية"
-            eyebrow="Give for the Sake of Allah"
+            eyebrow={site.donate.campaign.name}
             title={
               <>
-                Help us <span className="text-foil italic">grow</span> &amp; serve
+                Every brick, a <span className="text-foil italic">lasting</span>{" "}
+                reward
               </>
             }
-            description="With your generous contributions, we can continue expanding our services, maintaining our facilities, and offering valuable programs to our community."
+            description={`Our ${site.donate.campaign.description} are being built now. Whatever you give becomes part of this masjid — a sadaqah jariyah that keeps giving for as long as people pray here.`}
             align="center"
             tone="dark"
           />
-          <Link href="/donate" className="btn-primary mt-9 w-full sm:w-auto">
-            Donate Now
-          </Link>
+          <div className="mx-auto mt-9 flex max-w-sm flex-col gap-3 sm:max-w-none sm:flex-row sm:justify-center">
+            <a
+              href={site.donate.campaign.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-primary w-full sm:w-auto"
+            >
+              Donate to Construction
+            </a>
+            <Link href="/donate" className="btn-outline w-full sm:w-auto">
+              Other Ways to Give
+            </Link>
+          </div>
         </Reveal>
       </section>
     </PageTransition>

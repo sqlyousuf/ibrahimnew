@@ -31,13 +31,24 @@ export default function HomeHero({
   description,
   ctaLabel,
   ctaHref,
+  secondaryLabel,
+  secondaryHref,
+  hadith,
+  highlights = [],
 }: {
+  /** Status line above the title, e.g. the construction phase. */
   eyebrow: string;
   /** JSX so a single phrase can be set in gilded italic. */
   title: ReactNode;
   description: string;
   ctaLabel: string;
+  /** External (the campaign's donation form) — opens in a new tab. */
   ctaHref: string;
+  secondaryLabel: string;
+  secondaryHref: string;
+  hadith?: { text: string; source: string };
+  /** What the current phase builds, shown as a short list. */
+  highlights?: string[];
 }) {
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -95,7 +106,7 @@ export default function HomeHero({
 
       <div
         ref={contentRef}
-        className="container-page relative z-10 flex flex-col items-center pb-14 pt-12 text-center sm:pb-24 sm:pt-20 lg:pb-32 lg:pt-28"
+        className="container-page relative z-10 flex flex-col items-center pb-14 pt-12 text-center sm:pb-24 sm:pt-20 lg:pb-28 lg:pt-24"
       >
         {/* Mihrab frame behind the type, echoing the arch in the logo. */}
         <div
@@ -110,22 +121,31 @@ export default function HomeHero({
           data-hero-item
           lang="ar"
           dir="rtl"
-          className="arabic-accent relative mt-14 text-[1.875rem] text-foil sm:mt-20 sm:text-[2.5rem]"
+          className="arabic-accent relative mt-14 text-[1.625rem] text-foil sm:mt-20 sm:text-[2.25rem]"
         >
           بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
         </p>
+
+        {/* Live-status pill — the one place the site says "work in
+            progress", styled like a lit sign rather than a warning. */}
         <p
           data-hero-item
-          className="section-eyebrow relative mt-5 justify-center text-gold-300 before:bg-gold-300"
+          className="relative mt-5 inline-flex items-center gap-2.5 rounded-full border border-gold-300/30 bg-gold-300/[0.07] px-4 py-2 text-[0.625rem] font-semibold uppercase tracking-[0.26em] text-gold-200 backdrop-blur-sm"
         >
+          <span aria-hidden="true" className="relative flex h-2 w-2">
+            <span className="absolute inset-0 animate-ping rounded-full bg-gold-300/60" />
+            <span className="relative h-2 w-2 rounded-full bg-gold-300" />
+          </span>
           {eyebrow}
         </p>
+
         <h1
           data-hero-item
-          className="relative mt-4 max-w-4xl text-balance font-display text-display-hero font-semibold text-cream-50"
+          className="relative mt-5 max-w-4xl text-balance font-display text-display-xl font-semibold text-cream-50 sm:text-display-hero"
         >
           {title}
         </h1>
+
         <span
           data-hero-item
           aria-hidden="true"
@@ -135,23 +155,71 @@ export default function HomeHero({
           <span className="h-1.5 w-1.5 rotate-45 bg-gold-300" />
           <span className="h-px w-10 bg-gradient-to-l from-transparent to-gold-300/70" />
         </span>
+
+        {hadith && (
+          <figure data-hero-item className="relative mt-6 max-w-xl">
+            <blockquote className="font-display text-[1.375rem] italic leading-[1.4] text-cream-50/90 sm:text-[1.75rem]">
+              &ldquo;{hadith.text}&rdquo;
+            </blockquote>
+            <figcaption className="mt-3 text-[0.625rem] font-semibold uppercase tracking-[0.28em] text-gold-300/80">
+              {hadith.source}
+            </figcaption>
+          </figure>
+        )}
+
+        {/* Buttons sit straight after the hadith so the ask is on the
+            first phone screen; the detail follows for anyone who reads on. */}
+        <div
+          data-hero-item
+          className="relative mt-8 flex w-full max-w-sm flex-col gap-3 sm:w-auto sm:max-w-none sm:flex-row"
+        >
+          <a
+            href={ctaHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-primary w-full sm:w-auto"
+          >
+            {ctaLabel}
+          </a>
+          <Link href={secondaryHref} className="btn-outline w-full sm:w-auto">
+            {secondaryLabel}
+          </Link>
+        </div>
+
         <p
           data-hero-item
-          className="relative mt-6 max-w-[34ch] text-[0.9375rem] leading-[1.75] text-cream-100/80 sm:max-w-xl sm:text-lede"
+          className="relative mt-9 max-w-[36ch] text-[0.9375rem] leading-[1.75] text-cream-100/75 sm:max-w-xl sm:text-lede"
         >
           {description}
         </p>
-        <div
+
+        {highlights.length > 0 && (
+          <ul
+            data-hero-item
+            aria-label="Being built in this phase"
+            className="relative mt-7 flex flex-wrap justify-center gap-2"
+          >
+            {highlights.map((item) => (
+              <li
+                key={item}
+                className="flex items-center gap-2 rounded-full border border-cream-100/15 bg-white/[0.04] px-3.5 py-1.5 text-xs font-medium text-cream-100/85"
+              >
+                <span aria-hidden="true" className="h-1 w-1 rotate-45 bg-gold-300" />
+                {item}
+              </li>
+            ))}
+          </ul>
+        )}
+
+
+        <p
           data-hero-item
-          className="relative mt-9 flex w-full max-w-sm flex-col gap-3 sm:w-auto sm:max-w-none sm:flex-row"
+          lang="ar"
+          dir="rtl"
+          className="arabic-accent relative mt-8 text-xl text-gold-300/60"
         >
-          <Link href={ctaHref} className="btn-primary w-full sm:w-auto">
-            {ctaLabel}
-          </Link>
-          <Link href="/events" className="btn-outline w-full sm:w-auto">
-            This Week
-          </Link>
-        </div>
+          صدقة جارية
+        </p>
       </div>
 
       <span

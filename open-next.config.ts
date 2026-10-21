@@ -11,7 +11,7 @@ import memoryQueue from "@opennextjs/cloudflare/overrides/queue/memory-queue";
  * the in-memory queue is enough for revalidation at this site's traffic.
  * Nothing uses revalidateTag, so no tag cache.
  */
-export default {
+const config = {
   ...defineCloudflareConfig({
     incrementalCache: kvIncrementalCache,
     queue: memoryQueue,
@@ -20,3 +20,5 @@ export default {
   // so OpenNext must call Next directly rather than back into that script.
   buildCommand: "npx next build",
 };
+
+export default config;
