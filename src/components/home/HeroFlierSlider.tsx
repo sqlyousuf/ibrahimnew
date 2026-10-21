@@ -18,9 +18,9 @@ function getServerSnapshot() {
 }
 
 /**
- * Replaces the welcome hero whenever there's at least one upcoming one-off
- * event with a flier (see getUpcomingEventFliers) — the homepage decides
- * which to render, this just draws the slides.
+ * The homepage's upcoming-events band, shown whenever there's at least one
+ * upcoming one-off event with a flier (UpcomingFliers.tsx decides whether
+ * to render it) — this just draws the slides.
  *
  * Fliers are posters with real information printed on them, so unlike the
  * rest of the site's photography this never crops (`object-contain`, not
@@ -90,9 +90,9 @@ export default function HeroFlierSlider({
               {event.dateLabel}
               {event.time ? ` · ${event.time}` : ""}
             </p>
-            <h1 className="mt-3 max-w-2xl text-balance font-display text-display-md font-semibold text-cream-50">
+            <h3 className="mt-3 max-w-2xl text-balance font-display text-display-md font-semibold text-cream-50">
               {event.title}
-            </h1>
+            </h3>
             <span className="btn-primary mt-5 inline-flex">See This Week&apos;s Events</span>
           </div>
         </Link>

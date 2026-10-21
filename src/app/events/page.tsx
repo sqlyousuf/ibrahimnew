@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import PageHero from "@/components/PageHero";
 import PageTransition from "@/components/motion/PageTransition";
-import WeekCalendar from "@/components/events/WeekCalendar";
-import { getWeekCalendar } from "@/lib/calendar";
+import LiveWeekCalendar from "@/components/events/LiveWeekCalendar";
 
 export const metadata: Metadata = {
   title: "This Week",
@@ -10,13 +9,7 @@ export const metadata: Metadata = {
     "This week's calendar of programs, halaqas, and events at Masjid Ibrahim in Spring, Texas.",
 };
 
-// Ad-hoc entries now live in Vercel Blob, edited through /admin — always
-// render fresh rather than serving a stale cached copy after a save.
-export const dynamic = "force-dynamic";
-
-export default async function EventsPage() {
-  const days = await getWeekCalendar();
-
+export default function EventsPage() {
   return (
     <PageTransition>
       <PageHero
@@ -30,7 +23,7 @@ export default async function EventsPage() {
       />
 
       <section className="section container-page">
-        <WeekCalendar days={days} />
+        <LiveWeekCalendar />
       </section>
     </PageTransition>
   );

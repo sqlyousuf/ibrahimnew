@@ -1,8 +1,8 @@
 /**
  * Builds the "This Week at Masjid Ibrahim" calendar: the Institute's three
  * recurring programs (static, from site.ts) plus one-off/ad-hoc entries
- * managed through the /admin panel (live, from Vercel Blob via
- * calendarStore.ts), merged onto the next 7 days starting today — not a
+ * managed through the /admin panel (stored in Workers KV, served by
+ * worker/index.ts at /api/events), merged onto the next 7 days starting today — not a
  * fixed Sunday-Saturday week, which would show already-past days once the
  * week is partway through.
  *
@@ -13,8 +13,8 @@
  */
 
 import { getMasjidDateKey } from "@/lib/prayerTimes";
-import { getCalendarEvents } from "@/lib/calendarStore";
 import { programs } from "@/lib/site";
+import type { CalendarEvent } from "@/lib/site";
 
 export type CalendarDisplayEntry = {
   key: string;
@@ -60,14 +60,11 @@ export type UpcomingFlierEvent = {
  * programs and one-off events without a flier never appear here; this is
  * deliberately narrower than getWeekCalendar's "everything this week".
  */
-export async function getUpcomingEventFliers(
+export function getUpcomingEventFliers(
+  calendarEvents: CalendarEvent[],
   referenceDate: Date = new Date(),
   limit = 8,
-): Promise<UpcomingFlierEvent[]> {
-  // 5-minute revalidate — keeps this page statically generated (ISR)
-  // instead of forcing it fully dynamic, at the cost of a new admin-
-  // uploaded flier taking up to a few minutes to appear live.
-  const calendarEvents = await getCalendarEvents(300);
+): UpcomingFlierEvent[] {
   const todayKey = getMasjidDateKey(referenceDate);
 
   return calendarEvents
@@ -94,9 +91,10 @@ export async function getUpcomingEventFliers(
     });
 }
 
-export async function getWeekCalendar(referenceDate: Date = new Date()): Promise<CalendarDay[]> {
-  const calendarEvents = await getCalendarEvents();
-
+export function getWeekCalendar(
+  calendarEvents: CalendarEvent[],
+  referenceDate: Date = new Date(),
+): CalendarDay[] {
   const todayKey = getMasjidDateKey(referenceDate);
   const [y, m, d] = todayKey.split("-").map(Number);
   const todayUTC = Date.UTC(y, m - 1, d);

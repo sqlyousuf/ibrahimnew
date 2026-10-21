@@ -1,25 +1,31 @@
+/**
+ * The site is a static export (`out/`) served by Cloudflare Workers static
+ * assets — free and unmetered on the Workers Free plan. The only server
+ * code is the Worker in worker/index.ts, which owns `/api/*` and `/media/*`.
+ *
+ * In `next dev` there is no export; those two paths are forwarded to a
+ * local `wrangler dev` instead (run `npm run dev:api` alongside).
+ */
+const isDev = process.env.NODE_ENV === "development";
+const WORKER_DEV_ORIGIN = process.env.WORKER_DEV_ORIGIN ?? "http://localhost:8787";
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: isDev ? undefined : "export",
   images: {
-    // Resizing is delegated to Unsplash's CDN (see the loader) rather than
-    // Next's optimizer, which is billed on Vercel and needs the paid Images
-    // binding on Cloudflare Workers.
+    // Static export has no image optimizer; resizing is delegated to
+    // Unsplash's CDN instead (see the loader).
     loader: "custom",
     loaderFile: "./src/lib/imageLoader.ts",
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "images.unsplash.com",
-      },
-      {
-        // Flier images uploaded through /admin. Wildcarded because the
-        // store subdomain is a per-store random ID that can change if the
-        // Blob store is ever recreated (as already happened once).
-        protocol: "https",
-        hostname: "*.public.blob.vercel-storage.com",
-      },
-    ],
   },
+  ...(isDev && {
+    async rewrites() {
+      return [
+        { source: "/api/:path*", destination: `${WORKER_DEV_ORIGIN}/api/:path*` },
+        { source: "/media/:path*", destination: `${WORKER_DEV_ORIGIN}/media/:path*` },
+      ];
+    },
+  }),
 };
 
 module.exports = nextConfig;

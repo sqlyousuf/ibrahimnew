@@ -1,14 +1,11 @@
 /**
  * Composition layer pairing Masjidal's Adhan and Iqamah data into the board
- * format a masjid actually displays. `./masjidal` supplies the raw per-day
- * timings; all the joining/formatting logic lives here.
+ * format a masjid actually displays. Pure functions only: the Worker
+ * (worker/index.ts) fetches raw timings and runs `buildPrayerPayload`, and
+ * the browser renders the result — so this file is shared by both.
  */
 
-import {
-  fetchMasjidalDay,
-  fetchMasjidalWeek,
-  type MasjidalDayTimings,
-} from "./masjidal";
+import type { MasjidalDayTimings } from "./masjidal";
 import { getMasjidDateKey, MASJID_TIMEZONE } from "./iqamah";
 
 export { MASJID_TIMEZONE, getMasjidDateKey };
@@ -62,7 +59,7 @@ export type PrayerBoard = {
   maghribOffsetMinutes: number | null;
 };
 
-function boardFromDay(day: MasjidalDayTimings | null): PrayerBoard {
+export function boardFromDay(day: MasjidalDayTimings | null): PrayerBoard {
   if (!day) {
     return {
       rows: ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"].map((name) => ({
@@ -99,12 +96,6 @@ function boardFromDay(day: MasjidalDayTimings | null): PrayerBoard {
   return { rows, sunrise: day.salah.sunrise, jummah, maghribOffsetMinutes: maghribOffset };
 }
 
-/** Today's full board, live from Masjidal. */
-export async function getPrayerBoard(date: Date = new Date()): Promise<PrayerBoard> {
-  const day = await fetchMasjidalDay(getMasjidDateKey(date));
-  return boardFromDay(day);
-}
-
 export type DayStartTimes = {
   /** YYYY-MM-DD at the masjid. */
   key: string;
@@ -121,32 +112,20 @@ export type DayStartTimes = {
   } | null;
 };
 
-/**
- * Adhan times for today and the following days, live from Masjidal.
- */
-export async function getWeekAhead(
-  date: Date = new Date(),
+/** Adhan times for `days` consecutive days, starting at `todayKey`. */
+export function weekFromDays(
+  todayKey: string,
+  timings: MasjidalDayTimings[] | null,
   days = 7,
-): Promise<DayStartTimes[]> {
-  const todayKey = getMasjidDateKey(date);
-  const week = await fetchMasjidalWeek(todayKey, days);
-  const byKey = new Map(
-    (week ?? []).map((day, i) => {
-      const [y, m, d] = todayKey.split("-").map(Number);
-      const key = new Date(Date.UTC(y, m - 1, d) + i * 86_400_000)
-        .toISOString()
-        .slice(0, 10);
-      return [key, day];
-    }),
-  );
-
+): DayStartTimes[] {
   const [year, month, day] = todayKey.split("-").map(Number);
   const start = Date.UTC(year, month - 1, day);
 
   return Array.from({ length: days }, (_, offset) => {
     const current = new Date(start + offset * 86_400_000);
     const key = current.toISOString().slice(0, 10);
-    const entry = byKey.get(key);
+    // Masjidal returns the range in order, one entry per day.
+    const entry = timings?.[offset];
 
     return {
       key,
@@ -169,6 +148,38 @@ export async function getWeekAhead(
         : null,
     };
   });
+}
+
+/** What `/api/prayer` returns: everything any page shows about salah. */
+export type PrayerPayload = {
+  /** YYYY-MM-DD at the masjid — lets the browser tell if it's gone stale. */
+  dateKey: string;
+  /** e.g. "Wednesday, October 21". */
+  todayLabel: string;
+  board: PrayerBoard;
+  /** Today plus the following six days. */
+  week: DayStartTimes[];
+};
+
+/** End date (inclusive) of a `count`-day range starting at `startDateKey`. */
+export function rangeEndKey(startDateKey: string, count: number): string {
+  const [y, m, d] = startDateKey.split("-").map(Number);
+  return new Date(Date.UTC(y, m - 1, d) + (count - 1) * 86_400_000)
+    .toISOString()
+    .slice(0, 10);
+}
+
+export function buildPrayerPayload(
+  now: Date,
+  timings: MasjidalDayTimings[] | null,
+): PrayerPayload {
+  const dateKey = getMasjidDateKey(now);
+  return {
+    dateKey,
+    todayLabel: formatMasjidToday(now),
+    board: boardFromDay(timings?.[0] ?? null),
+    week: weekFromDays(dateKey, timings),
+  };
 }
 
 /** e.g. "Friday, August 14". */

@@ -3,14 +3,9 @@ import PageHero from "@/components/PageHero";
 import Reveal from "@/components/Reveal";
 import PrayerBoard from "@/components/PrayerBoard";
 import PageTransition from "@/components/motion/PageTransition";
-import { StarDivider, StarGlyph } from "@/components/Ornament";
-import {
-  formatMaghribOffset,
-  formatMasjidToday,
-  formatTime,
-  getPrayerBoard,
-  getWeekAhead,
-} from "@/lib/prayerTimes";
+import { StarGlyph } from "@/components/Ornament";
+import MaghribRule from "@/components/prayer/MaghribRule";
+import WeekAhead from "@/components/prayer/WeekAhead";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -19,11 +14,7 @@ export const metadata: Metadata = {
     "Daily adhan and iqamah times, Jumu'ah timings, and the week ahead for Masjid Ibrahim in Spring, Texas.",
 };
 
-export default async function PrayerTimesPage() {
-  const board = await getPrayerBoard();
-  const week = (await getWeekAhead()).slice(1);
-  const todayLabel = formatMasjidToday();
-
+export default function PrayerTimesPage() {
   return (
     <PageTransition>
       <PageHero
@@ -39,12 +30,7 @@ export default async function PrayerTimesPage() {
       {/* Tighter top padding than the standard rhythm — this is the one page
           where the visitor wants the answer immediately. */}
       <section className="container-page max-w-4xl pb-16 pt-8 sm:pb-20 sm:pt-12 lg:pb-24 lg:pt-14">
-        <PrayerBoard
-          board={board}
-          todayLabel={todayLabel}
-          emphasis
-          showSunrise
-        />
+        <PrayerBoard emphasis showSunrise />
 
         {/* -------------------------------------------------- What this means */}
         <Reveal className="mt-10 grid gap-4 sm:mt-14 sm:grid-cols-2 sm:gap-5">
@@ -67,97 +53,14 @@ export default async function PrayerTimesPage() {
             <p className="mt-2 text-sm leading-relaxed text-navy-700">
               Maghrib follows sunset, which moves a little each day, so its
               iqamah is set as{" "}
-              <span className="font-semibold text-navy-900">
-                {board.maghribOffsetMinutes !== null
-                  ? formatMaghribOffset(board.maghribOffsetMinutes)
-                  : "a short offset"}
-              </span>{" "}
+              <MaghribRule />{" "}
               rather than a fixed clock time.
             </p>
           </div>
         </Reveal>
 
         {/* ------------------------------------------------------ Week ahead */}
-        {week.length > 0 && (
-          <Reveal className="mt-10 sm:mt-14">
-            <StarDivider className="mb-8" />
-            <p className="section-eyebrow justify-center">Plan Ahead</p>
-            <h2 className="mt-3 text-center font-display text-display-sm font-semibold text-navy-900">
-              The Week Ahead
-            </h2>
-            <p className="measure mx-auto mt-3 text-center text-sm leading-relaxed text-navy-700/90">
-              Adhan times for the coming days. Iqamah stays as shown above
-              until the next scheduled change.
-            </p>
-
-            <div className="relative mt-6 overflow-hidden rounded-[1.375rem] bg-cream-50 shadow-soft ring-1 ring-gold-700/10">
-              {/* Scrolls inside its own container rather than pushing the page
-                  sideways on a narrow phone. Below sm, the table (36rem min)
-                  is wider than the viewport, so Maghrib/Isha sit off to the
-                  right with nothing else hinting they're there — this fade
-                  is the only cue to swipe for them. */}
-              <div className="overflow-x-auto">
-                <table className="w-full min-w-[36rem] text-left text-sm">
-                  <caption className="sr-only">
-                    Adhan times for the coming week
-                  </caption>
-                  <thead className="bg-cream-100">
-                    <tr className="border-b border-navy-900/[0.07]">
-                      {["Day", "Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"].map(
-                        (heading) => (
-                          <th
-                            key={heading}
-                            scope="col"
-                            className="whitespace-nowrap px-4 py-3 text-[0.625rem] font-semibold uppercase tracking-[0.14em] text-navy-500"
-                          >
-                            {heading}
-                          </th>
-                        ),
-                      )}
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-navy-900/[0.06]">
-                    {week.map((day) => (
-                      <tr key={day.key}>
-                        <th
-                          scope="row"
-                          className="whitespace-nowrap px-4 py-3 font-semibold text-navy-900"
-                        >
-                          {day.label}
-                        </th>
-                        {day.times ? (
-                          [
-                            day.times.fajr,
-                            day.times.dhuhr,
-                            day.times.asr,
-                            day.times.maghrib,
-                            day.times.isha,
-                          ].map((time, i) => (
-                            <td
-                              key={i}
-                              className="whitespace-nowrap px-4 py-3 tabular-nums text-navy-700"
-                            >
-                              {formatTime(time)}
-                            </td>
-                          ))
-                        ) : (
-                          <td colSpan={5} className="px-4 py-3 text-navy-500">
-                            &mdash;
-                          </td>
-                        )}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-
-              <div
-                aria-hidden="true"
-                className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-cream-50 to-transparent sm:hidden"
-              />
-            </div>
-          </Reveal>
-        )}
+        <WeekAhead />
 
         {/* --------------------------------------------------------- Footnote */}
         <Reveal>

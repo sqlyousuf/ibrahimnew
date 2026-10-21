@@ -1,13 +1,31 @@
 "use client";
 
-import { useActionState } from "react";
-import { login } from "@/app/admin/actions";
+import { useState } from "react";
+import type { FormEvent } from "react";
+import { useRouter } from "next/navigation";
+import { adminApi } from "@/lib/adminApi";
 
 export default function LoginForm() {
-  const [state, formAction, pending] = useActionState(login, undefined);
+  const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
+  const [pending, setPending] = useState(false);
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const form = new FormData(event.currentTarget);
+    setPending(true);
+    setError(null);
+    try {
+      await adminApi.login(String(form.get("username")), String(form.get("password")));
+      router.replace("/admin");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Sign-in failed. Please try again.");
+      setPending(false);
+    }
+  }
 
   return (
-    <form action={formAction} className="card mx-auto max-w-sm p-6 sm:p-8">
+    <form onSubmit={handleSubmit} className="card mx-auto max-w-sm p-6 sm:p-8">
       <div className="space-y-4">
         <div>
           <label
@@ -42,9 +60,9 @@ export default function LoginForm() {
           />
         </div>
 
-        {state?.error && (
+        {error && (
           <p role="alert" className="text-sm font-medium text-red-600">
-            {state.error}
+            {error}
           </p>
         )}
 

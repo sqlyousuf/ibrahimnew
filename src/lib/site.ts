@@ -197,8 +197,8 @@ type OneOffCalendarEvent = CalendarEventBase & {
  * them.
  *
  * Unlike the rest of this file, entries of this type are **not** stored
- * here in code — they live in Vercel Blob, managed through the /admin
- * panel (see src/lib/calendarStore.ts and src/app/admin/). This type is
+ * here in code — they live in Workers KV, managed through the /admin
+ * panel (see worker/index.ts and src/app/admin/). This type is
  * still the shared shape both sides agree on:
  *
  * - `slug` — unique, kebab-case.

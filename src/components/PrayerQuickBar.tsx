@@ -2,13 +2,16 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { usePrayerData } from "@/lib/liveData";
 import { findNextPrayer, useMasjidMinute } from "@/lib/nextPrayer";
-import type { PrayerBoard } from "@/lib/prayerTimes";
 
 const PRAYER_HREF = "/prayer-times";
 
+const NAMES = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"];
+
 /** Drops the meridiem so five prayers fit across a 375px phone. */
-function compact(time: string | null): string {
+function compact(time: string | null | undefined, loading: boolean): string {
+  if (loading) return "··";
   return time ? time.replace(/\s*(AM|PM)$/i, "") : "—";
 }
 
@@ -21,13 +24,18 @@ function compact(time: string | null): string {
  * the sticky header rather than a competing top bar, and hides while the
  * phone menu is open (see `data-menu-open` on <html>).
  *
- * The board is resolved on the server and passed in, so the times are in the
- * initial HTML with no hydration flash.
+ * Reads the same /api/prayer request as the prayer board (liveData.ts), so
+ * a page never fetches the times twice.
  */
-export default function PrayerQuickBar({ board }: { board: PrayerBoard }) {
+export default function PrayerQuickBar() {
   const pathname = usePathname();
+  const data = usePrayerData();
+  const loading = data === undefined;
+  const rows = NAMES.map(
+    (name) => data?.board.rows.find((row) => row.name === name) ?? { name, adhan: null, iqamah: null },
+  );
   const minute = useMasjidMinute();
-  const next = minute === null ? null : findNextPrayer(board.rows, minute);
+  const next = minute === null || !data ? null : findNextPrayer(data.board.rows, minute);
 
   // Redundant on the page it points at.
   if (pathname === PRAYER_HREF) return null;
@@ -67,7 +75,7 @@ export default function PrayerQuickBar({ board }: { board: PrayerBoard }) {
               </span>
 
               <span className="flex items-stretch gap-1">
-                {board.rows.map((row) => {
+                {rows.map((row) => {
                   const isNext = next?.row.name === row.name && !next.tomorrow;
                   return (
                     <span
@@ -86,10 +94,10 @@ export default function PrayerQuickBar({ board }: { board: PrayerBoard }) {
                         {row.name}
                       </span>
                       <span className="mt-1 text-[0.625rem] leading-none tabular-nums text-cream-100/50">
-                        {compact(row.adhan)}
+                        {compact(row.adhan, loading)}
                       </span>
                       <span className="mt-0.5 text-[0.8125rem] font-bold leading-none tabular-nums text-cream-50">
-                        {compact(row.iqamah)}
+                        {compact(row.iqamah, loading)}
                       </span>
                     </span>
                   );

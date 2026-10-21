@@ -1,12 +1,13 @@
 "use client";
 
-import { useActionState, useState } from "react";
-import type { ChangeEvent } from "react";
+import { useState } from "react";
+import type { ChangeEvent, FormEvent } from "react";
 import Image from "next/image";
-import { saveEvent } from "@/app/admin/actions";
+import { useRouter } from "next/navigation";
+import { adminApi } from "@/lib/adminApi";
 import type { CalendarEvent } from "@/lib/site";
 
-// Kept in sync with MAX_FLIER_BYTES in src/app/api/admin/upload/route.ts —
+// Kept in sync with MAX_FLIER_BYTES in worker/index.ts —
 // checked here too so an oversized file gets a clear message immediately
 // instead of waiting on a doomed upload.
 const MAX_FLIER_BYTES = 4 * 1024 * 1024;
@@ -26,7 +27,9 @@ const fieldClass =
 const labelClass = "text-[0.6875rem] font-semibold uppercase tracking-[0.16em] text-gold-700";
 
 export default function EventForm({ initialEvent }: { initialEvent?: CalendarEvent }) {
-  const [state, formAction, pending] = useActionState(saveEvent, undefined);
+  const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
+  const [pending, setPending] = useState(false);
   const [recurrence, setRecurrence] = useState<"weekly" | "once">(
     initialEvent?.recurrence ?? "weekly",
   );
@@ -49,14 +52,8 @@ export default function EventForm({ initialEvent }: { initialEvent?: CalendarEve
     setUploading(true);
     setUploadError(null);
     try {
-      const body = new FormData();
-      body.set("file", file);
-      const res = await fetch("/api/admin/upload", { method: "POST", body });
-      const data: { src?: string; error?: string } = await res.json();
-      if (!res.ok || !data.src) {
-        throw new Error(data.error || "Upload failed. Please try again.");
-      }
-      setFlierSrc(data.src);
+      const { src } = await adminApi.uploadFlier(file);
+      setFlierSrc(src);
     } catch (err) {
       setUploadError(err instanceof Error ? err.message : "Upload failed. Please try again.");
     } finally {
@@ -64,8 +61,25 @@ export default function EventForm({ initialEvent }: { initialEvent?: CalendarEve
     }
   }
 
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const form = new FormData(event.currentTarget);
+    setPending(true);
+    setError(null);
+    try {
+      await adminApi.saveEvent({
+        ...Object.fromEntries(form),
+        daysOfWeek: form.getAll("daysOfWeek").map(Number),
+      });
+      router.replace("/admin");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Couldn’t save. Please try again.");
+      setPending(false);
+    }
+  }
+
   return (
-    <form action={formAction} className="card space-y-5 p-6 sm:p-8">
+    <form onSubmit={handleSubmit} className="card space-y-5 p-6 sm:p-8">
       {initialEvent && (
         <input type="hidden" name="originalSlug" value={initialEvent.slug} />
       )}
@@ -202,9 +216,8 @@ export default function EventForm({ initialEvent }: { initialEvent?: CalendarEve
 
         <input type="hidden" name="flierSrc" value={flierSrc} />
 
-        {/* Uploads straight to Blob from the browser (see handleFlierChange) —
-            not through the form submission, since a real photographed flier
-            easily exceeds the 1MB default Server Action body limit. */}
+        {/* Uploaded on selection (see handleFlierChange), separately from the
+            form save — the save itself only carries the resulting URL. */}
         <input
           type="file"
           accept="image/*"
@@ -230,9 +243,9 @@ export default function EventForm({ initialEvent }: { initialEvent?: CalendarEve
         />
       </div>
 
-      {state?.error && (
+      {error && (
         <p role="alert" className="text-sm font-medium text-red-600">
-          {state.error}
+          {error}
         </p>
       )}
 

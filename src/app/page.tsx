@@ -5,45 +5,35 @@ import PrayerBoard from "@/components/PrayerBoard";
 import SectionHeading from "@/components/SectionHeading";
 import { PatternField, Rosette, StarDivider, StarGlyph } from "@/components/Ornament";
 import HomeHero from "@/components/home/HomeHero";
-import HeroFlierSlider from "@/components/home/HeroFlierSlider";
+import UpcomingFliers from "@/components/home/UpcomingFliers";
 import TestimonialCarousel from "@/components/home/TestimonialCarousel";
 import PageTransition from "@/components/motion/PageTransition";
 import CinematicImage from "@/components/motion/CinematicImage";
 import HorizontalRail from "@/components/motion/HorizontalRail";
-import { getUpcomingEventFliers } from "@/lib/calendar";
-import { formatMasjidToday, getPrayerBoard } from "@/lib/prayerTimes";
 import { programs, site, testimonials } from "@/lib/site";
 
-export default async function HomePage() {
-  const board = await getPrayerBoard();
-  const todayLabel = formatMasjidToday(new Date(), "short");
-  const flierEvents = await getUpcomingEventFliers();
-
+export default function HomePage() {
   return (
     <PageTransition>
-      {flierEvents.length > 0 ? (
-        <HeroFlierSlider events={flierEvents} />
-      ) : (
-        <HomeHero
-          eyebrow={`Under Construction · ${site.donate.campaign.name.replace("Construction ", "")}`}
-          title={
-            <>
-              Help us <span className="text-foil italic">build</span> the
-              House of Allah
-            </>
-          }
-          hadith={{
-            text: "Whoever builds a masjid for Allah, Allah will build for him a house in Paradise.",
-            source: "Sahih al-Bukhari & Sahih Muslim",
-          }}
-          description="Masjid Ibrahim is growing, and our construction is underway. Give generously today and share in the reward of every salah, every lesson, and every gathering held within these walls."
-          highlights={site.donate.campaign.description.split(/\s*(?:,|&)\s*/)}
-          ctaLabel="Donate to Construction"
-          ctaHref={site.donate.campaign.url}
-          secondaryLabel="Other Ways to Give"
-          secondaryHref="/donate"
-        />
-      )}
+      <HomeHero
+        eyebrow={`Under Construction · ${site.donate.campaign.name.replace("Construction ", "")}`}
+        title={
+          <>
+            Help us <span className="text-foil italic">build</span> the
+            House of Allah
+          </>
+        }
+        hadith={{
+          text: "Whoever builds a masjid for Allah, Allah will build for him a house in Paradise.",
+          source: "Sahih al-Bukhari & Sahih Muslim",
+        }}
+        description="Masjid Ibrahim is growing, and our construction is underway. Give generously today and share in the reward of every salah, every lesson, and every gathering held within these walls."
+        highlights={site.donate.campaign.description.split(/\s*(?:,|&)\s*/)}
+        ctaLabel="Donate to Construction"
+        ctaHref={site.donate.campaign.url}
+        secondaryLabel="Other Ways to Give"
+        secondaryHref="/donate"
+      />
 
       {/* ------------------------------------------------------- Prayer times
           First section after the hero on every viewport, rendered from local
@@ -71,8 +61,6 @@ export default async function HomePage() {
           />
 
           <PrayerBoard
-            board={board}
-            todayLabel={todayLabel}
             className="lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-center"
           />
 
@@ -88,6 +76,10 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Upcoming one-off events with fliers — renders nothing when there
+          are none (see UpcomingFliers.tsx). */}
+      <UpcomingFliers />
 
       {/* ------------------------------------------------------ Welcome/story */}
       <section className="section relative overflow-hidden">

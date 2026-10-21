@@ -8,14 +8,7 @@ import SmoothScrollProvider from "@/components/motion/SmoothScrollProvider";
 import CustomCursor from "@/components/motion/CustomCursor";
 import Preloader from "@/components/motion/Preloader";
 import ScrollProgressStar from "@/components/motion/ScrollProgressStar";
-import { getPrayerBoard } from "@/lib/prayerTimes";
 import { site } from "@/lib/site";
-
-/**
- * Prayer times are resolved per render from date-keyed data, so the pages
- * regenerate periodically rather than freezing today's times at build time.
- */
-export const revalidate = 1800;
 
 // Body/UI face — a quiet geometric sans that stays crisp at small sizes on
 // phone screens, so the serif can carry all the ceremony.
@@ -90,13 +83,11 @@ export const viewport: Viewport = {
  */
 const revealReady = `try{if('IntersectionObserver' in window&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.classList.add('reveal-ready')}}catch(e){}`;
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const prayerBoard = await getPrayerBoard();
-
   return (
     <html
       lang="en"
@@ -125,7 +116,7 @@ export default async function RootLayout({
             {children}
           </main>
           <Footer />
-          <PrayerQuickBar board={prayerBoard} />
+          <PrayerQuickBar />
         </SmoothScrollProvider>
       </body>
     </html>

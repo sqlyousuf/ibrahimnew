@@ -1,44 +1,64 @@
 "use client";
 
 import { StarGlyph } from "@/components/Ornament";
+import { usePrayerData } from "@/lib/liveData";
 import {
   findNextPrayer,
   formatCountdown,
   useMasjidMinute,
 } from "@/lib/nextPrayer";
-import type { PrayerBoard as Board } from "@/lib/prayerTimes";
+import type { PrayerRow } from "@/lib/prayerTimes";
 
 const JUMMAH_LABELS = ["First", "Second", "Third"] as const;
+
+// Rendered while the times load, so the board's shape is in the prebuilt
+// HTML and nothing shifts when the data lands.
+const PLACEHOLDER_ROWS: PrayerRow[] = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"].map(
+  (name) => ({ name, adhan: null, iqamah: null, iqamahNote: null }),
+);
+
+/** A soft shimmer standing in for a time that hasn't loaded yet. */
+function TimePlaceholder({ wide = false }: { wide?: boolean }) {
+  return (
+    <span
+      aria-hidden="true"
+      className={`inline-block h-3.5 animate-pulse rounded-full bg-cream-100/10 align-middle ${
+        wide ? "w-16" : "w-14"
+      }`}
+    />
+  );
+}
 
 /**
  * Today's prayer board in the format a masjid actually posts: Adhan (when the
  * prayer window opens) alongside Iqamah (when the congregation stands).
  *
- * The times themselves arrive server-rendered in the props; only the "next
- * salah" spotlight and row highlight are decided in the browser, against the
- * masjid's clock. The spotlight reserves its height up front so the board
- * never jumps when that resolves.
+ * The site is static, so the times are fetched in the browser (/api/prayer,
+ * shared with the phone prayer bar — see liveData.ts); the "next salah"
+ * spotlight and row highlight are decided against the masjid's clock. Rows
+ * and the spotlight reserve their space up front so nothing jumps when the
+ * data lands.
  *
  * A real table, so the column structure carries semantics for screen readers
  * and stays easy to extend.
  */
 export default function PrayerBoard({
-  board,
-  todayLabel,
   className = "",
   emphasis = false,
   showSunrise = false,
 }: {
-  board: Board;
-  /** e.g. "Friday, August 14". */
-  todayLabel?: string;
   className?: string;
   /** Larger type for the dedicated Prayer Times page. */
   emphasis?: boolean;
   showSunrise?: boolean;
 }) {
+  const data = usePrayerData();
+  const board = data?.board;
+  const rows = board?.rows ?? PLACEHOLDER_ROWS;
+  const todayLabel = data?.todayLabel;
+  const loading = data === undefined;
   const minute = useMasjidMinute();
-  const next = minute === null ? null : findNextPrayer(board.rows, minute);
+  const next = minute === null || !board ? null : findNextPrayer(board.rows, minute);
   const nameSize = emphasis ? "text-[1.375rem] sm:text-2xl" : "text-xl sm:text-[1.375rem]";
   const timeSize = emphasis ? "text-base sm:text-lg" : "text-[0.9375rem] sm:text-base";
 
@@ -90,7 +110,9 @@ export default function PrayerBoard({
         ) : (
           <div className="flex h-full min-h-[4.25rem] items-center">
             <p className="font-display text-2xl italic text-cream-100/70">
-              Today&apos;s five daily salah
+              {loading
+                ? "Today’s five daily salah"
+                : "Times are unavailable right now — please call the masjid."}
             </p>
           </div>
         )}
@@ -124,7 +146,7 @@ export default function PrayerBoard({
           </tr>
         </thead>
         <tbody>
-          {board.rows.map((row) => {
+          {rows.map((row) => {
             const isNext = next?.row.name === row.name && !next.tomorrow;
             return (
               <tr
@@ -153,7 +175,7 @@ export default function PrayerBoard({
                 <td
                   className={`whitespace-nowrap px-2 py-3.5 text-right tabular-nums text-cream-100/55 ${timeSize}`}
                 >
-                  {row.adhan ?? "—"}
+                  {loading ? <TimePlaceholder /> : (row.adhan ?? "—")}
                 </td>
                 <td className="py-3.5 pl-2 pr-5 text-right sm:pr-7">
                   <span
@@ -161,7 +183,7 @@ export default function PrayerBoard({
                       isNext ? "text-gold-100" : "text-cream-50"
                     }`}
                   >
-                    {row.iqamah ?? "—"}
+                    {loading ? <TimePlaceholder wide /> : (row.iqamah ?? "—")}
                   </span>
                   {/* Maghrib's iqamah is derived from its adhan, so the rule is
                       worth stating next to the resulting time. */}
@@ -177,7 +199,7 @@ export default function PrayerBoard({
         </tbody>
       </table>
 
-      {(board.jummah.length > 0 || (showSunrise && board.sunrise)) && (
+      {board && (board.jummah.length > 0 || (showSunrise && board.sunrise)) && (
         <div className="relative space-y-3 border-t border-gold-300/[0.12] bg-black/20 px-5 py-4 sm:px-7">
           {board.jummah.length > 0 && (
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2.5">
