@@ -10,11 +10,15 @@
   "keep_vars": true,
   // Keep the *.workers.dev address too, as a fallback test link.
   "workers_dev": true,
-  // The masjid's domain (DNS on Cloudflare). Custom domains: Cloudflare
-  // creates the DNS records and the certificate itself.
+  // The masjid's domains (DNS on Cloudflare). Custom domains: Cloudflare
+  // creates the DNS records and the certificate itself. Every domain the
+  // Worker should answer on must be listed here, or a CLI deploy may detach
+  // it. americanwaqffoundation.org serves the same site.
   "routes": [
     { "pattern": "masjidibrahimspring.org", "custom_domain": true },
-    { "pattern": "www.masjidibrahimspring.org", "custom_domain": true }
+    { "pattern": "www.masjidibrahimspring.org", "custom_domain": true },
+    { "pattern": "americanwaqffoundation.org", "custom_domain": true },
+    { "pattern": "www.americanwaqffoundation.org", "custom_domain": true }
   ],
   "assets": {
     // The Next.js static export.
