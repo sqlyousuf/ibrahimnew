@@ -1,9 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    // AVIF first — meaningfully smaller than WebP for photography, and
-    // every browser this site needs to support decodes it.
-    formats: ["image/avif", "image/webp"],
+    // Resizing is delegated to Unsplash's CDN (see the loader) rather than
+    // Next's optimizer, which is billed on Vercel and needs the paid Images
+    // binding on Cloudflare Workers.
+    loader: "custom",
+    loaderFile: "./src/lib/imageLoader.ts",
     remotePatterns: [
       {
         protocol: "https",

@@ -24,9 +24,6 @@
       "binding": "NEXT_INC_CACHE_KV"
     }
   ],
-  "images": {
-    "binding": "IMAGES"
-  },
   "observability": {
     "enabled": true
   }
