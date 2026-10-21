@@ -106,7 +106,8 @@ export default function AboutPage() {
       </section>
 
       {/* -------------------------------------------------------- Leadership */}
-      <section className="section container-page">
+      {/* id is the target of the "Our Leadership" menu item. */}
+      <section id="leadership" className="section container-page scroll-mt-24">
         <Reveal className="mx-auto max-w-2xl text-center">
           <p className="section-eyebrow justify-center">Our Leadership</p>
           <h2 className="mt-3 font-display text-display-md font-semibold text-navy-900">
@@ -121,7 +122,7 @@ export default function AboutPage() {
               className="grid items-center gap-7 lg:grid-cols-5 lg:gap-12"
             >
               <div
-                className={`arch relative mx-auto aspect-[4/5] w-full max-w-[17rem] overflow-hidden shadow-panel sm:max-w-xs lg:col-span-2 lg:mx-0 lg:max-w-none ${
+                className={`arch relative mx-auto aspect-[4/5] w-full max-w-[17rem] overflow-hidden shadow-panel sm:max-w-xs lg:col-span-2 lg:mx-0 lg:max-w-xs ${
                   i % 2 === 1 ? "lg:order-2" : "lg:order-1"
                 }`}
               >
@@ -129,7 +130,8 @@ export default function AboutPage() {
                   src={leader.image}
                   alt={`${leader.name}, ${leader.role}`}
                   speed={0.15}
-                  sizes="(min-width: 1024px) 30vw, 17rem"
+                  sizes="20rem"
+                  className="object-top"
                 />
               </div>
               <div

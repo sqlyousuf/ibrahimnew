@@ -5,6 +5,8 @@ import GalleryLightbox from "@/components/gallery/GalleryLightbox";
 import { galleryImages } from "@/lib/site";
 
 export const metadata: Metadata = {
+  // Hidden from the site for now (see navLinks in site.ts).
+  robots: { index: false, follow: false },
   title: "Gallery",
   description: "A visual look at life at Masjid Ibrahim in Spring, Texas.",
 };

@@ -33,8 +33,8 @@ function TimePlaceholder({ wide = false }: { wide?: boolean }) {
  * Today's prayer board in the format a masjid actually posts: Adhan (when the
  * prayer window opens) alongside Iqamah (when the congregation stands).
  *
- * The site is static, so the times are fetched in the browser (/api/prayer,
- * shared with the phone prayer bar — see liveData.ts); the "next salah"
+ * The site is static, so the times are fetched in the browser straight from
+ * Masjidal (shared with the phone prayer bar — see liveData.ts); the "next salah"
  * spotlight and row highlight are decided against the masjid's clock. Rows
  * and the spotlight reserve their space up front so nothing jumps when the
  * data lands.

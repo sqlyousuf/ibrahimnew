@@ -26,7 +26,7 @@ To run exactly what production runs (static site + Worker together): `npm run pr
 
 ## Content notes
 
-- **Prayer times**: live from Masjidal. The Worker calls Masjidal's API with the secret server key (`src/lib/masjidal.ts`), shapes the result (`src/lib/prayerTimes.ts`), and caches it in KV for 30 minutes; the browser fetches `/api/prayer`.
+- **Prayer times**: live from Masjidal's public feed — the same keyless endpoint Masjidal's own widgets use, for masjid ID `site.masjidal.masjidId` in `src/lib/site.ts`. The browser calls it directly (`src/lib/masjidal.ts`, shaped by `src/lib/prayerTimes.ts`); no key, and nothing of ours in between.
 - **This Week (`/events`)**: a 7-day calendar built by `getWeekCalendar()` in `src/lib/calendar.ts`, which merges two sources — the Institute's three recurring programs (their `calendar: { daysOfWeek, time }` field in `src/lib/site.ts`) and the entries managed at `/admin` (stored in Workers KV) for everything else (one-off events via `recurrence: "once"` + an ISO `date`, or other recurring items via `recurrence: "weekly"` + `daysOfWeek`). See the `CalendarEvent` type in `src/lib/site.ts` for the full entry shape, including the optional flier image. A day with nothing scheduled just shows "Nothing scheduled" — there's no separate empty state for the page as a whole, since the recurring programs mean it's never really empty.
 - **Donations**: online payment link and Zelle address live in `site.donate` in `src/lib/site.ts`.
 - **Images**: stock photography from Unsplash (free to use, no attribution required) via `images.unsplash.com`, referenced directly by URL — no local copies needed. Swap any `src/lib/site.ts` image URL, or an inline `<Image src=... >` in a page file, for a real photo of the masjid once available. To use a real photo, drop it in `public/` and point the `src` at `/your-file.jpg`.
@@ -35,9 +35,9 @@ To run exactly what production runs (static site + Worker together): `npm run pr
 
 The Next.js app is a **static export** (`output: "export"` → `out/`), served by Cloudflare Workers static assets. Static asset requests are free and unlimited, and never run any code.
 
-Everything that needs a server lives in one small Worker (`worker/index.ts`), which only runs for `/api/*` and `/media/*`. Every route there waits on I/O (Masjidal, KV) rather than computing, so it stays inside the Free plan's 10ms-CPU-per-request limit. That's also why the admin password is checked with an HMAC comparison, not bcrypt.
+Everything that needs a server lives in one small Worker (`worker/index.ts`): the This Week entries, flier images, and the admin API. It only runs for `/api/*` and `/media/*`, and every route there waits on KV rather than computing, so it stays inside the Free plan's 10ms-CPU-per-request limit. That's also why the admin password is checked with an HMAC comparison, not bcrypt.
 
-Storage is one KV namespace (`SITE_KV`, free tier, no card needed): This Week entries, uploaded flier images, and the cached Masjidal response. Wrangler creates it on the first deploy.
+Storage is one KV namespace (`SITE_KV`, free tier, no card needed): This Week entries and uploaded flier images. Wrangler creates it on the first deploy.
 
 ## Deploying to Cloudflare
 
@@ -47,7 +47,6 @@ Secrets — set in the Worker's **Settings → Variables and Secrets**:
 
 | Name | What it's for |
 | --- | --- |
-| `MASJIDAL_SERVER_KEY` | Masjidal API key for live prayer times |
 | `ADMIN_USERNAME` | `/admin` sign-in username |
 | `ADMIN_PASSWORD` | `/admin` sign-in password (plain text; stored encrypted by Cloudflare) |
 | `ADMIN_SESSION_SECRET` | Long random string used to sign admin sessions |

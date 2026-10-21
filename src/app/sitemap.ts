@@ -5,7 +5,8 @@ import { navLinks, site } from "@/lib/site";
 export const dynamic = "force-static";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  return navLinks.map((link) => ({
+  // In-page anchors (e.g. /about#leadership) aren't separate pages.
+  return navLinks.filter((link) => !link.href.includes("#")).map((link) => ({
     url: `${site.url}${link.href === "/" ? "" : link.href}`,
     lastModified: new Date(),
   }));

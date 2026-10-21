@@ -1,8 +1,8 @@
 /**
  * Composition layer pairing Masjidal's Adhan and Iqamah data into the board
- * format a masjid actually displays. Pure functions only: the Worker
- * (worker/index.ts) fetches raw timings and runs `buildPrayerPayload`, and
- * the browser renders the result — so this file is shared by both.
+ * format a masjid actually displays. Pure functions only — the browser
+ * fetches raw timings from Masjidal (./masjidal) and runs
+ * `buildPrayerPayload` on them (see liveData.ts).
  */
 
 import type { MasjidalDayTimings } from "./masjidal";
@@ -150,7 +150,7 @@ export function weekFromDays(
   });
 }
 
-/** What `/api/prayer` returns: everything any page shows about salah. */
+/** Everything any page shows about salah, built in the browser. */
 export type PrayerPayload = {
   /** YYYY-MM-DD at the masjid — lets the browser tell if it's gone stale. */
   dateKey: string;

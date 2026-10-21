@@ -3,7 +3,7 @@ import ProgramCard from "@/components/ProgramCard";
 import Reveal from "@/components/Reveal";
 import PrayerBoard from "@/components/PrayerBoard";
 import SectionHeading from "@/components/SectionHeading";
-import { PatternField, Rosette, StarDivider, StarGlyph } from "@/components/Ornament";
+import { PatternField, Rosette, StarDivider } from "@/components/Ornament";
 import HomeHero from "@/components/home/HomeHero";
 import UpcomingFliers from "@/components/home/UpcomingFliers";
 import TestimonialCarousel from "@/components/home/TestimonialCarousel";
@@ -83,38 +83,8 @@ export default function HomePage() {
 
       {/* ------------------------------------------------------ Welcome/story */}
       <section className="section relative overflow-hidden">
-        <div className="container-page grid items-center gap-14 lg:grid-cols-2 lg:gap-20">
-          <Reveal className="relative mx-auto w-full max-w-md lg:max-w-none">
-            {/* Offset gold arch behind the photo — a second frame that makes
-                the image feel set into the page rather than placed on it. */}
-            <div
-              aria-hidden="true"
-              className="arch absolute inset-0 translate-x-3 translate-y-3 border border-gold-500/50 sm:translate-x-5 sm:translate-y-5"
-            />
-            <div className="arch relative aspect-[4/5] w-full overflow-hidden shadow-panel">
-              <CinematicImage
-                src="https://images.unsplash.com/photo-1761640864240-f793d7ec8348?auto=format&fit=crop&w=1200&q=80"
-                alt="Congregants standing shoulder to shoulder in salah"
-                speed={0.15}
-                sizes="(min-width: 1024px) 40vw, 90vw"
-              />
-              <div
-                aria-hidden="true"
-                className="absolute inset-0 bg-gradient-to-t from-navy-975/50 via-transparent to-transparent"
-              />
-            </div>
-            <div className="card-night absolute -bottom-8 -left-2 w-44 px-5 py-4 sm:-left-8 sm:w-52">
-              <StarGlyph className="h-5 w-5 text-gold-300" />
-              <p className="text-foil mt-2 font-display text-5xl font-semibold leading-none">
-                5×
-              </p>
-              <p className="mt-2 text-[0.625rem] font-semibold uppercase leading-snug tracking-[0.2em] text-cream-100/75">
-                Daily congregational salah
-              </p>
-            </div>
-          </Reveal>
-
-          <Reveal delay={80} className="mt-6 lg:mt-0">
+        <div className="container-page">
+          <Reveal className="mx-auto max-w-2xl text-center">
             <SectionHeading
               arabic="أهلاً وسهلاً"
               eyebrow="Our Story"
@@ -124,8 +94,9 @@ export default function HomePage() {
                   generation
                 </>
               }
+              align="center"
             />
-            <div className="measure mt-5 space-y-4 text-[0.9375rem] leading-[1.8] text-navy-700 sm:text-base">
+            <div className="mx-auto mt-5 max-w-xl space-y-4 text-[0.9375rem] leading-[1.8] text-navy-700 sm:text-base">
               <p>
                 At Masjid Ibrahim, we are committed to fostering a strong and
                 connected Muslim community through salah, education, and
@@ -259,7 +230,7 @@ export default function HomePage() {
               }
               description="Imam Yousuf Ahmed and Dr. Mamdouh Moustafa Mahmoud lead our congregation with decades of combined scholarship — from classical Islamic sciences to Qur'anic Qira'at, guiding our community with warmth and wisdom."
             />
-            <Link href="/about" className="btn-outline-navy mt-8 w-full sm:w-auto">
+            <Link href="/about#leadership" className="btn-outline-navy mt-8 w-full sm:w-auto">
               Meet Our Imams
             </Link>
           </Reveal>
@@ -290,7 +261,7 @@ export default function HomePage() {
       {/* ------------------------------------------------------------- Donate */}
       <section className="relative overflow-hidden bg-navy-975">
         <CinematicImage
-          src="https://images.unsplash.com/photo-1593113646773-028c64a8f1b8?auto=format&fit=crop&w=2000&q=80"
+          src="https://images.unsplash.com/photo-1753947127898-a11f139e9a67?auto=format&fit=crop&w=2000&q=80"
           alt=""
           speed={0.3}
           sizes="100vw"

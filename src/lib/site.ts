@@ -23,6 +23,14 @@ export const site = {
       url: "https://www.zeffy.com/en-US/donation-form/masjid-ibrahim-construction-phase-3-community-hall-wudu-area-restrooms",
     },
   },
+  masjidal: {
+    /**
+     * Masjidal's public ID for this masjid — the same one its embeddable
+     * widgets use. Live prayer times are read from Masjidal's public feed
+     * with it (see src/lib/masjidal.ts); no key needed.
+     */
+    masjidId: "adJqxqAk",
+  },
   social: {
     youtube: "https://youtube.com/@masjidibrahimspring?si=kQO_mJbvC_37BC9f",
     /** Live/past broadcast streams tab, used by the header's "Watch Live" button. */
@@ -35,10 +43,12 @@ export const site = {
 export const navLinks = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },
+  { href: "/about#leadership", label: "Our Leadership" },
   { href: "/prayer-times", label: "Salah Times" },
   { href: "/institute", label: "Institute" },
   { href: "/events", label: "This Week" },
-  { href: "/gallery", label: "Gallery" },
+  // Gallery hidden until there are real photos — the page still exists at
+  // /gallery (noindex); re-add { href: "/gallery", label: "Gallery" } here.
   { href: "/contact", label: "Contact" },
 ];
 
@@ -51,8 +61,7 @@ export const leadership = [
       "Deeply invested in teaching, mentorship, and youth engagement, Imam Yousuf has served as an Imam, Islamic educator, and youth coordinator, connecting Islamic teachings to modern-day realities through impactful talks and educational programs in the greater Houston area for the past 7 years.",
       "Originally from Karachi, Pakistan, Imam Yousuf brings not only a commitment to spiritual growth, but also a warm and relatable personality. He enjoys meaningful community interaction and finds joy in helping others grow through faith and connection.",
     ],
-    image:
-      "https://images.unsplash.com/photo-1758618079913-b6b631637ad9?auto=format&fit=crop&w=800&q=80",
+    image: "/leadership/yousuf-ahmed.jpg",
   },
   {
     name: "Dr. Mamdouh Moustafa Mahmoud",
@@ -62,8 +71,7 @@ export const leadership = [
       "Holds several ijazahs (certifications) in the Qira'at of the Qur'an, books of Hadith, and many other traditional Islamic sciences.",
       "Texas mediator/arbitrator and public speaker, bringing decades of scholarship to the community.",
     ],
-    image:
-      "https://images.unsplash.com/photo-1577561426384-62154a1e9457?auto=format&fit=crop&w=800&q=80",
+    image: "/leadership/mamdouh-mahmoud.jpg",
   },
 ];
 
@@ -245,7 +253,7 @@ export const galleryImages = [
     alt: "Child studying and writing",
   },
   {
-    src: "https://images.unsplash.com/photo-1593113646773-028c64a8f1b8?auto=format&fit=crop&w=1200&q=80",
-    alt: "Volunteers packing donation boxes",
+    src: "https://images.unsplash.com/photo-1753947127898-a11f139e9a67?auto=format&fit=crop&w=1200&q=80",
+    alt: "Gilded columns and arches receding through a mosque colonnade",
   },
 ];

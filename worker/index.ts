@@ -5,20 +5,18 @@
  * The Next.js app is a static export (`out/`) served straight from Workers
  * static assets, which never invokes this script and costs no CPU. Only
  * `/api/*` and `/media/*` reach here (see `run_worker_first` in
- * wrangler.jsonc), and every route is I/O-bound: a Masjidal fetch, a KV
- * read/write, an HMAC. Nothing does real computation — which is why the
+ * wrangler.jsonc), and every route is I/O-bound: a KV read/write, an HMAC.
+ * (Prayer times don't come through here at all — the browser reads them
+ * from Masjidal's public feed.) Nothing does real computation — which is why the
  * admin password check is an HMAC comparison rather than bcrypt (~100ms of
  * CPU by design, far over the limit).
  *
  * Storage is one KV namespace (free tier, no card needed):
  * - `calendar-events`   — the This Week ad-hoc entries, one JSON array
  * - `flier:<file>`      — uploaded flier images, served at /media/fliers/<file>
- * - `prayer:<date>`     — today's Masjidal response, cached 30 minutes
  */
 
 import { jwtVerify, SignJWT } from "jose";
-import { fetchMasjidalRange } from "../src/lib/masjidal";
-import { buildPrayerPayload, getMasjidDateKey, rangeEndKey } from "../src/lib/prayerTimes";
 import type { CalendarEvent } from "../src/lib/site";
 
 // --------------------------------------------------------------------- Types
@@ -32,17 +30,12 @@ interface KVNamespace {
     key: string,
     options: { type: "stream" },
   ): Promise<{ value: ReadableStream | null; metadata: M | null }>;
-  put(
-    key: string,
-    value: string | ArrayBuffer,
-    options?: { expirationTtl?: number; metadata?: unknown },
-  ): Promise<void>;
+  put(key: string, value: string | ArrayBuffer, options?: { metadata?: unknown }): Promise<void>;
 }
 
 interface Env {
   ASSETS: { fetch(request: Request): Promise<Response> };
   SITE_KV: KVNamespace;
-  MASJIDAL_SERVER_KEY?: string;
   ADMIN_USERNAME?: string;
   ADMIN_PASSWORD?: string;
   ADMIN_SESSION_SECRET?: string;
@@ -51,7 +44,6 @@ interface Env {
 // ----------------------------------------------------------------- Constants
 
 const EVENTS_KEY = "calendar-events";
-const PRAYER_TTL_SECONDS = 1800;
 const MAX_FLIER_BYTES = 4 * 1024 * 1024;
 const SESSION_COOKIE = "mi_admin_session";
 const SESSION_SECONDS = 60 * 60 * 24 * 14;
@@ -170,31 +162,6 @@ function isSafeMutation(request: Request, expect: "json" | "image"): boolean {
 }
 
 // -------------------------------------------------------------------- Routes
-
-async function prayer(env: Env): Promise<Response> {
-  const now = new Date();
-  const dateKey = getMasjidDateKey(now);
-  const cacheKey = `prayer:${dateKey}`;
-  const headers = { "cache-control": "public, max-age=300" };
-
-  const cached = await env.SITE_KV.get(cacheKey, "text");
-  if (cached) return new Response(cached, { headers: { ...headers, "content-type": "application/json; charset=utf-8" } });
-
-  const timings = env.MASJIDAL_SERVER_KEY
-    ? await fetchMasjidalRange(env.MASJIDAL_SERVER_KEY, dateKey, rangeEndKey(dateKey, 7))
-    : null;
-  if (!env.MASJIDAL_SERVER_KEY) console.error("MASJIDAL_SERVER_KEY is not set");
-
-  const payload = buildPrayerPayload(now, timings);
-  if (timings) {
-    // Only cache a good answer — an outage should retry on the next visit.
-    await env.SITE_KV.put(cacheKey, JSON.stringify(payload), {
-      expirationTtl: PRAYER_TTL_SECONDS,
-    });
-    return json(payload, 200, headers);
-  }
-  return json(payload, 200, { "cache-control": "no-store" });
-}
 
 async function publicEvents(env: Env): Promise<Response> {
   return json(await readEvents(env), 200, { "cache-control": "public, max-age=60" });
@@ -350,7 +317,6 @@ const worker = {
     const method = request.method;
 
     try {
-      if (method === "GET" && pathname === "/api/prayer") return await prayer(env);
       if (method === "GET" && pathname === "/api/events") return await publicEvents(env);
       if (method === "GET" && pathname.startsWith("/media/fliers/")) {
         return await flier(env, decodeURIComponent(pathname.slice("/media/fliers/".length)));

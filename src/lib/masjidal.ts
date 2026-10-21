@@ -1,16 +1,16 @@
 /**
- * Server-side client for Masjidal's Timings API — the masjid's live source of
- * record for Salah (Adhan) and Iqamah times, replacing the CSV-derived
- * static tables this file used to sit alongside.
+ * Client for Masjidal's public timings feed — the masjid's live source of
+ * record for Salah (Adhan) and Iqamah times.
  *
- * Auth is the Server Key (`MASJIDAL_SERVER_KEY`), scoped to server-to-server
- * calls only — never send it to the browser, which is why only the Worker
- * calls this. The API versions its response
- * shape via a vendor media type in `Accept` rather than a URL segment.
+ * This is the same keyless, public endpoint Masjidal's own embeddable
+ * widgets use (it's what the masjid's previous WordPress site displayed),
+ * served with `Access-Control-Allow-Origin: *`. So the browser calls it
+ * directly: no API key, no server, nothing of ours in the path.
  */
 
-const MASJIDAL_API_BASE = "https://api.masjidal.com";
-const MASJIDAL_ACCEPT = "application/vnd.masjidal.com.v1+json";
+import { site } from "./site";
+
+const MASJIDAL_RANGE_URL = "https://masjidal.com/api/v1/time/range";
 
 export type MasjidalDayTimings = {
   date: string;
@@ -36,36 +36,73 @@ export type MasjidalDayTimings = {
   };
 };
 
-type TimingsResponse = {
-  data?: { timings?: MasjidalDayTimings[] };
+type RangeResponse = {
+  status?: string;
+  data?: {
+    salah?: Array<Record<string, string>>;
+    iqamah?: Array<Record<string, string>>;
+  };
 };
 
 /**
- * Fetches timings for a date range (inclusive). Returns null on any failure
- * — network error, non-2xx, bad JSON — rather than throwing, so a Masjidal
- * outage degrades to "times unavailable" instead of a crashed response.
- * Runs in the Cloudflare Worker (worker/index.ts), which owns caching.
+ * The feed writes "6:22AM" (and occasionally "1:30 PM"); the rest of the
+ * site expects "6:22 AM". Non-times ("N/A", "") pass through untouched.
+ */
+function normalizeTime(value: string | undefined): string {
+  const time = (value ?? "").trim();
+  const match = time.match(/^(\d{1,2}:\d{2})\s*(AM|PM)$/i);
+  return match ? `${match[1]} ${match[2].toUpperCase()}` : time;
+}
+
+/**
+ * Timings for a date range (inclusive), one entry per day in order.
+ * Returns null on any failure — network error, non-2xx, bad JSON, a
+ * mismatched response — rather than throwing, so a Masjidal outage
+ * degrades to "times unavailable" instead of a broken page.
  */
 export async function fetchMasjidalRange(
-  apiKey: string,
   startDateKey: string,
   endDateKey: string,
 ): Promise<MasjidalDayTimings[] | null> {
   try {
-    const url = `${MASJIDAL_API_BASE}/timings?start_date=${startDateKey}&end_date=${endDateKey}`;
-    const res = await fetch(url, {
-      headers: { "x-api-key": apiKey, Accept: MASJIDAL_ACCEPT },
-    });
+    const url = `${MASJIDAL_RANGE_URL}?masjid_id=${site.masjidal.masjidId}&from_date=${startDateKey}&to_date=${endDateKey}`;
+    const res = await fetch(url);
+    if (!res.ok) return null;
 
-    if (!res.ok) {
-      console.error(`Masjidal API returned ${res.status} for ${url}`);
+    const body: RangeResponse = await res.json();
+    const salah = body.data?.salah;
+    const iqamah = body.data?.iqamah;
+    if (body.status !== "success" || !salah?.length || salah.length !== iqamah?.length) {
       return null;
     }
 
-    const body: TimingsResponse = await res.json();
-    return body.data?.timings ?? null;
-  } catch (error) {
-    console.error("Masjidal API fetch failed", error);
+    return salah.map((day, i) => {
+      const iq = iqamah[i];
+      return {
+        date: day.date,
+        hijri_date: day.hijri_date,
+        hijri_month: day.hijri_month,
+        salah: {
+          fajr: normalizeTime(day.fajr),
+          sunrise: normalizeTime(day.sunrise),
+          zuhr: normalizeTime(day.zuhr),
+          asr: normalizeTime(day.asr),
+          maghrib: normalizeTime(day.maghrib),
+          isha: normalizeTime(day.isha),
+        },
+        iqamah: {
+          fajr: normalizeTime(iq.fajr),
+          zuhr: normalizeTime(iq.zuhr),
+          asr: normalizeTime(iq.asr),
+          maghrib: normalizeTime(iq.maghrib),
+          isha: normalizeTime(iq.isha),
+          jummah1: normalizeTime(iq.jummah1),
+          jummah2: normalizeTime(iq.jummah2),
+          jummah3: normalizeTime(iq.jummah3),
+        },
+      };
+    });
+  } catch {
     return null;
   }
 }

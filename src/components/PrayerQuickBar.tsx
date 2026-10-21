@@ -24,8 +24,8 @@ function compact(time: string | null | undefined, loading: boolean): string {
  * the sticky header rather than a competing top bar, and hides while the
  * phone menu is open (see `data-menu-open` on <html>).
  *
- * Reads the same /api/prayer request as the prayer board (liveData.ts), so
- * a page never fetches the times twice.
+ * Reads the same Masjidal request as the prayer board (liveData.ts), so a
+ * page never fetches the times twice.
  */
 export default function PrayerQuickBar() {
   const pathname = usePathname();

@@ -5,7 +5,7 @@ import { StarDivider } from "@/components/Ornament";
 import { usePrayerData } from "@/lib/liveData";
 
 /**
- * Adhan times for the six days after today, from the same /api/prayer
+ * Adhan times for the six days after today, from the same Masjidal
  * response as the board above. Renders nothing until the data is in (it's
  * below the fold, so there's nothing to hold space for).
  */
