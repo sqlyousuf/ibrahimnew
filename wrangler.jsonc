@@ -1,0 +1,33 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "ibrahimnew",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-10-19",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "services": [
+    {
+      // Self-reference for OpenNext's cache/revalidation — the service name
+      // must match "name" above.
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "ibrahimnew"
+    }
+  ],
+  "kv_namespaces": [
+    {
+      // ISR / fetch cache (see open-next.config.ts). No id on purpose:
+      // wrangler creates the namespace on the first deploy and reuses it
+      // after that.
+      "binding": "NEXT_INC_CACHE_KV"
+    }
+  ],
+  "images": {
+    "binding": "IMAGES"
+  },
+  "observability": {
+    "enabled": true
+  }
+}
