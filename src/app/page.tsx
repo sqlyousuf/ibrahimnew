@@ -2,7 +2,8 @@ import Link from "next/link";
 import ProgramCard from "@/components/ProgramCard";
 import Reveal from "@/components/Reveal";
 import PrayerBoard from "@/components/PrayerBoard";
-import { PatternField, StarDivider, StarGlyph } from "@/components/Ornament";
+import SectionHeading from "@/components/SectionHeading";
+import { PatternField, Rosette, StarDivider, StarGlyph } from "@/components/Ornament";
 import HomeHero from "@/components/home/HomeHero";
 import HeroFlierSlider from "@/components/home/HeroFlierSlider";
 import TestimonialCarousel from "@/components/home/TestimonialCarousel";
@@ -25,7 +26,15 @@ export default async function HomePage() {
       ) : (
         <HomeHero
           eyebrow={`Welcome to ${site.name}`}
-          title="Pray Together. Learn Together. Grow Together."
+          title={
+            <>
+              Pray Together.
+              <br />
+              <span className="text-foil italic">Learn</span> Together.
+              <br />
+              Grow Together.
+            </>
+          }
           description="Serving Spring, Texas with daily salah, Islamic education, and a welcoming home for families to grow in faith together."
           ctaLabel="Support the Masjid"
           ctaHref="/donate"
@@ -36,19 +45,26 @@ export default async function HomePage() {
           First section after the hero on every viewport, rendered from local
           data so it paints instantly — cinematic chrome wraps around it, but
           the board itself is never gated behind an animation. */}
-      <section className="relative overflow-hidden bg-navy-975 pb-14 pt-8 sm:pb-20 sm:pt-16 lg:py-24">
-        <PatternField opacity={0.06} />
+      <section className="relative overflow-hidden bg-navy-975 pb-16 pt-12 sm:pb-24 sm:pt-20 lg:py-28">
+        <PatternField opacity={0.05} />
         <div aria-hidden="true" className="grain absolute inset-0" />
+        <div
+          aria-hidden="true"
+          className="absolute inset-x-0 top-0 h-80 bg-[radial-gradient(60%_100%_at_50%_0%,rgba(220,181,106,0.12),transparent_70%)]"
+        />
 
-        <div className="container-page relative grid gap-5 lg:grid-cols-2 lg:items-center lg:gap-14">
-          <div className="lg:col-start-1 lg:row-start-1">
-            <p className="section-eyebrow hidden text-gold-300 before:bg-gold-400 sm:inline-flex">
-              Salah Times
-            </p>
-            <h2 className="font-display text-xl font-semibold text-white sm:mt-3 sm:text-display-md">
-              Today at Masjid Ibrahim
-            </h2>
-          </div>
+        <div className="container-page relative grid gap-8 lg:grid-cols-2 lg:items-center lg:gap-16">
+          <SectionHeading
+            arabic="الصلاة"
+            eyebrow="Salah Times"
+            title={
+              <>
+                Today at <span className="text-foil italic">Masjid Ibrahim</span>
+              </>
+            }
+            tone="dark"
+            className="text-center lg:col-start-1 lg:row-start-1 lg:text-left [&_.section-eyebrow]:justify-center lg:[&_.section-eyebrow]:justify-start"
+          />
 
           <PrayerBoard
             board={board}
@@ -56,26 +72,29 @@ export default async function HomePage() {
             className="lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-center"
           />
 
-          <div className="lg:col-start-1 lg:row-start-2">
-            <p className="measure-narrow leading-relaxed text-cream-100/80">
+          <div className="text-center lg:col-start-1 lg:row-start-2 lg:text-left">
+            <p className="mx-auto max-w-md text-[0.9375rem] leading-[1.75] text-cream-100/70 lg:mx-0">
               Adhan marks the start of each salah window; iqamah is when the
               congregation lines up. Jumu&apos;ah timings, sunrise, and the week
               ahead are on the salah times page.
             </p>
-            <Link
-              href="/prayer-times"
-              className="btn-primary mt-6 w-full sm:w-auto"
-            >
-              View Full Salah Schedule
+            <Link href="/prayer-times" className="btn-outline mt-7 w-full sm:w-auto">
+              Full Salah Schedule
             </Link>
           </div>
         </div>
       </section>
 
       {/* ------------------------------------------------------ Welcome/story */}
-      <section className="section container-page">
-        <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
-          <Reveal className="relative">
+      <section className="section relative overflow-hidden">
+        <div className="container-page grid items-center gap-14 lg:grid-cols-2 lg:gap-20">
+          <Reveal className="relative mx-auto w-full max-w-md lg:max-w-none">
+            {/* Offset gold arch behind the photo — a second frame that makes
+                the image feel set into the page rather than placed on it. */}
+            <div
+              aria-hidden="true"
+              className="arch absolute inset-0 translate-x-3 translate-y-3 border border-gold-500/50 sm:translate-x-5 sm:translate-y-5"
+            />
             <div className="arch relative aspect-[4/5] w-full overflow-hidden shadow-panel">
               <CinematicImage
                 src="https://images.unsplash.com/photo-1761640864240-f793d7ec8348?auto=format&fit=crop&w=1200&q=80"
@@ -83,24 +102,34 @@ export default async function HomePage() {
                 speed={0.15}
                 sizes="(min-width: 1024px) 40vw, 90vw"
               />
+              <div
+                aria-hidden="true"
+                className="absolute inset-0 bg-gradient-to-t from-navy-975/50 via-transparent to-transparent"
+              />
             </div>
-            <div className="card absolute -bottom-6 -right-2 w-40 p-4 sm:-right-6 sm:w-48 sm:p-5">
-              <StarGlyph className="h-5 w-5 text-gold-500" />
-              <p className="mt-2 font-display text-3xl font-bold leading-none text-navy-900">
-                5x
+            <div className="card-night absolute -bottom-8 -left-2 w-44 px-5 py-4 sm:-left-8 sm:w-52">
+              <StarGlyph className="h-5 w-5 text-gold-300" />
+              <p className="text-foil mt-2 font-display text-5xl font-semibold leading-none">
+                5×
               </p>
-              <p className="mt-1.5 text-[0.6875rem] font-semibold uppercase leading-snug tracking-wide text-navy-700">
+              <p className="mt-2 text-[0.625rem] font-semibold uppercase leading-snug tracking-[0.2em] text-cream-100/75">
                 Daily congregational salah
               </p>
             </div>
           </Reveal>
 
-          <Reveal delay={80} className="mt-8 lg:mt-0">
-            <p className="section-eyebrow">Our Story</p>
-            <h2 className="mt-3 font-display text-display-md font-semibold text-navy-900">
-              Welcome to Masjid Ibrahim
-            </h2>
-            <div className="measure mt-5 space-y-4 leading-relaxed text-navy-700">
+          <Reveal delay={80} className="mt-6 lg:mt-0">
+            <SectionHeading
+              arabic="أهلاً وسهلاً"
+              eyebrow="Our Story"
+              title={
+                <>
+                  A sanctuary for <span className="text-foil-deep italic">every</span>{" "}
+                  generation
+                </>
+              }
+            />
+            <div className="measure mt-5 space-y-4 text-[0.9375rem] leading-[1.8] text-navy-700 sm:text-base">
               <p>
                 At Masjid Ibrahim, we are committed to fostering a strong and
                 connected Muslim community through salah, education, and
@@ -117,12 +146,43 @@ export default async function HomePage() {
             </div>
             <Link
               href="/about"
-              className="btn-outline-navy mt-7 w-full sm:w-auto"
+              className="btn-outline-navy mt-8 w-full sm:w-auto"
             >
               Learn More About Us
             </Link>
           </Reveal>
         </div>
+      </section>
+
+      {/* ---------------------------------------------------------- Ayah band
+          At-Tawbah 9:18. Set in Amiri (a Naskh), not the Ruq'ah used for
+          ornamental accents — Qur'anic text is never set decoratively. */}
+      <section className="relative overflow-hidden bg-navy-975 py-20 sm:py-28">
+        <PatternField opacity={0.06} />
+        <div aria-hidden="true" className="grain absolute inset-0" />
+        <Rosette className="pointer-events-none absolute left-1/2 top-1/2 h-[34rem] w-[34rem] -translate-x-1/2 -translate-y-1/2 animate-star-spin-slow text-gold-300/[0.07] sm:h-[44rem] sm:w-[44rem]" />
+        <span aria-hidden="true" className="rule-gold absolute inset-x-0 top-0" />
+        <span aria-hidden="true" className="rule-gold absolute inset-x-0 bottom-0" />
+
+        <Reveal className="container-page relative mx-auto max-w-3xl text-center">
+          <StarDivider />
+          <blockquote className="mt-8">
+            <p
+              lang="ar"
+              dir="rtl"
+              className="text-foil font-arabic text-[2rem] leading-[1.9] sm:text-5xl sm:leading-[1.8]"
+            >
+              إنما يعمر مساجد الله من آمن بالله واليوم الآخر
+            </p>
+            <p className="mx-auto mt-6 max-w-xl font-display text-[1.375rem] italic leading-[1.45] text-cream-100/85 sm:text-[1.75rem]">
+              &ldquo;The masjids of Allah are only to be maintained by those who
+              believe in Allah and the Last Day.&rdquo;
+            </p>
+          </blockquote>
+          <p className="mt-6 text-[0.625rem] font-semibold uppercase tracking-[0.32em] text-gold-300/80">
+            Surah At-Tawbah · 9:18
+          </p>
+        </Reveal>
       </section>
 
       {/* ---------------------------------------------------------- Institute
@@ -133,27 +193,29 @@ export default async function HomePage() {
       <section className="section relative overflow-hidden bg-cream-200">
         <PatternField opacity={0.05} />
         <div className="container-page relative">
-          <Reveal className="mx-auto max-w-2xl text-center">
-            <p className="section-eyebrow justify-center">
-              Masjid Ibrahim Institute
-            </p>
-            <h2 className="mt-3 font-display text-display-md font-semibold text-navy-900">
-              Nurturing Faith Through Education
-            </h2>
-            <p className="mx-auto mt-4 max-w-xl leading-relaxed text-navy-700">
-              From young learners memorizing Qur&apos;an to youth building
-              brotherhood, our Institute offers a program for every stage of
-              the journey.
-            </p>
+          <Reveal>
+            <SectionHeading
+              arabic="العلم"
+              eyebrow="Masjid Ibrahim Institute"
+              title={
+                <>
+                  Nurturing faith through{" "}
+                  <span className="text-foil-deep italic">education</span>
+                </>
+              }
+              description="From young learners memorizing Qur'an to youth building brotherhood, our Institute offers a program for every stage of the journey."
+              align="center"
+              className="max-w-2xl"
+            />
           </Reveal>
         </div>
 
         <HorizontalRail
           className="mt-10 lg:mt-14"
-          trackClassName="flex gap-6 px-5 sm:gap-8 sm:px-6 lg:px-8"
+          trackClassName="flex gap-5 px-5 sm:gap-8 sm:px-6 lg:px-8"
         >
           {programs.map((program) => (
-            <div key={program.slug} className="w-[82vw] shrink-0 sm:w-[420px]">
+            <div key={program.slug} className="w-[84vw] shrink-0 sm:w-[420px]">
               <ProgramCard program={program} />
             </div>
           ))}
@@ -173,9 +235,13 @@ export default async function HomePage() {
       </section>
 
       {/* --------------------------------------------------------- Leadership */}
-      <section className="section container-page">
-        <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
-          <Reveal className="lg:order-2">
+      <section className="section relative overflow-hidden">
+        <div className="container-page grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
+          <Reveal className="relative lg:order-2">
+            <div
+              aria-hidden="true"
+              className="arch-sm absolute inset-0 -translate-x-3 translate-y-3 border border-gold-500/50 sm:-translate-x-5 sm:translate-y-5"
+            />
             <div className="arch-sm relative aspect-[4/3] w-full overflow-hidden shadow-panel">
               <CinematicImage
                 src="https://images.unsplash.com/photo-1758618079913-b6b631637ad9?auto=format&fit=crop&w=1200&q=80"
@@ -186,17 +252,18 @@ export default async function HomePage() {
             </div>
           </Reveal>
           <Reveal delay={80} className="lg:order-1">
-            <p className="section-eyebrow">Our Leadership</p>
-            <h2 className="mt-3 font-display text-display-md font-semibold text-navy-900">
-              Guided by Knowledge, Rooted in Community
-            </h2>
-            <p className="measure mt-5 leading-relaxed text-navy-700">
-              Imam Yousuf Ahmed and Dr. Mamdouh Moustafa Mahmoud lead our
-              congregation with decades of combined scholarship &mdash; from
-              classical Islamic sciences to Qur&apos;anic Qira&apos;at, guiding
-              our community with warmth and wisdom.
-            </p>
-            <Link href="/about" className="btn-outline-navy mt-7 w-full sm:w-auto">
+            <SectionHeading
+              arabic="القيادة"
+              eyebrow="Our Leadership"
+              title={
+                <>
+                  Guided by knowledge, <span className="text-foil-deep italic">rooted</span>{" "}
+                  in community
+                </>
+              }
+              description="Imam Yousuf Ahmed and Dr. Mamdouh Moustafa Mahmoud lead our congregation with decades of combined scholarship — from classical Islamic sciences to Qur'anic Qira'at, guiding our community with warmth and wisdom."
+            />
+            <Link href="/about" className="btn-outline-navy mt-8 w-full sm:w-auto">
               Meet Our Imams
             </Link>
           </Reveal>
@@ -207,13 +274,17 @@ export default async function HomePage() {
       <section className="section relative overflow-hidden bg-cream-200">
         <PatternField opacity={0.05} />
         <div className="container-page relative">
-          <Reveal className="mx-auto max-w-2xl text-center">
-            <p className="section-eyebrow justify-center">
-              What Our Community Says
-            </p>
-            <h2 className="mt-3 font-display text-display-md font-semibold text-navy-900">
-              Strengthening Faith Together
-            </h2>
+          <Reveal>
+            <SectionHeading
+              eyebrow="What Our Community Says"
+              title={
+                <>
+                  Strengthening faith <span className="text-foil-deep italic">together</span>
+                </>
+              }
+              align="center"
+              className="max-w-2xl"
+            />
           </Reveal>
 
           <TestimonialCarousel testimonials={testimonials} />
@@ -228,24 +299,28 @@ export default async function HomePage() {
           speed={0.3}
           sizes="100vw"
         />
-        <div aria-hidden="true" className="absolute inset-0 bg-navy-975/85" />
-        <PatternField opacity={0.08} />
+        <div aria-hidden="true" className="absolute inset-0 bg-navy-975/[0.88]" />
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 bg-[radial-gradient(60%_60%_at_50%_45%,rgba(220,181,106,0.16),transparent_70%)]"
+        />
+        <PatternField opacity={0.07} />
         <div aria-hidden="true" className="grain absolute inset-0" />
 
         <Reveal className="container-page section relative z-10 mx-auto max-w-3xl text-center">
-          <StarDivider className="mb-7" />
-          <p className="section-eyebrow justify-center text-gold-300 before:bg-gold-400">
-            Give for the Sake of Allah
-          </p>
-          <h2 className="mt-3 font-display text-display-md font-semibold text-white">
-            Help Us Grow &amp; Serve
-          </h2>
-          <p className="mx-auto mt-4 max-w-xl leading-relaxed text-cream-100/85">
-            With your generous contributions, we can continue expanding our
-            services, maintaining our facilities, and offering valuable
-            programs to our community.
-          </p>
-          <Link href="/donate" className="btn-primary mt-8 w-full sm:w-auto">
+          <SectionHeading
+            arabic="صدقة جارية"
+            eyebrow="Give for the Sake of Allah"
+            title={
+              <>
+                Help us <span className="text-foil italic">grow</span> &amp; serve
+              </>
+            }
+            description="With your generous contributions, we can continue expanding our services, maintaining our facilities, and offering valuable programs to our community."
+            align="center"
+            tone="dark"
+          />
+          <Link href="/donate" className="btn-primary mt-9 w-full sm:w-auto">
             Donate Now
           </Link>
         </Reveal>

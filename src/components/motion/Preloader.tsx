@@ -3,7 +3,7 @@
 import { useEffect, useRef, useSyncExternalStore } from "react";
 import { gsap } from "@/lib/gsap";
 import { prefersReducedMotion } from "@/lib/motionGate";
-import { StarGlyph } from "@/components/Ornament";
+import { LogoMark, Rosette } from "@/components/Ornament";
 
 const SESSION_KEY = "mi-intro-played";
 
@@ -57,10 +57,9 @@ export default function Preloader() {
     // nowhere — kept snappy rather than lingering for its own sake.
     tl.fromTo(
       starRef.current,
-      { autoAlpha: 0, scale: 0.8, rotate: -25 },
-      { autoAlpha: 1, scale: 1, rotate: 0, duration: 0.7, ease: "power3.out" },
+      { autoAlpha: 0, scale: 0.92, y: 8 },
+      { autoAlpha: 1, scale: 1, y: 0, duration: 0.9, ease: "power3.out" },
     )
-      .to(starRef.current, { rotate: 180, duration: 1, ease: "power2.inOut" }, "<")
       .to(rootRef.current, {
         autoAlpha: 0,
         duration: 0.5,
@@ -82,8 +81,9 @@ export default function Preloader() {
       aria-hidden="true"
       className="fixed inset-0 z-[300] flex items-center justify-center bg-navy-975"
     >
-      <div ref={starRef} className="h-14 w-14 text-gold-glow sm:h-16 sm:w-16">
-        <StarGlyph className="h-full w-full" />
+      <Rosette className="absolute h-72 w-72 animate-star-spin text-gold-300/15" />
+      <div ref={starRef} className="relative">
+        <LogoMark className="h-28 w-auto sm:h-32" />
       </div>
     </div>
   );

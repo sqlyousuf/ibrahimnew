@@ -76,7 +76,7 @@ export default function BrandPage() {
                   />
                 </div>
                 <div className="flex flex-1 flex-col p-5 sm:p-7">
-                  <h2 className="font-display text-lg font-semibold text-navy-900 sm:text-xl">
+                  <h2 className="font-display text-[1.5rem] font-semibold leading-tight text-navy-900 sm:text-[1.75rem]">
                     {logo.name}
                   </h2>
                   <p className="mt-2 text-sm leading-relaxed text-navy-700">
@@ -98,7 +98,7 @@ export default function BrandPage() {
         <Reveal className="mt-10 sm:mt-12">
           <div className="card p-5 sm:p-7">
             <StarGlyph className="h-5 w-5 text-gold-500" />
-            <h2 className="mt-3 font-display text-lg font-semibold text-navy-900 sm:text-xl">
+            <h2 className="mt-3 font-display text-[1.5rem] font-semibold leading-tight text-navy-900 sm:text-[1.75rem]">
               Printing something large?
             </h2>
             <p className="measure mt-2 text-sm leading-relaxed text-navy-700">

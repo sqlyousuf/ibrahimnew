@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { findNextPrayer, useMasjidMinute } from "@/lib/nextPrayer";
 import type { PrayerBoard } from "@/lib/prayerTimes";
 
 const PRAYER_HREF = "/prayer-times";
@@ -25,6 +26,8 @@ function compact(time: string | null): string {
  */
 export default function PrayerQuickBar({ board }: { board: PrayerBoard }) {
   const pathname = usePathname();
+  const minute = useMasjidMinute();
+  const next = minute === null ? null : findNextPrayer(board.rows, minute);
 
   // Redundant on the page it points at.
   if (pathname === PRAYER_HREF) return null;
@@ -34,26 +37,27 @@ export default function PrayerQuickBar({ board }: { board: PrayerBoard }) {
       {/* Reserves layout space so the bar never covers the end of the page. */}
       <div aria-hidden="true" className="h-[5.75rem] lg:hidden" />
 
-      <div className="prayer-quick-bar fixed inset-x-0 bottom-0 z-40 transition-[transform,opacity] duration-300 ease-entrance lg:hidden">
-        <div className="border-t border-gold-500/30 bg-navy-975/95 backdrop-blur-md">
+      <div className="prayer-quick-bar fixed inset-x-0 bottom-0 z-40 transition-[transform,opacity] duration-500 ease-entrance lg:hidden">
+        <div className="relative border-t border-gold-300/20 bg-navy-975/[0.92] shadow-[0_-18px_40px_-20px_rgba(0,0,0,0.9)] backdrop-blur-xl backdrop-saturate-150">
+          <span aria-hidden="true" className="rule-gold absolute inset-x-0 top-0" />
           <div className="pb-[env(safe-area-inset-bottom)]">
             <Link
               href={PRAYER_HREF}
-              className="block px-3 py-2"
+              className="block px-2.5 pb-2 pt-1.5"
               aria-label="Today's adhan and iqamah times — open the full salah schedule"
             >
               {/* The legend is styled exactly like the two rows below it, so
                   the muted line reads as Adhan and the bold line as Iqamah
                   without needing a label on every chip. */}
-              <span className="mb-1.5 flex items-baseline justify-between gap-2 px-1">
-                <span className="text-[0.5625rem] font-semibold uppercase tracking-[0.16em] text-gold-300">
+              <span className="mb-1.5 flex items-baseline justify-between gap-2 px-1.5">
+                <span className="text-[0.5625rem] font-semibold uppercase tracking-[0.24em] text-gold-300">
                   Today
                 </span>
                 <span className="flex items-baseline gap-2">
-                  <span className="text-[0.5625rem] uppercase tracking-[0.1em] text-cream-100/60">
+                  <span className="text-[0.5625rem] uppercase tracking-[0.14em] text-cream-100/50">
                     Adhan
                   </span>
-                  <span className="text-[0.5625rem] font-semibold uppercase tracking-[0.1em] text-white">
+                  <span className="text-[0.5625rem] font-semibold uppercase tracking-[0.14em] text-cream-50">
                     Iqamah
                   </span>
                   <span aria-hidden="true" className="text-[0.625rem] text-gold-300">
@@ -63,22 +67,33 @@ export default function PrayerQuickBar({ board }: { board: PrayerBoard }) {
               </span>
 
               <span className="flex items-stretch gap-1">
-                {board.rows.map((row) => (
-                  <span
-                    key={row.name}
-                    className="flex flex-1 flex-col items-center justify-center rounded-lg bg-white/[0.07] px-0.5 py-1"
-                  >
-                    <span className="text-[0.5rem] font-semibold uppercase tracking-[0.06em] text-gold-300/90">
-                      {row.name}
+                {board.rows.map((row) => {
+                  const isNext = next?.row.name === row.name && !next.tomorrow;
+                  return (
+                    <span
+                      key={row.name}
+                      className={`flex flex-1 flex-col items-center justify-center rounded-xl px-0.5 py-1.5 transition-colors duration-700 ${
+                        isNext
+                          ? "bg-gradient-to-b from-gold-300/25 to-gold-500/10 ring-1 ring-gold-300/50"
+                          : "bg-white/[0.04] ring-1 ring-white/[0.05]"
+                      }`}
+                    >
+                      <span
+                        className={`font-display text-[0.8125rem] font-semibold italic leading-none ${
+                          isNext ? "text-gold-100" : "text-gold-300/90"
+                        }`}
+                      >
+                        {row.name}
+                      </span>
+                      <span className="mt-1 text-[0.625rem] leading-none tabular-nums text-cream-100/50">
+                        {compact(row.adhan)}
+                      </span>
+                      <span className="mt-0.5 text-[0.8125rem] font-bold leading-none tabular-nums text-cream-50">
+                        {compact(row.iqamah)}
+                      </span>
                     </span>
-                    <span className="mt-0.5 text-[0.625rem] leading-none tabular-nums text-cream-100/60">
-                      {compact(row.adhan)}
-                    </span>
-                    <span className="mt-0.5 text-[0.8125rem] font-semibold leading-none tabular-nums text-white">
-                      {compact(row.iqamah)}
-                    </span>
-                  </span>
-                ))}
+                  );
+                })}
               </span>
             </Link>
           </div>

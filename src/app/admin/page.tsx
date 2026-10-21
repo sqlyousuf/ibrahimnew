@@ -75,7 +75,7 @@ export default async function AdminDashboardPage({
                 {event.time ? ` · ${event.time}` : ""}
                 {event.flier ? " · Has flier" : ""}
               </p>
-              <p className="mt-1 font-display text-lg font-semibold text-navy-900">
+              <p className="mt-1 font-display text-[1.5rem] font-semibold leading-tight text-navy-900">
                 {event.title}
               </p>
               {event.location && (

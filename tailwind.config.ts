@@ -19,7 +19,7 @@ const config: Config = {
           950: "#0a1122",
           // Cinematic ground — the resting-black behind full-bleed scenes.
           // Darker than 950 so gold light reads as the one source in frame.
-          975: "#050810",
+          975: "#060a17",
         },
         gold: {
           50: "#fbf7ee",
@@ -36,16 +36,20 @@ const config: Config = {
           // Used sparingly; the working palette otherwise stops at 50-900.
           glow: "#f6dfae",
         },
+        // Ivory paper — warm enough to read as parchment beside the gold,
+        // never a flat white.
         cream: {
-          50: "#fdfcfa",
-          100: "#faf7f0",
-          200: "#f3ede0",
+          50: "#fdfbf7",
+          100: "#f8f4eb",
+          200: "#efe7d6",
+          300: "#e4d8bf",
         },
       },
       fontFamily: {
-        display: ["var(--font-playfair)", "serif"],
-        body: ["var(--font-inter)", "sans-serif"],
+        display: ["var(--font-cormorant)", "Georgia", "serif"],
+        body: ["var(--font-manrope)", "system-ui", "sans-serif"],
         arabic: ["var(--font-amiri)", "serif"],
+        calligraphy: ["var(--font-ruqaa)", "var(--font-amiri)", "serif"],
       },
       // Fluid display scale — one ramp shared by every page so headings
       // stay in proportion from 375px phones up to wide desktops.
@@ -53,24 +57,24 @@ const config: Config = {
         // Cinematic hero scale only — one step above display-xl, reserved
         // for signature pinned-hero headlines.
         "display-hero": [
-          "clamp(2.75rem, 9vw, 6.75rem)",
-          { lineHeight: "1.02", letterSpacing: "-0.025em" },
+          "clamp(3.25rem, 12.5vw, 7.75rem)",
+          { lineHeight: "0.98", letterSpacing: "-0.02em" },
         ],
         "display-xl": [
-          "clamp(2.125rem, 6.4vw, 4.25rem)",
-          { lineHeight: "1.08", letterSpacing: "-0.021em" },
+          "clamp(2.5rem, 7.5vw, 4.75rem)",
+          { lineHeight: "1.04", letterSpacing: "-0.018em" },
         ],
         "display-lg": [
-          "clamp(1.875rem, 4.4vw, 3rem)",
-          { lineHeight: "1.13", letterSpacing: "-0.018em" },
+          "clamp(2.375rem, 5.6vw, 3.75rem)",
+          { lineHeight: "1.06", letterSpacing: "-0.015em" },
         ],
         "display-md": [
-          "clamp(1.5rem, 3.1vw, 2.25rem)",
-          { lineHeight: "1.19", letterSpacing: "-0.015em" },
+          "clamp(2rem, 4vw, 2.875rem)",
+          { lineHeight: "1.1", letterSpacing: "-0.012em" },
         ],
         "display-sm": [
-          "clamp(1.25rem, 2.1vw, 1.5rem)",
-          { lineHeight: "1.26", letterSpacing: "-0.01em" },
+          "clamp(1.5rem, 2.6vw, 1.875rem)",
+          { lineHeight: "1.18", letterSpacing: "-0.008em" },
         ],
         lede: [
           "clamp(1.0625rem, 1.5vw, 1.1875rem)",
@@ -91,6 +95,10 @@ const config: Config = {
         // Warm bloom for the one light source in a cinematic frame — cursor
         // dot, active nav glyph, loader star.
         glow: "0 0 1px rgba(246,223,174,0.8), 0 0 40px rgba(205,156,71,0.35)",
+        // Gold-leaf button: a lit top edge plus a warm cast below.
+        foil: "inset 0 1px 0 rgba(255,244,214,0.55), inset 0 -1px 0 rgba(122,85,40,0.35), 0 10px 28px -12px rgba(184,134,58,0.65)",
+        // Midnight card floating on midnight — depth from a soft black pool.
+        night: "0 1px 0 rgba(246,223,174,0.06) inset, 0 30px 60px -30px rgba(0,0,0,0.8)",
       },
       transitionTimingFunction: {
         entrance: "cubic-bezier(0.22, 1, 0.36, 1)",
@@ -107,10 +115,22 @@ const config: Config = {
           from: { transform: "rotate(0deg)" },
           to: { transform: "rotate(360deg)" },
         },
+        // Light passing across gold leaf.
+        sheen: {
+          "0%, 70%": { transform: "translateX(-120%) skewX(-20deg)" },
+          "100%": { transform: "translateX(220%) skewX(-20deg)" },
+        },
+        "soft-pulse": {
+          "0%, 100%": { opacity: "1", transform: "scale(1)" },
+          "50%": { opacity: "0.45", transform: "scale(0.8)" },
+        },
       },
       animation: {
         "fade-up": "fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both",
         "star-spin": "star-spin 16s linear infinite",
+        "star-spin-slow": "star-spin 90s linear infinite",
+        sheen: "sheen 6s cubic-bezier(0.22, 1, 0.36, 1) infinite",
+        "soft-pulse": "soft-pulse 2.4s ease-in-out infinite",
       },
     },
   },

@@ -20,6 +20,7 @@ export default async function EventsPage() {
   return (
     <PageTransition>
       <PageHero
+        arabic="هذا الأسبوع"
         eyebrow="What's Happening"
         title="This Week at Masjid Ibrahim"
         description="Everything happening this week, day by day — tap a flier for a closer look where there is one. For anything time-sensitive, call the masjid directly."

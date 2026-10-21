@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { motionAllowed } from "@/lib/motionGate";
 import type { UpcomingFlierEvent } from "@/lib/calendar";
+import { PatternField } from "@/components/Ornament";
 
 const INTERVAL_MS = 6000;
 const EVENTS_HREF = "/events";
@@ -56,6 +57,11 @@ export default function HeroFlierSlider({
       onFocus={() => setPaused(true)}
       onBlur={() => setPaused(false)}
     >
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 bg-[radial-gradient(70%_55%_at_50%_40%,rgba(220,181,106,0.18),transparent_70%)]"
+      />
+      <PatternField opacity={0.05} />
       {visibleEvents.map((event, i) => (
         <Link
           key={event.slug}
@@ -80,11 +86,11 @@ export default function HeroFlierSlider({
           </div>
 
           <div className="relative z-10 shrink-0 text-center">
-            <p className="section-eyebrow justify-center text-gold-300 before:bg-gold-400">
+            <p className="section-eyebrow justify-center text-gold-300 before:bg-gold-300">
               {event.dateLabel}
               {event.time ? ` · ${event.time}` : ""}
             </p>
-            <h1 className="mt-3 max-w-2xl text-balance font-display text-display-sm font-semibold text-white sm:text-display-md">
+            <h1 className="mt-3 max-w-2xl text-balance font-display text-display-md font-semibold text-cream-50">
               {event.title}
             </h1>
             <span className="btn-primary mt-5 inline-flex">See This Week&apos;s Events</span>

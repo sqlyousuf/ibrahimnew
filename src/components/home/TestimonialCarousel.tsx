@@ -48,7 +48,7 @@ export default function TestimonialCarousel({
             className="card flex h-full flex-col p-6 sm:p-7"
           >
             <StarGlyph className="h-5 w-5 shrink-0 text-gold-500" />
-            <blockquote className="mt-3 flex-1 text-sm leading-relaxed text-navy-700">
+            <blockquote className="mt-3 flex-1 font-display text-xl italic leading-relaxed text-navy-800">
               &ldquo;{testimonial.quote}&rdquo;
             </blockquote>
             <figcaption className="mt-4 text-sm font-semibold text-navy-900">
@@ -68,7 +68,13 @@ export default function TestimonialCarousel({
       onFocus={() => setPaused(true)}
       onBlur={() => setPaused(false)}
     >
-      <div className="card relative min-h-[19rem] overflow-hidden p-8 sm:min-h-[15rem] sm:p-10">
+      <div className="card relative min-h-[21rem] overflow-hidden p-8 sm:min-h-[17rem] sm:p-10">
+        <span
+          aria-hidden="true"
+          className="text-foil-deep pointer-events-none absolute left-1/2 top-3 -translate-x-1/2 font-display text-[6rem] leading-none opacity-25"
+        >
+          &ldquo;
+        </span>
         {testimonials.map((testimonial, i) => (
           <figure
             key={testimonial.name}
@@ -79,11 +85,11 @@ export default function TestimonialCarousel({
               pointerEvents: i === index ? "auto" : "none",
             }}
           >
-            <StarGlyph className="h-6 w-6 shrink-0 text-gold-500" />
-            <blockquote className="measure mt-4 text-base leading-relaxed text-navy-700 sm:text-lg">
+            <blockquote className="measure mt-6 font-display text-[1.375rem] italic leading-[1.45] text-navy-800 sm:text-2xl">
               &ldquo;{testimonial.quote}&rdquo;
             </blockquote>
-            <figcaption className="mt-5 text-sm font-semibold uppercase tracking-wide text-navy-900">
+            <figcaption className="mt-6 flex items-center gap-3 text-[0.6875rem] font-semibold uppercase tracking-[0.26em] text-gold-700">
+              <span aria-hidden="true" className="h-px w-6 bg-gold-500/60" />
               {testimonial.name}
             </figcaption>
           </figure>

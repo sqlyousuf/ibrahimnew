@@ -35,6 +35,7 @@ export default function AboutPage() {
   return (
     <PageTransition>
       <PageHero
+        arabic="من نحن"
         eyebrow="About Masjid Ibrahim"
         title="A Place of Worship, Learning, and Community"
         description="Rooted in faith, built for our community in Spring, Texas."
@@ -75,7 +76,7 @@ export default function AboutPage() {
 
           <StarDivider className="my-8 sm:my-10" />
 
-          <p className="text-balance text-center font-display text-xl italic leading-snug text-navy-900 sm:text-2xl">
+          <p className="text-balance text-center font-display text-[1.5rem] italic leading-snug text-navy-900 sm:text-[1.75rem]">
             We invite you to join us in salah, learning, and giving, as we work
             together to build a stronger, more connected ummah.
           </p>
@@ -91,7 +92,7 @@ export default function AboutPage() {
               <Reveal key={value.title} delay={i * 70} className="h-full">
                 <div className="card h-full p-5 sm:p-6 lg:p-7">
                   <StarGlyph className="h-5 w-5 text-gold-500" />
-                  <h2 className="mt-3 font-display text-lg font-semibold text-navy-900 sm:text-xl">
+                  <h2 className="mt-3 font-display text-[1.5rem] font-semibold leading-tight text-navy-900 sm:text-[1.75rem]">
                     {value.title}
                   </h2>
                   <p className="mt-2 text-sm leading-relaxed text-navy-700">
@@ -136,7 +137,7 @@ export default function AboutPage() {
                   i % 2 === 1 ? "lg:order-1" : "lg:order-2"
                 }`}
               >
-                <h3 className="font-display text-xl font-semibold text-navy-900 sm:text-2xl">
+                <h3 className="font-display text-[1.75rem] font-semibold leading-tight text-navy-900 sm:text-[2rem]">
                   {leader.name}
                 </h3>
                 <p className="mt-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-gold-700 sm:text-sm">

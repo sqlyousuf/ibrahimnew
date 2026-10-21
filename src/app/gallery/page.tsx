@@ -26,6 +26,7 @@ export default function GalleryPage() {
   return (
     <PageTransition>
       <PageHero
+        arabic="لحظات"
         eyebrow="Moments"
         title="Gallery"
         description="A glimpse into worship, learning, and community life at Masjid Ibrahim."

@@ -42,7 +42,7 @@ export default function WeekCalendar({ days }: { days: CalendarDay[] }) {
               className={`flex h-full flex-col rounded-2xl p-3 ring-1 sm:p-4 ${
                 day.isToday
                   ? "bg-navy-975 text-cream-100 ring-gold-500/40"
-                  : "bg-white ring-navy-900/5"
+                  : "bg-cream-50 ring-gold-700/10"
               }`}
             >
               <div className="flex items-baseline justify-between gap-2 border-b border-current/10 pb-2.5">
@@ -54,7 +54,7 @@ export default function WeekCalendar({ days }: { days: CalendarDay[] }) {
                   {day.weekdayLabel}
                 </p>
                 <p
-                  className={`font-display text-lg font-semibold leading-none ${
+                  className={`font-display text-[1.375rem] font-semibold leading-none ${
                     day.isToday ? "text-white" : "text-navy-900"
                   }`}
                 >

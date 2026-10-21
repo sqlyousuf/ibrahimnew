@@ -1,4 +1,11 @@
+"use client";
+
 import { StarGlyph } from "@/components/Ornament";
+import {
+  findNextPrayer,
+  formatCountdown,
+  useMasjidMinute,
+} from "@/lib/nextPrayer";
 import type { PrayerBoard as Board } from "@/lib/prayerTimes";
 
 const JUMMAH_LABELS = ["First", "Second", "Third"] as const;
@@ -6,6 +13,11 @@ const JUMMAH_LABELS = ["First", "Second", "Third"] as const;
 /**
  * Today's prayer board in the format a masjid actually posts: Adhan (when the
  * prayer window opens) alongside Iqamah (when the congregation stands).
+ *
+ * The times themselves arrive server-rendered in the props; only the "next
+ * salah" spotlight and row highlight are decided in the browser, against the
+ * masjid's clock. The spotlight reserves its height up front so the board
+ * never jumps when that resolves.
  *
  * A real table, so the column structure carries semantics for screen readers
  * and stays easy to extend.
@@ -25,97 +37,160 @@ export default function PrayerBoard({
   emphasis?: boolean;
   showSunrise?: boolean;
 }) {
-  const timeSize = emphasis ? "text-base sm:text-lg" : "text-sm sm:text-base";
+  const minute = useMasjidMinute();
+  const next = minute === null ? null : findNextPrayer(board.rows, minute);
+  const nameSize = emphasis ? "text-[1.375rem] sm:text-2xl" : "text-xl sm:text-[1.375rem]";
+  const timeSize = emphasis ? "text-base sm:text-lg" : "text-[0.9375rem] sm:text-base";
 
   return (
-    <div
-      className={`overflow-hidden rounded-2xl bg-white shadow-panel ring-1 ring-navy-900/5 ${className}`}
-    >
-      <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 border-b border-navy-900/[0.07] bg-cream-100 px-4 py-3 sm:px-6">
-        <p className="flex items-center gap-2 text-[0.6875rem] font-semibold uppercase tracking-[0.16em] text-gold-700">
-          <StarGlyph className="h-4 w-4 shrink-0" />
+    <div className={`card-night overflow-hidden ${className}`}>
+      {/* ------------------------------------------------------ Masthead */}
+      <div className="relative flex items-center justify-between gap-3 px-5 pt-5 sm:px-7 sm:pt-6">
+        <p className="flex items-center gap-2 text-[0.625rem] font-semibold uppercase tracking-[0.28em] text-gold-300">
+          <StarGlyph className="h-3.5 w-3.5 shrink-0" />
           Salah Times
         </p>
         {todayLabel && (
-          <p className="text-xs font-medium text-navy-700">{todayLabel}</p>
+          <p className="text-[0.6875rem] font-medium tracking-wide text-cream-100/60">
+            {todayLabel}
+          </p>
         )}
       </div>
 
-      <table className="w-full text-left">
+      {/* ------------------------------------------------------ Spotlight */}
+      <div
+        className="relative mx-5 mt-4 min-h-[6.25rem] rounded-2xl border border-gold-300/15 bg-gradient-to-br from-gold-300/[0.09] via-transparent to-transparent px-4 py-4 sm:mx-7 sm:px-5"
+        aria-live="polite"
+      >
+        {next ? (
+          <div className="flex items-end justify-between gap-4">
+            <div className="min-w-0">
+              <p className="flex items-center gap-2 text-[0.625rem] font-semibold uppercase tracking-[0.24em] text-cream-100/60">
+                <span className="relative flex h-1.5 w-1.5">
+                  <span className="absolute inset-0 animate-soft-pulse rounded-full bg-gold-300" />
+                </span>
+                {next.tomorrow ? "Tomorrow" : "Next salah"}
+              </p>
+              <p className="text-foil mt-1 font-display text-[2.75rem] font-semibold italic leading-[1.05] sm:text-5xl">
+                {next.row.name}
+              </p>
+            </div>
+            <div className="shrink-0 text-right">
+              <p className="text-[0.625rem] font-semibold uppercase tracking-[0.2em] text-cream-100/55">
+                {next.phase === "before-adhan" ? "Adhan in" : "Iqamah in"}
+              </p>
+              <p className="mt-1 font-display text-[1.75rem] font-semibold leading-none tabular-nums text-cream-50 sm:text-[2rem]">
+                {formatCountdown(next.minutesUntil)}
+              </p>
+              <p className="mt-1.5 text-[0.6875rem] tabular-nums text-gold-200/80">
+                Iqamah {next.row.iqamah ?? next.row.adhan}
+              </p>
+            </div>
+          </div>
+        ) : (
+          <div className="flex h-full min-h-[4.25rem] items-center">
+            <p className="font-display text-2xl italic text-cream-100/70">
+              Today&apos;s five daily salah
+            </p>
+          </div>
+        )}
+      </div>
+
+      {/* ---------------------------------------------------------- Table */}
+      <table className="relative mt-3 w-full text-left">
         <caption className="sr-only">
           Adhan and iqamah times{todayLabel ? ` for ${todayLabel}` : ""}
         </caption>
         <thead>
-          <tr className="border-b border-navy-900/[0.07]">
+          <tr>
             <th
               scope="col"
-              className="px-3 py-2 text-[0.625rem] font-semibold uppercase tracking-[0.14em] text-navy-500 sm:px-6"
+              className="py-2.5 pl-5 pr-2 text-[0.5625rem] font-semibold uppercase tracking-[0.24em] text-cream-100/45 sm:pl-7"
             >
               Salah
             </th>
             <th
               scope="col"
-              className="px-2 py-2 text-right text-[0.625rem] font-semibold uppercase tracking-[0.14em] text-navy-500 sm:px-4"
+              className="px-2 py-2.5 text-right text-[0.5625rem] font-semibold uppercase tracking-[0.24em] text-cream-100/45"
             >
               Adhan
             </th>
             <th
               scope="col"
-              className="px-3 py-2 text-right text-[0.625rem] font-semibold uppercase tracking-[0.14em] text-gold-700 sm:px-6"
+              className="py-2.5 pl-2 pr-5 text-right text-[0.5625rem] font-semibold uppercase tracking-[0.24em] text-gold-300 sm:pr-7"
             >
               Iqamah
             </th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-navy-900/[0.06]">
-          {board.rows.map((row) => (
-            <tr key={row.name}>
-              <th
-                scope="row"
-                className={`px-3 py-3 font-display font-semibold text-navy-900 sm:px-6 ${
-                  emphasis ? "text-base sm:text-lg" : "text-sm sm:text-base"
+        <tbody>
+          {board.rows.map((row) => {
+            const isNext = next?.row.name === row.name && !next.tomorrow;
+            return (
+              <tr
+                key={row.name}
+                aria-current={isNext ? "time" : undefined}
+                className={`relative border-t border-gold-300/[0.08] transition-colors duration-700 ${
+                  isNext
+                    ? "bg-gradient-to-r from-gold-300/[0.14] via-gold-300/[0.05] to-transparent"
+                    : ""
                 }`}
               >
-                {row.name}
-              </th>
-              <td
-                className={`whitespace-nowrap px-2 py-3 text-right tabular-nums text-navy-600 sm:px-4 ${timeSize}`}
-              >
-                {row.adhan ?? "—"}
-              </td>
-              <td className="px-3 py-3 text-right sm:px-6">
-                <span
-                  className={`whitespace-nowrap font-semibold tabular-nums text-navy-900 ${timeSize}`}
+                <th
+                  scope="row"
+                  className={`relative py-3.5 pl-5 pr-2 font-display font-semibold sm:pl-7 ${nameSize} ${
+                    isNext ? "text-gold-200" : "text-cream-50"
+                  }`}
                 >
-                  {row.iqamah ?? "—"}
-                </span>
-                {/* Maghrib's iqamah is derived from its adhan, so the rule is
-                    worth stating next to the resulting time. */}
-                {row.iqamahNote && (
-                  <span className="mt-0.5 block text-[0.625rem] leading-tight text-navy-500">
-                    {row.iqamahNote}
+                  {isNext && (
+                    <span
+                      aria-hidden="true"
+                      className="absolute inset-y-2 left-0 w-[3px] rounded-r-full bg-gradient-to-b from-gold-200 to-gold-500"
+                    />
+                  )}
+                  {row.name}
+                </th>
+                <td
+                  className={`whitespace-nowrap px-2 py-3.5 text-right tabular-nums text-cream-100/55 ${timeSize}`}
+                >
+                  {row.adhan ?? "—"}
+                </td>
+                <td className="py-3.5 pl-2 pr-5 text-right sm:pr-7">
+                  <span
+                    className={`whitespace-nowrap font-semibold tabular-nums ${timeSize} ${
+                      isNext ? "text-gold-100" : "text-cream-50"
+                    }`}
+                  >
+                    {row.iqamah ?? "—"}
                   </span>
-                )}
-              </td>
-            </tr>
-          ))}
+                  {/* Maghrib's iqamah is derived from its adhan, so the rule is
+                      worth stating next to the resulting time. */}
+                  {row.iqamahNote && (
+                    <span className="mt-0.5 block text-[0.625rem] leading-tight text-cream-100/45">
+                      {row.iqamahNote}
+                    </span>
+                  )}
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
 
       {(board.jummah.length > 0 || (showSunrise && board.sunrise)) && (
-        <div className="space-y-3 border-t border-navy-900/[0.07] bg-cream-100 px-4 py-4 sm:px-6">
+        <div className="relative space-y-3 border-t border-gold-300/[0.12] bg-black/20 px-5 py-4 sm:px-7">
           {board.jummah.length > 0 && (
-            <div>
-              <p className="text-[0.625rem] font-semibold uppercase tracking-[0.16em] text-gold-700">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2.5">
+              <p className="font-display text-xl font-semibold italic text-gold-200">
                 Jumu&apos;ah
               </p>
-              <ul className="mt-2 flex flex-wrap gap-2">
+              <ul className="flex flex-wrap gap-2">
                 {board.jummah.map((slot, i) => (
                   <li
                     key={slot}
-                    className="flex items-baseline gap-2 rounded-full bg-navy-900 px-3.5 py-1.5 text-xs text-cream-100"
+                    className="flex items-baseline gap-2 rounded-full border border-gold-300/25 bg-gold-300/[0.06] px-3.5 py-1.5 text-xs text-cream-100"
                   >
-                    <span className="text-gold-300">
+                    <span className="text-[0.625rem] font-semibold uppercase tracking-[0.16em] text-gold-300">
                       {JUMMAH_LABELS[i] ?? `${i + 1}`}
                     </span>
                     <span className="font-semibold tabular-nums">{slot}</span>
@@ -127,10 +202,10 @@ export default function PrayerBoard({
 
           {/* Not a prayer — it marks the end of the Fajr window. */}
           {showSunrise && board.sunrise && (
-            <p className="text-xs text-navy-700">
-              <span className="font-semibold text-navy-900">Sunrise</span>{" "}
+            <p className="text-xs text-cream-100/65">
+              <span className="font-semibold text-cream-50">Sunrise</span>{" "}
               <span className="tabular-nums">{board.sunrise}</span>
-              <span className="text-navy-500"> · end of the Fajr window</span>
+              <span className="text-cream-100/45"> · end of the Fajr window</span>
             </p>
           )}
         </div>

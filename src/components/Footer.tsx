@@ -1,7 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
 import { navLinks, site } from "@/lib/site";
-import { PatternField, StarGlyph } from "@/components/Ornament";
+import { LogoMark, PatternField, Rosette, StarGlyph } from "@/components/Ornament";
 
 const linkClass =
   "inline-flex min-h-[2.75rem] items-center text-cream-100/80 transition-colors hover:text-gold-300 lg:min-h-0 lg:py-1";
@@ -9,7 +8,7 @@ const linkClass =
 const socialLinks = [
   {
     label: "YouTube",
-    href: site.social.youtube,
+    href: site.social.youtubeLive,
     icon: (
       <path
         fill="currentColor"
@@ -47,33 +46,37 @@ export default function Footer() {
     <footer className="relative overflow-hidden bg-navy-975 text-cream-100">
       <PatternField opacity={0.05} />
       <div aria-hidden="true" className="grain absolute inset-0" />
-      <span
-        aria-hidden="true"
-        className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold-500/40 to-transparent"
-      />
+      <span aria-hidden="true" className="rule-gold absolute inset-x-0 top-0" />
+      <Rosette className="pointer-events-none absolute -left-40 top-10 h-[30rem] w-[30rem] animate-star-spin-slow text-gold-300/[0.06]" />
 
-      <div className="container-page relative grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4 lg:gap-12 lg:py-16">
+      {/* Ceremonial close — the gilded mark and the masjid's name in Ruq'ah,
+          before the utilitarian columns. */}
+      <div className="container-page relative flex flex-col items-center pb-4 pt-16 text-center lg:pt-20">
+        <LogoMark className="h-28 w-auto lg:h-32" />
+        <p className="mt-6 max-w-sm font-display text-[1.5rem] italic leading-snug text-cream-100/85 sm:max-w-md sm:text-[1.75rem]">
+          {site.tagline}
+        </p>
+        <span aria-hidden="true" className="mt-6 flex items-center gap-3">
+          <span className="h-px w-12 bg-gradient-to-r from-transparent to-gold-300/60" />
+          <StarGlyph className="h-4 w-4 text-gold-300" />
+          <span className="h-px w-12 bg-gradient-to-l from-transparent to-gold-300/60" />
+        </span>
+      </div>
+
+      <div className="container-page relative grid gap-10 pb-14 pt-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-12 lg:pb-16">
         <div className="sm:col-span-2 lg:col-span-1">
-          {/* 206x250 matches the file's true 1407x1704 ratio. */}
-          <Image
-            src="/brand/logo-navy-bg.jpg"
-            alt=""
-            width={206}
-            height={250}
-            className="h-16 w-auto lg:h-20"
-          />
-          <p lang="ar" className="mt-4 font-arabic text-2xl leading-none text-gold-300">
-            مسجد إبراهيم
-          </p>
-          <p className="measure-narrow mt-3 text-sm leading-relaxed text-cream-100/75">
-            {site.tagline}. A center for salah, learning, and service in
-            Spring, Texas.
+          <h2 className="flex items-center gap-2.5 font-display text-[1.375rem] font-semibold italic text-gold-200">
+            <StarGlyph className="h-3.5 w-3.5 text-gold-400" />
+            {site.name}
+          </h2>
+          <p className="measure-narrow mt-3 text-sm leading-relaxed text-cream-100/70">
+            A center for salah, learning, and service in Spring, Texas.
           </p>
         </div>
 
         <div>
-          <h2 className="flex items-center gap-2 font-display text-sm font-semibold uppercase tracking-[0.2em] text-gold-300">
-            <StarGlyph className="h-3.5 w-3.5" />
+          <h2 className="flex items-center gap-2.5 font-display text-[1.375rem] font-semibold italic text-gold-200">
+            <StarGlyph className="h-3.5 w-3.5 text-gold-400" />
             Explore
           </h2>
           {/* Two columns on phones so seven 44px targets don't run long. */}
@@ -89,8 +92,8 @@ export default function Footer() {
         </div>
 
         <div>
-          <h2 className="flex items-center gap-2 font-display text-sm font-semibold uppercase tracking-[0.2em] text-gold-300">
-            <StarGlyph className="h-3.5 w-3.5" />
+          <h2 className="flex items-center gap-2.5 font-display text-[1.375rem] font-semibold italic text-gold-200">
+            <StarGlyph className="h-3.5 w-3.5 text-gold-400" />
             Contact
           </h2>
           <ul className="mt-2 text-sm lg:mt-4">
@@ -116,8 +119,8 @@ export default function Footer() {
         </div>
 
         <div>
-          <h2 className="flex items-center gap-2 font-display text-sm font-semibold uppercase tracking-[0.2em] text-gold-300">
-            <StarGlyph className="h-3.5 w-3.5" />
+          <h2 className="flex items-center gap-2.5 font-display text-[1.375rem] font-semibold italic text-gold-200">
+            <StarGlyph className="h-3.5 w-3.5 text-gold-400" />
             Support the Masjid
           </h2>
           <p className="mt-3 text-sm leading-relaxed text-cream-100/75 lg:mt-4">
@@ -127,7 +130,7 @@ export default function Footer() {
           <Link href="/donate" className="btn-primary mt-5 w-full sm:w-auto">
             Donate Now
           </Link>
-          <Link href="/events" className="btn-primary mt-3 w-full sm:w-auto">
+          <Link href="/events" className="btn-outline mt-3 w-full sm:w-auto">
             Events This Week
           </Link>
         </div>
@@ -147,7 +150,7 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={`${site.name} on ${social.label}`}
-                  className="flex h-10 w-10 items-center justify-center rounded-full text-cream-100/80 transition-colors hover:bg-white/10 hover:text-gold-300"
+                  className="flex h-11 w-11 items-center justify-center rounded-full border border-gold-300/20 text-cream-100/80 transition-colors hover:border-gold-300/60 hover:text-gold-200"
                 >
                   <svg
                     viewBox="0 0 24 24"
@@ -166,7 +169,7 @@ export default function Footer() {
             ))}
           </ul>
 
-          <p>Built with care for our community.</p>
+          <p lang="ar" dir="rtl" className="arabic-accent text-base text-gold-300/70">جزاكم الله خيرا</p>
         </div>
       </div>
     </footer>

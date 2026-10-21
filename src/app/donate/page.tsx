@@ -30,6 +30,7 @@ export default function DonatePage() {
   return (
     <PageTransition>
       <PageHero
+        arabic="صدقة"
         title="Support Masjid Ibrahim"
         description={
           <>
@@ -107,7 +108,7 @@ export default function DonatePage() {
             <Reveal key={cause.title} delay={i * 80} className="h-full">
               <div className="card h-full p-5 sm:p-6">
                 <StarGlyph className="h-5 w-5 text-gold-500" />
-                <h2 className="mt-3 font-display text-lg font-semibold text-navy-900">
+                <h2 className="mt-3 font-display text-[1.5rem] font-semibold leading-tight text-navy-900">
                   {cause.title}
                 </h2>
                 <p className="mt-2 text-sm leading-relaxed text-navy-700">

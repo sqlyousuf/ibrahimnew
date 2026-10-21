@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Playfair_Display, Amiri } from "next/font/google";
+import { Amiri, Aref_Ruqaa, Cormorant_Garamond, Manrope } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -17,24 +17,38 @@ import { site } from "@/lib/site";
  */
 export const revalidate = 1800;
 
-const inter = Inter({
+// Body/UI face — a quiet geometric sans that stays crisp at small sizes on
+// phone screens, so the serif can carry all the ceremony.
+const manrope = Manrope({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-manrope",
   display: "swap",
 });
 
-const playfair = Playfair_Display({
+// Display face — high-contrast Garamond with a true italic, used large and
+// sparingly. Its small x-height is why the display scale runs a step bigger.
+const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
-  variable: "--font-playfair",
+  weight: ["500", "600", "700"],
+  style: ["normal", "italic"],
+  variable: "--font-cormorant",
   display: "swap",
 });
 
-// Only weight 400 is ever used (see font-arabic usages) — bold was dead
-// weight on every page load.
+// Arabic reading text (names, short phrases set inline with English).
 const amiri = Amiri({
   subsets: ["arabic"],
   weight: ["400"],
   variable: "--font-amiri",
+  display: "swap",
+});
+
+// Calligraphic Ruq'ah — ornamental Arabic only (greetings, section marks),
+// never body copy.
+const ruqaa = Aref_Ruqaa({
+  subsets: ["arabic"],
+  weight: ["400", "700"],
+  variable: "--font-ruqaa",
   display: "swap",
 });
 
@@ -58,7 +72,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0a1122",
+  themeColor: "#060a17",
   colorScheme: "light",
   width: "device-width",
   initialScale: 1,
@@ -87,7 +101,7 @@ export default async function RootLayout({
     <html
       lang="en"
       data-scroll-behavior="smooth"
-      className={`${inter.variable} ${playfair.variable} ${amiri.variable}`}
+      className={`${manrope.variable} ${cormorant.variable} ${amiri.variable} ${ruqaa.variable}`}
       // The inline script below mutates this element's classList before React
       // hydrates (that's the point — it must run pre-paint to avoid a flash of
       // un-revealed content). That intentional, expected mismatch is exactly
@@ -98,7 +112,7 @@ export default async function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: revealReady }} />
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-navy-950 focus:px-5 focus:py-3 focus:text-sm focus:font-semibold focus:text-cream-100"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-navy-975 focus:px-5 focus:py-3 focus:text-sm focus:font-semibold focus:text-cream-100"
         >
           Skip to content
         </a>

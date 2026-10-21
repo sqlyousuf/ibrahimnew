@@ -13,7 +13,7 @@ export default function AdminLoginPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-cream-100 px-5 py-16">
       <div className="w-full">
-        <p className="mb-6 text-center font-display text-lg font-semibold text-navy-900">
+        <p className="mb-6 text-center font-display text-[1.5rem] font-semibold leading-tight text-navy-900">
           Masjid Ibrahim — This Week Admin
         </p>
         <LoginForm />

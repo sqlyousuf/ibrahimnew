@@ -18,6 +18,7 @@ export default function ContactPage() {
   return (
     <PageTransition>
       <PageHero
+        arabic="تواصل معنا"
         eyebrow="Get In Touch"
         title="Contact Us"
         description="We'd love to hear from you — reach out with questions, feedback, or to get involved."
@@ -32,7 +33,7 @@ export default function ContactPage() {
             <Reveal>
               <div className="card p-5 sm:p-7">
                 <p className="section-eyebrow">Visit</p>
-                <h2 className="mt-2 font-display text-lg font-semibold text-navy-900 sm:text-xl">
+                <h2 className="mt-2 font-display text-[1.5rem] font-semibold leading-tight text-navy-900 sm:text-[1.75rem]">
                   Address
                 </h2>
                 <p className="mt-2 leading-relaxed text-navy-700">
@@ -55,7 +56,7 @@ export default function ContactPage() {
             <Reveal delay={70}>
               <div className="card p-5 sm:p-7">
                 <p className="section-eyebrow">Call &amp; Email</p>
-                <h2 className="mt-2 font-display text-lg font-semibold text-navy-900 sm:text-xl">
+                <h2 className="mt-2 font-display text-[1.5rem] font-semibold leading-tight text-navy-900 sm:text-[1.75rem]">
                   Reach Us Directly
                 </h2>
                 <ul className="mt-2 divide-y divide-navy-900/[0.07]">
@@ -106,7 +107,7 @@ export default function ContactPage() {
                 <p className="section-eyebrow text-gold-300 before:bg-gold-400">
                   Institute Enrollment
                 </p>
-                <h2 className="mt-2 flex items-start gap-2.5 font-display text-lg font-semibold text-white sm:text-xl">
+                <h2 className="mt-2 flex items-start gap-2.5 font-display text-[1.5rem] font-semibold leading-tight text-white sm:text-[1.75rem]">
                   <StarGlyph className="mt-1 h-4 w-4 shrink-0 text-gold-300" />
                   <span>Questions about a program?</span>
                 </h2>

@@ -32,6 +32,7 @@ export default function InstitutePage() {
   return (
     <PageTransition>
       <PageHero
+        arabic="المعهد"
         eyebrow="Masjid Ibrahim Institute"
         title="Nurturing Faith Through Education"
         description="Quran memorization, weekend school, and youth mentorship for every stage of the journey."
@@ -138,7 +139,7 @@ export default function InstitutePage() {
               <Reveal key={service.slug} delay={i * 80} className="h-full">
                 <div className="card h-full p-6 sm:p-7">
                   <StarGlyph className="h-5 w-5 text-gold-500" />
-                  <h3 className="mt-3 font-display text-lg font-semibold text-navy-900">
+                  <h3 className="mt-3 font-display text-[1.5rem] font-semibold leading-tight text-navy-900">
                     {service.name}
                   </h3>
                   <p className="mt-2 text-sm leading-relaxed text-navy-700">

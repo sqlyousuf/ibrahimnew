@@ -6,10 +6,10 @@ type Program = (typeof programs)[number];
 function DetailRow({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <dt className="text-[0.625rem] font-semibold uppercase tracking-[0.16em] text-gold-700">
+      <dt className="text-[0.5625rem] font-semibold uppercase tracking-[0.24em] text-gold-600">
         {label}
       </dt>
-      <dd className="mt-0.5 text-sm leading-relaxed text-navy-700">{value}</dd>
+      <dd className="mt-1 text-sm leading-relaxed text-navy-800">{value}</dd>
     </div>
   );
 }
@@ -17,7 +17,7 @@ function DetailRow({ label, value }: { label: string; value: string }) {
 export default function ProgramCard({ program }: { program: Program }) {
   return (
     <article className="card card-interactive group flex h-full flex-col overflow-hidden">
-      <div className="relative aspect-[16/10] w-full overflow-hidden">
+      <div className="relative aspect-[4/3] w-full overflow-hidden">
         <Image
           src={program.image}
           alt={`${program.name} at Masjid Ibrahim`}
@@ -27,21 +27,22 @@ export default function ProgramCard({ program }: { program: Program }) {
         />
         <div
           aria-hidden="true"
-          className="absolute inset-0 bg-gradient-to-t from-navy-950/65 via-navy-950/10 to-transparent"
+          className="absolute inset-0 bg-gradient-to-t from-navy-975/90 via-navy-975/25 to-transparent"
         />
-        <p className="absolute inset-x-5 bottom-4 font-display text-xl font-semibold leading-tight text-white">
-          {program.name}
-        </p>
+        <div className="absolute inset-x-5 bottom-4 sm:inset-x-6">
+          <p className="text-[0.5625rem] font-semibold uppercase tracking-[0.26em] text-gold-200">
+            {program.subtitle}
+          </p>
+          <p className="mt-1.5 font-display text-[1.875rem] font-semibold leading-none text-cream-50">
+            {program.name}
+          </p>
+        </div>
       </div>
 
       <div className="flex flex-1 flex-col p-5 sm:p-6">
-        <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.16em] text-gold-700">
-          {program.subtitle}
-        </p>
-
         {/* Label-above-value stacking keeps long addresses readable at 375px,
             where an inline label/value split leaves ~190px for the value. */}
-        <dl className="mt-4 space-y-3 border-t border-navy-900/[0.07] pt-4">
+        <dl className="space-y-3.5">
           <DetailRow label="Ages" value={program.audience} />
           <DetailRow label="Schedule" value={program.schedule} />
           <DetailRow label="Location" value={program.location} />

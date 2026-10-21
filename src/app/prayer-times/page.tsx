@@ -27,6 +27,7 @@ export default async function PrayerTimesPage() {
   return (
     <PageTransition>
       <PageHero
+        arabic="أوقات الصلاة"
         eyebrow="Salah Times"
         title="Salah Times"
         description="Adhan and iqamah timings for the five daily salah and Jumu'ah at Masjid Ibrahim."
@@ -49,7 +50,7 @@ export default async function PrayerTimesPage() {
         <Reveal className="mt-10 grid gap-4 sm:mt-14 sm:grid-cols-2 sm:gap-5">
           <div className="card p-5 sm:p-6">
             <StarGlyph className="h-5 w-5 text-gold-500" />
-            <h2 className="mt-3 font-display text-lg font-semibold text-navy-900">
+            <h2 className="mt-3 font-display text-[1.5rem] font-semibold leading-tight text-navy-900">
               Adhan and iqamah
             </h2>
             <p className="mt-2 text-sm leading-relaxed text-navy-700">
@@ -60,7 +61,7 @@ export default async function PrayerTimesPage() {
           </div>
           <div className="card p-5 sm:p-6">
             <StarGlyph className="h-5 w-5 text-gold-500" />
-            <h2 className="mt-3 font-display text-lg font-semibold text-navy-900">
+            <h2 className="mt-3 font-display text-[1.5rem] font-semibold leading-tight text-navy-900">
               Why Maghrib is different
             </h2>
             <p className="mt-2 text-sm leading-relaxed text-navy-700">
@@ -89,7 +90,7 @@ export default async function PrayerTimesPage() {
               until the next scheduled change.
             </p>
 
-            <div className="relative mt-6 overflow-hidden rounded-2xl bg-white shadow-soft ring-1 ring-navy-900/5">
+            <div className="relative mt-6 overflow-hidden rounded-[1.375rem] bg-cream-50 shadow-soft ring-1 ring-gold-700/10">
               {/* Scrolls inside its own container rather than pushing the page
                   sideways on a narrow phone. Below sm, the table (36rem min)
                   is wider than the viewport, so Maghrib/Isha sit off to the
@@ -152,7 +153,7 @@ export default async function PrayerTimesPage() {
 
               <div
                 aria-hidden="true"
-                className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-white to-transparent sm:hidden"
+                className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-cream-50 to-transparent sm:hidden"
               />
             </div>
           </Reveal>

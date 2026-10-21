@@ -17,11 +17,23 @@
   body {
     @apply bg-cream-100 font-body text-navy-900 antialiased;
     text-rendering: optimizeLegibility;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  ::selection {
+    background: rgba(220, 181, 106, 0.35);
+    color: theme("colors.navy.950");
   }
 
   /* Serif display face needs optical tightening the sans doesn't. */
   .font-display {
-    font-feature-settings: "kern" 1, "liga" 1;
+    font-feature-settings: "kern" 1, "liga" 1, "dlig" 1, "onum" 0;
+  }
+
+  /* Cormorant's numerals are oldstyle by default; times and counts must
+     line up, so anything tabular gets lining figures. */
+  .tabular-nums {
+    font-feature-settings: "lnum" 1, "tnum" 1;
   }
 
   /* One visible focus treatment everywhere, tuned to pass 3:1 against both
@@ -80,21 +92,43 @@
 
   /* ---- Surfaces -----------------------------------------------------------
      One card system: same radius, same resting shadow, same hairline.
-     The hairline is what keeps a white card legible on cream. */
+     The hairline is what keeps a white card legible on ivory. */
   .card {
-    @apply rounded-2xl bg-white shadow-soft ring-1 ring-navy-900/5;
+    @apply rounded-[1.375rem] bg-cream-50 shadow-soft ring-1 ring-gold-700/10;
   }
 
   .card-dark {
-    @apply rounded-2xl bg-navy-900 text-cream-100 shadow-panel ring-1 ring-white/10;
+    @apply rounded-[1.375rem] bg-navy-950 text-cream-100 shadow-night ring-1 ring-gold-300/15;
+  }
+
+  /* Midnight glass — the premium surface for prayer times and anything
+     that sits on the dark cinematic grounds. A gold hairline frame plus a
+     faint top-light so it reads as lacquer rather than a flat panel. */
+  .card-night {
+    @apply relative rounded-[1.75rem] text-cream-100 shadow-night;
+    background:
+      radial-gradient(120% 80% at 50% -10%, rgba(220, 181, 106, 0.14), transparent 55%),
+      linear-gradient(180deg, #0f1730 0%, #0a1022 100%);
+  }
+  .card-night::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    padding: 1px;
+    border-radius: inherit;
+    background: linear-gradient(160deg, rgba(246, 223, 174, 0.55), rgba(184, 134, 58, 0.12) 35%, rgba(184, 134, 58, 0.08) 65%, rgba(246, 223, 174, 0.35));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
   }
 
   .card-interactive {
-    @apply transition duration-300 ease-entrance hover:-translate-y-1 hover:shadow-lift;
+    @apply transition duration-500 ease-entrance hover:-translate-y-1 hover:shadow-lift;
   }
 
   .panel {
-    @apply rounded-3xl bg-white shadow-panel ring-1 ring-navy-900/5;
+    @apply rounded-[1.75rem] bg-cream-50 shadow-panel ring-1 ring-gold-700/10;
   }
 
   /* Mihrab / dome framing device, echoing the arch in the masjid logo. */
@@ -107,38 +141,96 @@
   }
 
   /* ---- Type ---------------------------------------------------------------- */
-  /* items-start (not center) so a long eyebrow that wraps to two lines keeps
-     its rule aligned to the first line rather than floating mid-block. */
+  /* Small-caps label with a gold diamond — the site's recurring signature
+     above every heading. items-start so a wrapped label keeps its mark on
+     the first line. */
   .section-eyebrow {
-    @apply inline-flex items-start gap-3 text-[0.6875rem] font-semibold uppercase leading-[1.4] tracking-[0.22em] text-gold-600 sm:text-xs sm:tracking-[0.25em];
+    @apply inline-flex items-start gap-2.5 font-body text-[0.6875rem] font-semibold uppercase leading-[1.5] tracking-[0.28em] text-gold-600 sm:text-xs sm:tracking-[0.32em];
   }
 
   .section-eyebrow::before {
     content: "";
-    @apply mt-[0.65em] h-px w-6 shrink-0 bg-gold-500 sm:w-8;
+    @apply mt-[0.42em] h-[0.4rem] w-[0.4rem] shrink-0 rotate-45 bg-gold-500 ring-[3px] ring-gold-500/20;
+  }
+
+  /* Metallic gold leaf for display type — a vertical ramp from a pale lit
+     edge into deep bronze, so headline words read as gilded rather than
+     merely coloured. */
+  .text-foil {
+    /* Room for italic overhang, which background-clip would otherwise shave. */
+    padding-inline: 0.08em;
+    margin-inline: -0.08em;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+    background: linear-gradient(180deg, #fbefd2 0%, #e9cb8a 38%, #c99a4e 62%, #f1d9a2 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Darker leaf for use on ivory backgrounds, where pale gold would vanish. */
+  .text-foil-deep {
+    /* Room for italic overhang, which background-clip would otherwise shave. */
+    padding-inline: 0.08em;
+    margin-inline: -0.08em;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+    background: linear-gradient(180deg, #b8863a 0%, #8a6029 55%, #b8863a 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Calligraphic Arabic accent above headings. */
+  .arabic-accent {
+    @apply font-calligraphy leading-none;
   }
 
   /* ---- Buttons -------------------------------------------------------------
-     min-h 48px clears the 44px tap-target floor on every button on the site. */
+     min-h 52px clears the 44px tap-target floor with room to spare; these
+     are thumbed on phones far more often than clicked. */
   .btn-base {
-    @apply inline-flex min-h-[3rem] items-center justify-center gap-2 rounded-full px-6 text-center text-sm font-semibold uppercase tracking-wide transition duration-300 ease-entrance sm:px-7;
+    @apply relative inline-flex min-h-[3.25rem] items-center justify-center gap-2.5 overflow-hidden rounded-full px-7 text-center font-body text-[0.8125rem] font-bold uppercase tracking-[0.18em] transition duration-500 ease-entrance sm:px-8;
   }
 
+  /* Gold leaf: metallic ramp, lit top edge, and a slow sheen that passes
+     across it every few seconds. */
   .btn-primary {
-    @apply btn-base bg-gold-500 text-navy-950 shadow-soft hover:bg-gold-400 hover:shadow-lift active:translate-y-0 sm:hover:-translate-y-0.5;
+    @apply btn-base text-navy-975 shadow-foil active:scale-[0.98] sm:hover:-translate-y-0.5;
+    background: linear-gradient(180deg, #f3dca6 0%, #dcb56a 45%, #c4924a 100%);
+  }
+  .btn-primary::after {
+    content: "";
+    @apply pointer-events-none absolute inset-y-0 left-0 w-1/3 animate-sheen;
+    background: linear-gradient(90deg, transparent, rgba(255, 250, 235, 0.55), transparent);
+  }
+  .btn-primary:hover {
+    filter: brightness(1.06);
   }
 
   .btn-outline {
-    @apply btn-base border border-white/50 bg-white/5 text-white backdrop-blur-sm hover:border-gold-300 hover:bg-white/10 hover:text-gold-200 sm:hover:-translate-y-0.5;
+    @apply btn-base border border-gold-300/45 bg-white/[0.04] text-cream-50 backdrop-blur-md hover:border-gold-300 hover:bg-white/[0.08] hover:text-gold-200 active:scale-[0.98] sm:hover:-translate-y-0.5;
   }
 
   .btn-outline-navy {
-    @apply btn-base border border-navy-900/20 bg-white/60 text-navy-900 hover:border-gold-500 hover:bg-white hover:text-gold-700 hover:shadow-soft sm:hover:-translate-y-0.5;
+    @apply btn-base border border-gold-600/35 bg-transparent text-navy-900 hover:border-gold-500 hover:bg-cream-50 hover:text-gold-700 hover:shadow-soft active:scale-[0.98] sm:hover:-translate-y-0.5;
   }
 
   /* Inline text links that need an affordance without shouting. */
   .link-underline {
     @apply underline decoration-gold-500/40 underline-offset-4 transition-colors hover:decoration-gold-500;
+  }
+
+  /* Gold hairline rule that fades out at both ends. */
+  .rule-gold {
+    @apply h-px bg-gradient-to-r from-transparent via-gold-400/60 to-transparent;
+  }
+}
+
+/* Shimmer is decoration — off for anyone who's asked for less motion. */
+@media (prefers-reduced-motion: reduce) {
+  .btn-primary::after {
+    display: none;
   }
 }
 
@@ -365,4 +457,18 @@ html[data-lightbox-open="true"] .prayer-quick-bar {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* ---------------------------------------------------------------------------
+   Gilded logo
+   The calligraphic mark (a transparent PNG cut from the brand JPG) used as a
+   mask over a metallic ramp, so it reads as gold leaf on any dark ground
+   instead of a white box with a logo in it.
+   --------------------------------------------------------------------------- */
+
+.logo-foil {
+  aspect-ratio: 464 / 600;
+  background: linear-gradient(170deg, #fbefd2 0%, #e2bf7a 40%, #b8863a 70%, #f0d79f 100%);
+  -webkit-mask: url("/brand/logo-mark.png") center / contain no-repeat;
+  mask: url("/brand/logo-mark.png") center / contain no-repeat;
 }
