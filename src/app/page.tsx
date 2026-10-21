@@ -266,7 +266,7 @@ export default function HomePage() {
           speed={0.3}
           sizes="100vw"
         />
-        <div aria-hidden="true" className="absolute inset-0 bg-navy-975/[0.88]" />
+        <div aria-hidden="true" className="absolute inset-0 bg-navy-975/[0.78]" />
         <div
           aria-hidden="true"
           className="absolute inset-0 bg-[radial-gradient(60%_60%_at_50%_45%,rgba(220,181,106,0.16),transparent_70%)]"
