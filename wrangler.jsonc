@@ -5,6 +5,9 @@
   // to fit the Workers Free plan.
   "main": "worker/index.ts",
   "compatibility_date": "2026-10-19",
+  // Keep plain-text variables set in the Cloudflare dashboard when deploying
+  // from the CLI (secrets are always kept; this covers the rest).
+  "keep_vars": true,
   "assets": {
     // The Next.js static export.
     "directory": "out",
