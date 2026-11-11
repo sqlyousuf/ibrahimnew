@@ -35,6 +35,7 @@ export default function HomeHero({
   secondaryHref,
   hadith,
   highlights = [],
+  trustNote,
 }: {
   /** Status line above the title, e.g. the construction phase. */
   eyebrow: string;
@@ -49,6 +50,8 @@ export default function HomeHero({
   hadith?: { text: string; source: string };
   /** What the current phase builds, shown as a short list. */
   highlights?: string[];
+  /** Small reassurance line under the buttons (e.g. tax-deductible / EIN). */
+  trustNote?: ReactNode;
 }) {
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -185,6 +188,26 @@ export default function HomeHero({
             {secondaryLabel}
           </Link>
         </div>
+
+        {trustNote && (
+          <p
+            data-hero-item
+            className="relative mt-5 max-w-md text-balance text-center text-[0.8125rem] leading-relaxed text-cream-100/80"
+          >
+            <svg
+              viewBox="0 0 20 20"
+              aria-hidden="true"
+              className="mr-1.5 inline-block h-4 w-4 -translate-y-px align-middle text-gold-300"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.6"
+            >
+              <path d="M10 2.5 4 4.75v4.5c0 3.9 2.6 6.9 6 8.25 3.4-1.35 6-4.35 6-8.25v-4.5L10 2.5Z" strokeLinejoin="round" />
+              <path d="m7.25 10 1.9 1.9 3.6-3.8" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            {trustNote}
+          </p>
+        )}
 
         <p
           data-hero-item

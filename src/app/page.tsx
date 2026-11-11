@@ -33,6 +33,15 @@ export default function HomePage() {
         ctaHref={site.donate.campaign.url}
         secondaryLabel="Other Ways to Give"
         secondaryHref="/donate"
+        trustNote={
+          <>
+            <strong className="font-semibold text-cream-50">Your gift is tax-deductible.</strong>{" "}
+            {site.donate.nonprofit.name} is a registered{" "}
+            {/* ZWNJ after "c" stops the font's ligature turning "(c)" into "©". */}
+            <span className="whitespace-nowrap">501(c{String.fromCharCode(0x200c)})(3)</span> nonprofit
+            &middot; <span className="whitespace-nowrap">EIN {site.donate.nonprofit.ein}</span>
+          </>
+        }
       />
 
       {/* ---------------------------------------------- Programs & events

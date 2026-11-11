@@ -37,11 +37,11 @@ export default function DonatePage() {
             Your support helps strengthen our masjid, expand community
             programs, and serve families for generations to come.{" "}
             <strong className="font-semibold text-white">
-              American Waqf Foundation
+              {site.donate.nonprofit.name}
             </strong>{" "}
             is a tax-exempt charitable organization in{" "}
             <strong className="font-semibold text-white">
-              Spring, Texas (EIN 84-2645759)
+              Spring, Texas (EIN {site.donate.nonprofit.ein})
             </strong>
             .
           </>

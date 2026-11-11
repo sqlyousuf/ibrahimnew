@@ -15,6 +15,8 @@ export const site = {
     imamEmail: "imam@masjidibrahimspring.org",
   },
   donate: {
+    /** The registered nonprofit that receives donations. */
+    nonprofit: { name: "American Waqf Foundation", ein: "84-2645759" },
     url: "https://payments.madinaapps.com/masjidibrahimtx",
     /** The "Donate via Zeffy" button on the Donate page. */
     zeffyUrl:
