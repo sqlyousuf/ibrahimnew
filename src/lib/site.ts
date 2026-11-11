@@ -20,7 +20,8 @@ export const site = {
     campaign: {
       name: "Construction Phase 3",
       description: "Community Hall, Wudu Area & Restrooms",
-      url: "https://www.zeffy.com/en-US/donation-form/masjid-ibrahim-construction-phase-3-community-hall-wudu-area-restrooms",
+      // Same MadinaApps page as "Donate Online" — one place to give.
+      url: "https://payments.madinaapps.com/masjidibrahimtx",
     },
   },
   masjidal: {
