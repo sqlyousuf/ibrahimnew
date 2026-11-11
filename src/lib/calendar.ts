@@ -43,52 +43,91 @@ export type CalendarDay = {
 
 const DAY_MS = 86_400_000;
 
-export type UpcomingFlierEvent = {
-  slug: string;
+export type ShowcaseFlier = {
+  key: string;
   title: string;
-  dateKey: string;
-  /** e.g. "Saturday, Sep 12". */
-  dateLabel: string;
-  time?: string;
-  location?: string;
+  /** Short pill above the title: a date for one-off events, else "Weekly". */
+  tag: string;
+  /** e.g. "Every Sunday after Isha" or "7:00 PM". */
+  schedule?: string;
+  /** Second caption line, e.g. who it's for. */
+  detail?: string;
   flier: { src: string; alt: string };
 };
 
+const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+function weeklyLabel(days: number[]): string {
+  return days.length === 7 ? "Daily" : `Every ${days.map((d) => WEEKDAYS[d]).join(", ")}`;
+}
+
 /**
- * One-off events, today or later, that have a flier attached — soonest
- * first. Feeds the homepage flier slider (HeroFlierSlider.tsx). Recurring
- * programs and one-off events without a flier never appear here; this is
- * deliberately narrower than getWeekCalendar's "everything this week".
+ * Everything with a flier, for the homepage flier rail (FlierShowcase.tsx):
+ * upcoming one-off events first (soonest first — they're time-sensitive),
+ * then the Institute programs, then admin-added weekly entries. Pass
+ * `calendarEvents = []` before the live list has loaded to get just the
+ * programs, which are static and safe to prerender.
  */
-export function getUpcomingEventFliers(
+export function getFlierShowcase(
   calendarEvents: CalendarEvent[],
   referenceDate: Date = new Date(),
-  limit = 8,
-): UpcomingFlierEvent[] {
+): ShowcaseFlier[] {
   const todayKey = getMasjidDateKey(referenceDate);
+  const withFlier = calendarEvents.filter((e) => e.flier?.src);
 
-  return calendarEvents
-    .filter((event) => event.recurrence === "once" && event.date >= todayKey && event.flier?.src)
-    .sort((a, b) => (a as { date: string }).date.localeCompare((b as { date: string }).date))
-    .slice(0, limit)
-    .map((event) => {
-      const e = event as typeof event & { date: string; flier: { src: string; alt: string } };
+  const oneOff = withFlier
+    .filter((e): e is Extract<CalendarEvent, { recurrence: "once" }> =>
+      e.recurrence === "once" && e.date >= todayKey,
+    )
+    .sort((a, b) => a.date.localeCompare(b.date))
+    .map((e): ShowcaseFlier => {
       const [y, m, d] = e.date.split("-").map(Number);
       return {
-        slug: e.slug,
+        key: `event-${e.slug}`,
         title: e.title,
-        dateKey: e.date,
-        dateLabel: new Intl.DateTimeFormat("en-US", {
-          weekday: "long",
+        tag: new Intl.DateTimeFormat("en-US", {
+          weekday: "short",
           month: "short",
           day: "numeric",
           timeZone: "UTC",
         }).format(new Date(Date.UTC(y, m - 1, d))),
-        time: e.time,
-        location: e.location,
-        flier: e.flier,
+        schedule: e.time,
+        detail: e.location,
+        flier: e.flier!,
       };
     });
+
+  const programFliers = programs.flatMap((p): ShowcaseFlier[] =>
+    p.flier
+      ? [
+          {
+            key: `program-${p.slug}`,
+            title: p.name,
+            tag: "Weekly",
+            schedule: p.schedule,
+            detail: p.audience,
+            flier: p.flier,
+          },
+        ]
+      : [],
+  );
+
+  const weekly = withFlier.flatMap((e): ShowcaseFlier[] =>
+    e.recurrence === "weekly"
+      ? [
+          {
+            key: `event-${e.slug}`,
+            title: e.title,
+            tag: "Weekly",
+            schedule: [weeklyLabel(e.daysOfWeek), e.time].filter(Boolean).join(" · "),
+            detail: e.location,
+            flier: e.flier!,
+          },
+        ]
+      : [],
+  );
+
+  return [...oneOff, ...programFliers, ...weekly];
 }
 
 export function getWeekCalendar(

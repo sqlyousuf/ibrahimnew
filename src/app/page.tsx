@@ -5,7 +5,7 @@ import PrayerBoard from "@/components/PrayerBoard";
 import SectionHeading from "@/components/SectionHeading";
 import { PatternField, Rosette, StarDivider } from "@/components/Ornament";
 import HomeHero from "@/components/home/HomeHero";
-import UpcomingFliers from "@/components/home/UpcomingFliers";
+import FlierShowcase from "@/components/home/FlierShowcase";
 import TestimonialCarousel from "@/components/home/TestimonialCarousel";
 import PageTransition from "@/components/motion/PageTransition";
 import CinematicImage from "@/components/motion/CinematicImage";
@@ -35,10 +35,15 @@ export default function HomePage() {
         secondaryHref="/donate"
       />
 
+      {/* ---------------------------------------------- Programs & events
+          Every program/event flier as a swipeable rail (FlierShowcase.tsx).
+          Programs prerender; admin-added events join once /api/events loads. */}
+      <FlierShowcase />
+
       {/* ------------------------------------------------------- Prayer times
-          First section after the hero on every viewport, rendered from local
-          data so it paints instantly — cinematic chrome wraps around it, but
-          the board itself is never gated behind an animation. */}
+          Rendered from local data so it paints instantly — cinematic chrome
+          wraps around it, but the board itself is never gated behind an
+          animation. */}
       <section className="relative overflow-hidden bg-navy-975 pb-16 pt-12 sm:pb-24 sm:pt-20 lg:py-28">
         <PatternField opacity={0.05} />
         <div aria-hidden="true" className="grain absolute inset-0" />
@@ -76,10 +81,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
-      {/* Upcoming one-off events with fliers — renders nothing when there
-          are none (see UpcomingFliers.tsx). */}
-      <UpcomingFliers />
 
       {/* ------------------------------------------------------ Welcome/story */}
       <section className="section relative overflow-hidden">
