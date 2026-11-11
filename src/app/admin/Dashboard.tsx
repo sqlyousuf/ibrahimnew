@@ -60,7 +60,9 @@ export default function Dashboard() {
             Calendar Entries
           </h1>
           <p className="mt-2 text-sm text-navy-600">
-            Recurring Institute programs (Quran Maktab, WISE, YM Ibrahim)
+            Recurring Institute programs (Quran Maktab, WISE, YM Ibrahim,
+            Alimiyyah, Beyond the Recitation, Gardens of the Righteous, Life of
+            the Prophet)
             aren&apos;t listed here — they rarely change and live in code.
             This list is everything else on the This Week calendar.
           </p>

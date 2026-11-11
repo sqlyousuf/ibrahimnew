@@ -84,8 +84,8 @@ export const programs = [
     schedule: "Monday to Thursday, 5:30 PM – 7:30 PM",
     // Structured recurrence for the This Week calendar (0=Sun..6=Sat) — keep
     // in sync with `schedule` above, which is the human-readable version
-    // used on the Institute page.
-    calendar: { daysOfWeek: [1, 2, 3, 4], time: "5:30 PM – 7:30 PM" },
+    // used on the Institute page. One entry per distinct time slot.
+    calendar: [{ daysOfWeek: [1, 2, 3, 4], time: "5:30 PM – 7:30 PM" }],
     location: "5500 FM 2920 Rd, Spring, TX 77388",
     supervisors: ["Ustadh Shaykh Yousuf Ahmed", "Ustadha Sajida Lashkarwala"],
     price: "$75/month per child",
@@ -101,7 +101,7 @@ export const programs = [
     subtitle: "Weekend Islamic School Education",
     audience: "Children ages 5–12",
     schedule: "Sundays, 11:00 AM – 2:00 PM",
-    calendar: { daysOfWeek: [0], time: "11:00 AM – 2:00 PM" },
+    calendar: [{ daysOfWeek: [0], time: "11:00 AM – 2:00 PM" }],
     location: "Masjid Ibrahim, 5500 Farm to Market 2920, Spring, TX 77388",
     description:
       "To nurture a love for Islam while building foundational knowledge in Quran, Islamic Studies, and Arabic in an engaging and developmentally appropriate manner.",
@@ -118,17 +118,108 @@ export const programs = [
     subtitle: "Youth Ministry for Brothers 13–25",
     audience: "Brothers ages 13–25",
     schedule: "Every Saturday from 3:30 PM",
-    calendar: { daysOfWeek: [6], time: "From 3:30 PM" },
+    calendar: [{ daysOfWeek: [6], time: "From 3:30 PM" }],
     location: "5500 FM 2920, Spring, TX 77388 · 11815 Adel Rd, Houston, TX 77067",
     description:
       "Activities, halaqa, and food. For up-to-date locations and timings, join the WhatsApp group.",
     price: "Free",
     cta: "Join WhatsApp Group",
     enrollUrl: "https://chat.whatsapp.com/KjXpwInKxQiH6Ha6Z2Vr3O",
+    flier: {
+      src: "/fliers/ym-ibrahim.jpg",
+      alt: "YM Ibrahim flier: for brothers 13 to 25. Join us for activities, halaqa, and food every Saturday from 3:30 PM at 5500 FM 2920, Spring, TX 77388. Includes a QR code to join the WhatsApp group.",
+    },
     // A minaret against the sky, not a photo of the brothers themselves —
     // keeps the card generic/Islamic rather than tied to specific faces.
     image:
       "https://images.unsplash.com/photo-1755518346374-8698aef237b8?auto=format&fit=crop&w=1200&q=80",
+  },
+  {
+    slug: "alimiyyah",
+    name: "Alimiyyah Program",
+    subtitle: "With Hidayah Academy",
+    audience:
+      "Working professionals, corporate and business managers, executives, and college/university students",
+    schedule:
+      "Tuesday & Thursday, 6:00 PM – 9:00 PM · Sunday, 9:00 AM – 12:00 PM",
+    calendar: [
+      { daysOfWeek: [2, 4], time: "6:00 PM – 9:00 PM" },
+      { daysOfWeek: [0], time: "9:00 AM – 12:00 PM" },
+    ],
+    location: "5500 FM 2920, Spring, TX 77388",
+    description:
+      "A classical 'Alimiyyah curriculum in partnership with Hidayah Academy, under the supervision of Hazrat Molana Shaykh Azhar Iqbal (Db). New registrations are open — contact the Masjid Ibrahim admin for admission and details.",
+    supervisors: [
+      "Sh Dr. Mamdouh Mahmoud",
+      "Shaykh Yousuf Ahmed",
+      "Mufti Abdullah Sajid",
+      "Shaykh Muhammad Umar",
+      "Hafiz Hamza Kasim",
+    ],
+    cta: "Call for Admission",
+    flier: {
+      src: "/fliers/alimiyyah.jpg",
+      alt: "Hidayah Academy and Masjid Ibrahim flier: new registrations open for the Alimiyyah Program, specially for working professionals, corporate and business managers, executives, and college/university students. Teachers: Sh Dr. Mamdouh Mahmoud, Shaykh Yousuf Ahmed, Mufti Abdullah Sajid, Shaykh Muhammad Umar, Hafiz Hamza Kasim. Under the supervision of Hazrat Molana Shaykh Azhar Iqbal (Db). Classes started August 2026, Tuesday and Thursday 6 to 9 PM and Sunday 9 AM to 12 noon. Admission: Masjid Ibrahim admin, +1 (832) 743-8303. www.hidayah.edu.pk. 5500 FM 2920, Spring, TX 77388.",
+    },
+    image:
+      "https://images.unsplash.com/photo-1753947127898-a11f139e9a67?auto=format&fit=crop&w=1200&q=80",
+  },
+  {
+    slug: "beyond-the-recitation",
+    name: "Beyond the Recitation",
+    subtitle: "Weekly Tafsir & Reflection",
+    audience: "Everyone",
+    schedule: "Every Sunday after Isha",
+    calendar: [{ daysOfWeek: [0], time: "After Isha" }],
+    location: "5500 FM 2920, Spring, TX 77388",
+    description:
+      "A weekly Tafsir and reflection series exploring familiar verses recited in our daily prayers, uncovering their meanings, lessons, and relevance to our lives.",
+    supervisors: ["Shaykh Yousuf Ahmed"],
+    price: "Free",
+    flier: {
+      src: "/fliers/beyond-the-recitation.jpg",
+      alt: "Masjid Ibrahim flier: Beyond the Recitation, a weekly Tafsir and reflection series exploring familiar verses recited in our daily prayers, uncovering their meanings, lessons, and relevance to our lives. With Shaykh Yousuf Ahmed, every Sunday after Isha. 5500 FM 2920, Spring, TX 77388. 832-743-8303. masjidibrahimspring.org.",
+    },
+    image:
+      "https://images.unsplash.com/photo-1703492897922-befb3b3d148c?auto=format&fit=crop&w=1200&q=80",
+  },
+  {
+    slug: "gardens-of-the-righteous",
+    name: "Gardens of the Righteous",
+    subtitle: "Riyadus-Saliheen Study Circle",
+    audience: "Everyone",
+    schedule: "Every Sunday after Fajr",
+    calendar: [{ daysOfWeek: [0], time: "After Fajr" }],
+    location: "5500 FM 2920, Spring, TX 77388",
+    description:
+      "Join us on a journey through Riyadus-Saliheen, Imam an-Nawawi's beloved collection of hadith, studied alongside Shaykh Muhammad ibn Salih al-Uthaymeen's explanation.",
+    supervisors: ["Sh Dr. Mamdouh Mahmoud"],
+    price: "Free",
+    flier: {
+      src: "/fliers/gardens-of-the-righteous.jpg",
+      alt: "Masjid Ibrahim flier: Join us on a journey through the Gardens of the Righteous with Sheikh Mamdouh Mahmoud. Pictured: the Sheikh and the book Explanation of Riyadus-Saliheen, Volume 1, by Sheikh Muhammad bin Salih al-Uthaymeen. Riyadus-Saliheen every Sunday after Fajr. 5500 FM 2920, Spring, TX 77388.",
+    },
+    image:
+      "https://images.unsplash.com/photo-1577561426384-62154a1e9457?auto=format&fit=crop&w=1200&q=80",
+  },
+  {
+    slug: "life-of-the-prophet",
+    name: "The Life of the Prophet ﷺ",
+    subtitle: "Weekly Seerah Series",
+    audience: "Everyone",
+    schedule: "Every Friday after Isha",
+    calendar: [{ daysOfWeek: [5], time: "After Isha" }],
+    location: "5500 FM 2920, Spring, TX 77388",
+    description:
+      "Learn his life. Deepen your love. Follow his example. A weekly journey through the Seerah of the Prophet ﷺ.",
+    supervisors: ["Shaykh Hamza Mehter"],
+    price: "Free",
+    flier: {
+      src: "/fliers/life-of-the-prophet.jpg",
+      alt: "Masjid Ibrahim flier: Weekly Seerah Series, The Life of the Prophet, peace be upon him, with Shaykh Hamza Mehter. Every Friday after Isha, starting October 16, 2026. Learn his life. Deepen your love. Follow his example. 5500 FM 2920, Spring, TX 77388. 832-743-8303. masjidibrahimspring.org.",
+    },
+    image:
+      "https://images.unsplash.com/photo-1758618079913-b6b631637ad9?auto=format&fit=crop&w=1200&q=80",
   },
 ];
 
@@ -199,8 +290,8 @@ type OneOffCalendarEvent = CalendarEventBase & {
 
 /**
  * "This Week at Masjid Ibrahim" — one-off and ad-hoc-recurring entries for
- * the calendar (see WeekCalendar.tsx). The Institute's three core programs
- * (Quran Maktab, WISE, YM Ibrahim, above) also appear on the calendar
+ * the calendar (see WeekCalendar.tsx). The Institute's core programs
+ * (`programs`, above) also appear on the calendar
  * automatically via their own `calendar` field — this type doesn't cover
  * them.
  *
@@ -216,7 +307,7 @@ type OneOffCalendarEvent = CalendarEventBase & {
  *   happening — it only shows on the week containing that date, and drops
  *   off on its own afterward.
  * - `recurrence: "weekly"` + `daysOfWeek` for anything recurring that isn't
- *   already one of the three core programs above.
+ *   already one of the core programs above.
  * - `flier`'s `alt` must describe the flier in words — never a filename or
  *   generic placeholder, since screen readers can't read text baked into
  *   the image. Most entries won't have a flier at all, and that's fine.

@@ -11,8 +11,8 @@ import type { CalendarDay, CalendarDisplayEntry } from "@/lib/calendar";
  * 7-day week calendar. Same markup renders as a stacked list on phones and
  * a 7-column grid from `lg` up — no separate mobile layout to keep in sync.
  *
- * Most entries have no flier (recurring programs never do, and plenty of
- * one-off events won't either), so the flier is treated as an optional
+ * Many entries have no flier (some programs don't, and plenty of one-off
+ * events won't either), so the flier is treated as an optional
  * accent — a small thumbnail that opens a lightbox — never the thing an
  * entry's layout depends on.
  */
@@ -143,7 +143,7 @@ function EntryChip({
             onClick={() => onOpenFlier(entry.flier!)}
             aria-label={`View flier: ${entry.title}`}
             data-cursor="view"
-            className="relative h-8 w-8 shrink-0 overflow-hidden rounded-md ring-1 ring-gold-500/40"
+            className="relative z-10 h-8 w-8 shrink-0 overflow-hidden rounded-md ring-1 ring-gold-500/40"
           >
             <Image
               src={entry.flier.src}
@@ -177,14 +177,17 @@ function EntryChip({
   }`;
 
   if (entry.kind === "program" && entry.href) {
+    // The whole chip is clickable via a stretched link rather than an <a>
+    // wrapper, so the flier button (z-10) isn't nested inside the link.
     return (
-      <Link href={entry.href} className={`group block ${className}`}>
+      <div className={`group relative ${className}`}>
+        <Link href={entry.href} aria-label={`${entry.title} — program details`} className="absolute inset-0 rounded-lg" />
         <span className="mb-1 inline-flex items-center gap-1 text-[0.5625rem] font-semibold uppercase tracking-[0.14em] text-gold-600">
           <StarGlyph className="h-2.5 w-2.5 shrink-0" />
           Program
         </span>
         {body}
-      </Link>
+      </div>
     );
   }
 

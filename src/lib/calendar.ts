@@ -1,5 +1,5 @@
 /**
- * Builds the "This Week at Masjid Ibrahim" calendar: the Institute's three
+ * Builds the "This Week at Masjid Ibrahim" calendar: the Institute's
  * recurring programs (static, from site.ts) plus one-off/ad-hoc entries
  * managed through the /admin panel (stored in Workers KV, served by
  * worker/index.ts at /api/events), merged onto the next 7 days starting today — not a
@@ -111,15 +111,17 @@ export function getWeekCalendar(
     const entries: CalendarDisplayEntry[] = [];
 
     for (const program of programs) {
-      if (!program.calendar?.daysOfWeek.includes(weekday)) continue;
+      const session = program.calendar.find((slot) => slot.daysOfWeek.includes(weekday));
+      if (!session) continue;
       entries.push({
         key: `program-${program.slug}`,
         title: program.name,
-        time: program.calendar.time,
+        time: session.time,
         location: program.location,
         description: program.subtitle,
+        flier: program.flier,
         kind: "program",
-        href: "/institute",
+        href: `/institute#${program.slug}`,
       });
     }
 

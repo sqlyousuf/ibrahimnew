@@ -10,7 +10,7 @@ import { programs, services, site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Institute",
   description:
-    "Masjid Ibrahim Institute offers Quran Maktab, WISE Sunday School, and YM Ibrahim youth programs for all ages in Spring, Texas.",
+    "Masjid Ibrahim Institute offers Quran Maktab, WISE Sunday School, YM Ibrahim, the Alimiyyah Program, and weekly Tafsir, Hadith, and Seerah series in Spring, Texas.",
 };
 
 function Detail({ label, value }: { label: string; value: string }) {
@@ -35,7 +35,7 @@ export default function InstitutePage() {
         arabic="المعهد"
         eyebrow="Masjid Ibrahim Institute"
         title="Nurturing Faith Through Education"
-        description="Quran memorization, weekend school, and youth mentorship for every stage of the journey."
+        description="Quran memorization, weekend school, youth mentorship, and classical Islamic studies for every stage of the journey."
         image="https://images.unsplash.com/photo-1703492897922-befb3b3d148c?auto=format&fit=crop&w=2000&q=80"
         imageAlt="An open Qur'an resting on a wooden stand"
         imagePosition="object-center"
@@ -45,12 +45,13 @@ export default function InstitutePage() {
         <Reveal>
           <p className="section-eyebrow justify-center">Our Programs</p>
           <h2 className="mt-3 font-display text-display-md font-semibold text-navy-900">
-            Three Paths of Learning
+            Paths of Learning
           </h2>
           <p className="mx-auto mt-4 max-w-xl leading-relaxed text-navy-700">
-            Whether your child is beginning to read the Qur&apos;an or your
-            teenager is looking for brotherhood and purpose, the Masjid Ibrahim
-            Institute has a program built for them.
+            Whether your child is beginning to read the Qur&apos;an, your
+            teenager is looking for brotherhood and purpose, or you want to
+            study the deen more deeply yourself, the Masjid Ibrahim Institute
+            has a program built for you.
           </p>
         </Reveal>
       </section>
@@ -58,7 +59,7 @@ export default function InstitutePage() {
       <section className="container-page max-w-6xl space-y-8 pb-16 sm:space-y-12 sm:pb-20 lg:space-y-16 lg:pb-28">
         {programs.map((program, i) => (
           <Reveal key={program.slug}>
-            <article className="panel grid items-center overflow-hidden lg:grid-cols-2">
+            <article id={program.slug} className="scroll-mt-28 panel grid items-center overflow-hidden lg:grid-cols-2">
               <div
                 className={`relative aspect-[16/10] w-full sm:aspect-[2/1] lg:aspect-auto lg:h-full lg:min-h-[24rem] ${
                   i % 2 === 1 ? "lg:order-2" : ""
@@ -115,6 +116,16 @@ export default function InstitutePage() {
                   >
                     {program.cta ?? "Contact Us"}
                   </a>
+                  {program.flier && (
+                    <a
+                      href={program.flier.src}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn-outline-navy"
+                    >
+                      View Flier
+                    </a>
+                  )}
                   <Link href="/contact" className="btn-outline-navy">
                     Ask a Question
                   </Link>
