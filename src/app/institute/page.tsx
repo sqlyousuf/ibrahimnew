@@ -13,11 +13,20 @@ export const metadata: Metadata = {
     "Masjid Ibrahim Institute offers Quran Maktab, WISE Sunday School, YM Ibrahim, the Alimiyyah Program, and weekly Tafsir, Hadith, and Seerah series in Spring, Texas.",
 };
 
-function Detail({ label, value }: { label: string; value: string }) {
+function Detail({
+  label,
+  value,
+  short = false,
+}: {
+  label: string;
+  value: string;
+  /** Short values (ages, tuition) pair up side by side on phones. */
+  short?: boolean;
+}) {
   return (
     // Stacks on phones (a fixed 96px label column left only ~190px for the
     // value at 375px) and becomes a two-column row from sm up.
-    <div className="sm:flex sm:gap-4">
+    <div className={`sm:col-span-2 sm:flex sm:gap-4 ${short ? "" : "col-span-2"}`}>
       <dt className="text-[0.625rem] font-semibold uppercase tracking-[0.16em] text-gold-700 sm:w-24 sm:shrink-0 sm:pt-0.5">
         {label}
       </dt>
@@ -90,8 +99,11 @@ export default function InstitutePage() {
                   </p>
                 )}
 
-                <dl className="mt-6 space-y-3 border-t border-navy-900/[0.07] pt-5 sm:space-y-4">
-                  <Detail label="Ages" value={program.audience} />
+                <dl className="mt-6 grid grid-cols-2 gap-x-4 gap-y-3 border-t border-navy-900/[0.07] pt-5 sm:block sm:space-y-4">
+                  <Detail label="Ages" value={program.audience} short={program.audience.length <= 28} />
+                  {program.price && (
+                    <Detail label="Tuition" value={program.price} short />
+                  )}
                   <Detail label="Schedule" value={program.schedule} />
                   <Detail label="Location" value={program.location} />
                   {program.supervisors && (
@@ -100,14 +112,12 @@ export default function InstitutePage() {
                       value={program.supervisors.join(", ")}
                     />
                   )}
-                  {program.price && (
-                    <Detail label="Tuition" value={program.price} />
-                  )}
                 </dl>
 
-                {/* Stacked with a real gap on phones so the two adjacent
-                    targets can't be mis-tapped. */}
-                <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-4">
+                {/* One full-width primary action on phones, with the two
+                    secondary actions sharing a compact row beneath it —
+                    three stacked 52px pills made every card a long scroll. */}
+                <div className="mt-7 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
                   <a
                     href={program.enrollUrl ?? site.contact.phoneHref}
                     target={program.enrollUrl ? "_blank" : undefined}
@@ -116,19 +126,28 @@ export default function InstitutePage() {
                   >
                     {program.cta ?? "Contact Us"}
                   </a>
-                  {program.flier && (
-                    <a
-                      href={program.flier.src}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="btn-outline-navy"
+                  <div
+                    className={`grid gap-2.5 sm:flex sm:gap-4 ${
+                      program.flier ? "grid-cols-2" : "grid-cols-1"
+                    }`}
+                  >
+                    {program.flier && (
+                      <a
+                        href={program.flier.src}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn-outline-navy btn-compact sm:min-h-[3.25rem]"
+                      >
+                        View Flier
+                      </a>
+                    )}
+                    <Link
+                      href="/contact"
+                      className="btn-outline-navy btn-compact sm:min-h-[3.25rem]"
                     >
-                      View Flier
-                    </a>
-                  )}
-                  <Link href="/contact" className="btn-outline-navy">
-                    Ask a Question
-                  </Link>
+                      Ask a Question
+                    </Link>
+                  </div>
                 </div>
               </div>
             </article>

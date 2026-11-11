@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import type { programs } from "@/lib/site";
 
 type Program = (typeof programs)[number];
@@ -59,6 +60,21 @@ export default function ProgramCard({ program }: { program: Program }) {
             {program.description}
           </p>
         )}
+
+        {/* Pinned to the card floor so cards of different lengths in the
+            rail still end on the same line, with a real tap target. */}
+        <div className="mt-auto pt-5">
+          <Link
+            href={`/institute#${program.slug}`}
+            className="flex min-h-[2.75rem] items-center justify-between gap-3 border-t border-navy-900/[0.07] pt-4 text-[0.75rem] font-bold uppercase tracking-[0.16em] text-gold-700 transition-colors hover:text-gold-600"
+          >
+            Program details
+            <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4 transition-transform duration-500 ease-entrance group-hover:translate-x-1" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M5 12h14M13 6l6 6-6 6" />
+            </svg>
+            <span className="sr-only"> for {program.name}</span>
+          </Link>
+        </div>
       </div>
     </article>
   );

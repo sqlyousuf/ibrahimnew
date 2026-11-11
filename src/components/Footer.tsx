@@ -41,6 +41,39 @@ const socialLinks = [
   },
 ];
 
+const quickActions = [
+  {
+    label: "Call",
+    href: site.contact.phoneHref,
+    external: false,
+    icon: (
+      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z" />
+    ),
+  },
+  {
+    label: "Directions",
+    href: `https://www.google.com/maps/dir/?api=1&destination=${site.address.mapsQuery}`,
+    external: true,
+    icon: (
+      <>
+        <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+        <circle cx="12" cy="10" r="3" />
+      </>
+    ),
+  },
+  {
+    label: "Email",
+    href: `mailto:${site.contact.adminEmail}`,
+    external: false,
+    icon: (
+      <>
+        <rect x="2" y="4" width="20" height="16" rx="2" />
+        <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+      </>
+    ),
+  },
+];
+
 export default function Footer() {
   return (
     <footer className="relative overflow-hidden bg-navy-975 text-cream-100">
@@ -51,19 +84,66 @@ export default function Footer() {
 
       {/* Ceremonial close — the gilded mark and the masjid's name in Ruq'ah,
           before the utilitarian columns. */}
-      <div className="container-page relative flex flex-col items-center pb-4 pt-16 text-center lg:pt-20">
-        <LogoMark className="h-28 w-auto lg:h-32" />
-        <p className="mt-6 max-w-sm font-display text-[1.5rem] italic leading-snug text-cream-100/85 sm:max-w-md sm:text-[1.75rem]">
+      <div className="container-page relative flex flex-col items-center pb-2 pt-12 text-center sm:pb-4 sm:pt-16 lg:pt-20">
+        <LogoMark className="h-20 w-auto sm:h-28 lg:h-32" />
+        <p className="mt-4 max-w-xs font-display text-[1.25rem] italic leading-snug text-cream-100/85 sm:mt-6 sm:max-w-md sm:text-[1.75rem]">
           {site.tagline}
         </p>
-        <span aria-hidden="true" className="mt-6 flex items-center gap-3">
+        <span aria-hidden="true" className="mt-5 flex items-center gap-3 sm:mt-6">
           <span className="h-px w-12 bg-gradient-to-r from-transparent to-gold-300/60" />
           <StarGlyph className="h-4 w-4 text-gold-300" />
           <span className="h-px w-12 bg-gradient-to-l from-transparent to-gold-300/60" />
         </span>
       </div>
 
-      <div className="container-page relative grid gap-10 pb-14 pt-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-12 lg:pb-16">
+      {/* Phone footer — what a visitor reaches for at the bottom of a page
+          on their phone: call, get directions, email, give. Three thumb-sized
+          tiles plus one gold button instead of four stacked columns. */}
+      <div className="container-page relative pb-10 pt-8 sm:hidden">
+        <ul className="grid grid-cols-3 gap-2.5">
+          {quickActions.map((action) => (
+            <li key={action.label}>
+              <a
+                href={action.href}
+                target={action.external ? "_blank" : undefined}
+                rel={action.external ? "noopener noreferrer" : undefined}
+                className="flex h-full flex-col items-center gap-2 rounded-2xl border border-gold-300/15 bg-white/[0.04] px-2 py-4 text-center transition-colors active:bg-white/[0.08]"
+              >
+                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-gold-300/10 text-gold-200 ring-1 ring-gold-300/25">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" className="h-[1.1rem] w-[1.1rem]" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                    {action.icon}
+                  </svg>
+                </span>
+                <span className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-cream-100/90">
+                  {action.label}
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+
+        <Link href="/donate" className="btn-primary mt-4 w-full">
+          Donate Now
+        </Link>
+
+        <p className="mt-6 text-center text-[0.8125rem] leading-relaxed text-cream-100/65">
+          {site.address.full}
+        </p>
+
+        <nav aria-label="Footer" className="mt-6 border-t border-white/10 pt-4">
+          <ul className="grid grid-cols-2 gap-x-4 text-sm">
+            {navLinks.map((link) => (
+              <li key={link.href}>
+                <Link href={link.href} className={linkClass}>
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </div>
+
+      <div className="container-page relative hidden gap-10 pb-14 pt-10 sm:grid sm:grid-cols-2 lg:grid-cols-4 lg:gap-12 lg:pb-16">
         <div className="sm:col-span-2 lg:col-span-1">
           <h2 className="flex items-center gap-2.5 font-display text-[1.375rem] font-semibold italic text-gold-200">
             <StarGlyph className="h-3.5 w-3.5 text-gold-400" />

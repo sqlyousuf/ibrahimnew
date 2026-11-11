@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { motionAllowed } from "@/lib/motionGate";
 import { StarGlyph } from "@/components/Ornament";
 
@@ -30,6 +30,7 @@ export default function TestimonialCarousel({
   const enabled = useSyncExternalStore(subscribe, motionAllowed, getServerSnapshot);
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
+  const touchX = useRef<number | null>(null);
 
   useEffect(() => {
     if (!enabled || paused || testimonials.length < 2) return;
@@ -41,11 +42,13 @@ export default function TestimonialCarousel({
 
   if (!enabled) {
     return (
-      <div className="mt-10 grid gap-5 sm:grid-cols-3 sm:gap-6 lg:mt-14">
+      // A swipeable row on phones (one card plus a peek of the next) rather
+      // than three tall cards stacked down the page; a grid from sm up.
+      <div className="-mx-5 mt-10 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 sm:mx-0 sm:grid sm:grid-cols-3 sm:gap-6 sm:overflow-visible sm:px-0 sm:pb-0 lg:mt-14">
         {testimonials.map((testimonial) => (
           <figure
             key={testimonial.name}
-            className="card flex h-full flex-col p-6 sm:p-7"
+            className="card flex w-[82vw] max-w-sm shrink-0 snap-center flex-col p-6 sm:h-full sm:w-auto sm:max-w-none sm:p-7"
           >
             <StarGlyph className="h-5 w-5 shrink-0 text-gold-500" />
             <blockquote className="mt-3 flex-1 font-display text-xl italic leading-relaxed text-navy-800">
@@ -67,6 +70,21 @@ export default function TestimonialCarousel({
       onMouseLeave={() => setPaused(false)}
       onFocus={() => setPaused(true)}
       onBlur={() => setPaused(false)}
+      // Horizontal swipe steps through quotes on a phone, the way any
+      // carousel there is expected to behave.
+      onTouchStart={(e) => {
+        touchX.current = e.touches[0].clientX;
+        setPaused(true);
+      }}
+      onTouchEnd={(e) => {
+        const start = touchX.current;
+        touchX.current = null;
+        if (start === null) return;
+        const dx = e.changedTouches[0].clientX - start;
+        if (Math.abs(dx) < 40) return;
+        const n = testimonials.length;
+        setIndex((i) => (dx < 0 ? (i + 1) % n : (i - 1 + n) % n));
+      }}
     >
       <div className="card relative min-h-[21rem] overflow-hidden p-8 sm:min-h-[17rem] sm:p-10">
         <span

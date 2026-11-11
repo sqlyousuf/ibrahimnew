@@ -43,7 +43,7 @@ export default function PrayerQuickBar() {
   return (
     <>
       {/* Reserves layout space so the bar never covers the end of the page. */}
-      <div aria-hidden="true" className="h-[5.75rem] lg:hidden" />
+      <div aria-hidden="true" className="h-[5.75rem] bg-navy-975 lg:hidden" />
 
       <div className="prayer-quick-bar fixed inset-x-0 bottom-0 z-40 transition-[transform,opacity] duration-500 ease-entrance lg:hidden">
         <div className="relative border-t border-gold-300/20 bg-navy-975/[0.92] shadow-[0_-18px_40px_-20px_rgba(0,0,0,0.9)] backdrop-blur-xl backdrop-saturate-150">

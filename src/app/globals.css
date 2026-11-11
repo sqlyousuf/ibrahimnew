@@ -216,6 +216,12 @@
     @apply btn-base border border-gold-600/35 bg-transparent text-navy-900 hover:border-gold-500 hover:bg-cream-50 hover:text-gold-700 hover:shadow-soft active:scale-[0.98] sm:hover:-translate-y-0.5;
   }
 
+  /* Compact size modifier for secondary actions that sit side by side on a
+     phone. 44px still clears the tap-target floor. */
+  .btn-compact {
+    @apply min-h-[2.75rem] gap-2 px-3 text-[0.6875rem] tracking-[0.12em] sm:px-6 sm:text-[0.75rem] sm:tracking-[0.16em];
+  }
+
   /* Inline text links that need an affordance without shouting. */
   .link-underline {
     @apply underline decoration-gold-500/40 underline-offset-4 transition-colors hover:decoration-gold-500;
