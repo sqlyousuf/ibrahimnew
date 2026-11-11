@@ -68,12 +68,12 @@ export default function DonatePage() {
                 Institute.
               </p>
               <a
-                href={site.donate.url}
+                href={site.donate.zeffyUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-primary mt-7 w-full sm:w-auto"
               >
-                Donate Online
+                Donate via Zeffy
               </a>
             </div>
           </div>

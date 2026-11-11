@@ -16,11 +16,14 @@ export const site = {
   },
   donate: {
     url: "https://payments.madinaapps.com/masjidibrahimtx",
+    /** The "Donate via Zeffy" button on the Donate page. */
+    zeffyUrl:
+      "https://www.zeffy.com/en-US/donation-form/masjid-ibrahim-construction-phase-3-community-hall-wudu-area-restrooms",
     zelle: "admin@kleinislamiccenter.org",
     campaign: {
       name: "Construction Phase 3",
       description: "Community Hall, Wudu Area & Restrooms",
-      // Same MadinaApps page as "Donate Online" — one place to give.
+      // Homepage "Donate to Construction" buttons go to MadinaApps.
       url: "https://payments.madinaapps.com/masjidibrahimtx",
     },
   },
