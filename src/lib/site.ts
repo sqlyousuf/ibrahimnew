@@ -85,7 +85,7 @@ export const programs = [
   {
     slug: "maktab",
     name: "Quran Maktab",
-    subtitle: "Quran Nazira · Hifdh · Dua and Salat",
+    subtitle: "Evening Qur'an Class · Qaida · Nazira · Part-Time Hifz",
     audience: "Boys and girls, ages 5 and up",
     schedule: "Monday to Thursday, 5:30 PM – 7:30 PM",
     // Structured recurrence for the This Week calendar (0=Sun..6=Sat) — keep
@@ -93,13 +93,42 @@ export const programs = [
     // used on the Institute page. One entry per distinct time slot.
     calendar: [{ daysOfWeek: [1, 2, 3, 4], time: "5:30 PM – 7:30 PM" }],
     location: "5500 FM 2920 Rd, Spring, TX 77388",
+    description:
+      "Three tracks: Qaida (learning to read Arabic), Nazira (reading the Qur'an with surah memorization), and Part-Time Hifz (memorization of the Qur'an). All tracks include monthly du'a memorization and Islamic Studies sessions.",
     supervisors: ["Ustadh Shaykh Yousuf Ahmed", "Ustadha Sajida Lashkarwala"],
-    price: "$75/month per child",
+    price: "$75/month (Qaida & Nazira) · $90/month (Part-Time Hifz) · $15 registration",
     cta: "Enroll Now",
     enrollUrl:
       "https://docs.google.com/forms/d/e/1FAIpQLSfsdSi_SULF16vhWa4NVXXOv-LTksnqVphvah0gdSWqCMQ2Xw/viewform?usp=send_form",
+    flier: {
+      src: "/fliers/maktab-evening-quran-class.jpg",
+      alt: "Masjid Ibrahim flier: Maktab Evening Qur'an Class, under the supervision of Shaykh Yousuf Ahmed and Ustadhah Sajida Lashkarwala. Program tracks: Qaida, learning to read Arabic; Nazira, reading Qur'an with surah memorization; Part-Time Hifz, memorization of Qur'an. All tracks include monthly du'a memorization and Islamic Studies sessions. Ages 5 and up, boys and girls. 5:30 PM to 7:30 PM, Monday to Thursday. Fees: Qaida and Nazira $75, Part-Time Hifz $90, registration $15. www.masjidibrahimtx.org. Phone (832) 743-8303.",
+    },
     image:
       "https://images.unsplash.com/photo-1703492897922-befb3b3d148c?auto=format&fit=crop&w=1200&q=80",
+  },
+  {
+    slug: "afterschool-quran",
+    name: "Afterschool Quran Program",
+    subtitle: "Quran Memorization (Hifz)",
+    audience: "Boys and girls, ages 8 and up",
+    schedule: "Monday to Thursday, 3:30 PM – 5:30 PM · Saturday, 10:00 AM – 2:00 PM",
+    calendar: [
+      { daysOfWeek: [1, 2, 3, 4], time: "3:30 PM – 5:30 PM" },
+      { daysOfWeek: [6], time: "10:00 AM – 2:00 PM" },
+    ],
+    location: "5500 FM 2920 Rd, Spring, TX 77388",
+    description:
+      "Begin your Quran memorization journey with experienced teachers: build a strong connection with the Qur'an, strengthen concentration and discipline, and grow in piety, good manners, and Islamic values. Spots are limited.",
+    supervisors: ["Experienced teachers"],
+    price: "$100/month · early bird & sibling discounts available",
+    cta: "Register Today",
+    enrollUrl: "https://tinyurl.com/hifdhibrahim",
+    flier: {
+      src: "/fliers/afterschool-quran-program.jpg",
+      alt: "Masjid Ibrahim flier: Afterschool Quran Program. Begin your Quran memorization journey starting August 12th and be counted among the best of people: \"The best among you (Muslims) are those who learn the Qur'an and teach it\", Sahih al-Bukhari. Monday to Thursday 3:30 PM to 5:30 PM, and Saturday 10:00 AM to 2:00 PM. Taught by experienced teachers. Boys and girls, 8 and up. Fee $100 a month; early bird and sibling discounts available. Memorize, focus, character, reward. Register today at tinyurl.com/hifdhibrahim (QR code included); spots are limited. 5500 FM 2920 Rd, Spring, TX 77388. masjidibrahimspring.org. (832) 743-8303.",
+    },
+    image: "/fliers/afterschool-quran-program.jpg",
   },
   {
     slug: "wise",
