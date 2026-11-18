@@ -135,7 +135,12 @@ export default function BrandPage() {
               Print the ready-made A4 sheet, or put the code on your own flyer.
             </p>
             <div className="mt-5 flex flex-wrap gap-3">
-              <a href="/brand/connect-qr-a4.pdf" download className="btn-primary">
+              {/* US printers use Letter paper; an A4 file printed on Letter
+                  gets shrunk and leaves wide side margins. */}
+              <a href="/brand/connect-qr-letter.pdf" download className="btn-primary">
+                Letter sheet (PDF)
+              </a>
+              <a href="/brand/connect-qr-a4.pdf" download className="btn-outline-navy">
                 A4 sheet (PDF)
               </a>
               <a href="/brand/connect-qr.svg" download className="btn-outline-navy">

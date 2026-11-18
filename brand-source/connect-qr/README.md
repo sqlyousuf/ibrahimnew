@@ -6,6 +6,7 @@ anything already printed keeps working.
 
 Published files (served from `/brand/`, downloadable on the /brand page):
 
+- `public/brand/connect-qr-letter.pdf` — US Letter print sheet (render `a4-sheet.html?letter`)
 - `public/brand/connect-qr-a4.pdf` — A4 print sheet, edge to edge (print with
   Borderless on and scale at Actual size / 100%)
 - `public/brand/connect-qr.svg` — QR code only, vector (any size)
