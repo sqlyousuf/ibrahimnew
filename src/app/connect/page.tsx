@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import Reveal from "@/components/Reveal";
 import PageTransition from "@/components/motion/PageTransition";
 import SharePageButton from "@/components/connect/SharePageButton";
-import { PatternField, Rosette, StarGlyph } from "@/components/Ornament";
+import { StarGlyph } from "@/components/Ornament";
 import { site } from "@/lib/site";
 
 /**
@@ -193,7 +193,7 @@ const faqs = [
   },
   {
     q: "Can I share this page with family and friends?",
-    a: "Yes, please do. Tap “Share this page” at the top to send it by WhatsApp, text, or email.",
+    a: "Yes, please do. Tap “Share this page” below to send it by WhatsApp, text, or email.",
   },
 ];
 
@@ -259,40 +259,9 @@ function LinkRow({ link }: { link: ConnectLink }) {
 export default function ConnectPage() {
   return (
     <PageTransition>
-      <section className="relative overflow-hidden bg-navy-975 pb-12 pt-28 sm:pb-16 sm:pt-32">
-        <PatternField opacity={0.09} />
-        <Rosette className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 animate-star-spin-slow text-gold-300/[0.12] sm:h-96 sm:w-96" />
-        <div aria-hidden="true" className="grain absolute inset-0" />
-        <span aria-hidden="true" className="rule-gold absolute inset-x-0 bottom-0" />
-        <Reveal as="div" className="container-page relative z-10 max-w-3xl text-center">
-          <p className="arabic-accent text-[1.5rem] leading-[1.6] text-gold-300/90 sm:text-[2rem]">
-            <span lang="ar" dir="rtl">
-              السَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللَّهِ وَبَرَكَاتُهُ
-            </span>
-          </p>
-          <p className="section-eyebrow mt-5 text-gold-300 before:bg-gold-300">
-            Stay Connected
-          </p>
-          <h1 className="mt-4 text-balance font-display text-display-lg font-semibold text-cream-50">
-            Your masjid, <span className="text-foil italic">one tap away</span>
-          </h1>
-          <p className="mx-auto mt-4 max-w-md text-[0.9375rem] leading-[1.75] text-cream-100/80 sm:text-base">
-            WhatsApp, livestreams, social media, salah times, and directions,
-            all in one place. Tap any link below.
-          </p>
-          <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:justify-center">
-            <a href={site.donate.url} target="_blank" rel="noopener noreferrer" className="btn-primary">
-              Donate to the Masjid
-            </a>
-            <SharePageButton
-              title={`Stay connected with ${site.name}`}
-              text={`${site.name} links: WhatsApp, YouTube, social media, salah times, and more.`}
-            />
-          </div>
-        </Reveal>
-      </section>
-
-      <section className="section-tight container-page">
+      {/* No hero: a scanned QR code should land straight on the links. */}
+      <section className="container-page pb-12 pt-8 sm:pb-16 sm:pt-12">
+        <h1 className="sr-only">Stay connected with {site.name}</h1>
         <div className="mx-auto max-w-2xl space-y-8 sm:space-y-10">
           {groups.map((group, i) => (
             <Reveal key={group.title} delay={i * 60}>
@@ -348,6 +317,14 @@ export default function ConnectPage() {
               ))}
             </div>
           </Reveal>
+
+          <div className="flex justify-center">
+            <SharePageButton
+              className="btn-outline-navy"
+              title={`Stay connected with ${site.name}`}
+              text={`${site.name} links: WhatsApp, YouTube, social media, salah times, and more.`}
+            />
+          </div>
         </div>
       </section>
     </PageTransition>
