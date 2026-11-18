@@ -43,6 +43,8 @@ export const site = {
     youtubeLive: "https://www.youtube.com/@MasjidIbrahimSpring/streams",
     facebook: "https://www.facebook.com/KICMASJID",
     instagram: "https://www.instagram.com/masjid.ibrahim.spring.tx?igsh=NW51anNuZGcwdG9v",
+    /** The official Masjid Ibrahim WhatsApp community (the /connect page). */
+    whatsapp: "https://chat.whatsapp.com/Iy7djXatTmf54vDBdgu8w0",
   },
 };
 

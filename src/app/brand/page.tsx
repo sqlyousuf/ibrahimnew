@@ -119,6 +119,35 @@ export default function BrandPage() {
           </div>
         </Reveal>
 
+        {/* --------------------------------------------- Connect QR code */}
+        <Reveal className="mt-8">
+          <div className="card p-5 sm:p-7">
+            <StarGlyph className="h-5 w-5 text-gold-500" />
+            <h2 className="mt-3 font-display text-[1.5rem] font-semibold leading-tight text-navy-900 sm:text-[1.75rem]">
+              &ldquo;Stay Connected&rdquo; QR code
+            </h2>
+            <p className="measure mt-2 text-sm leading-relaxed text-navy-700">
+              Scanning it opens our{" "}
+              <a href="/connect" className="link-underline font-semibold text-navy-900">
+                Stay Connected
+              </a>{" "}
+              page: WhatsApp, YouTube, social media, donations, and directions.
+              Print the ready-made A4 sheet, or put the code on your own flyer.
+            </p>
+            <div className="mt-5 flex flex-wrap gap-3">
+              <a href="/brand/connect-qr-a4.pdf" download className="btn-primary">
+                A4 sheet (PDF)
+              </a>
+              <a href="/brand/connect-qr.svg" download className="btn-outline-navy">
+                QR code (SVG)
+              </a>
+              <a href="/brand/connect-qr.png" download className="btn-outline-navy">
+                QR code (PNG)
+              </a>
+            </div>
+          </div>
+        </Reveal>
+
         <Reveal className="mt-8">
           <p className="measure text-sm leading-relaxed text-navy-700">
             Please keep the logo unstretched and don&apos;t recolour it or add
