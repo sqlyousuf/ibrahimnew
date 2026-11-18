@@ -26,6 +26,8 @@ type ConnectLink = {
   /** Leaves this site (opens in a new tab so the visitor can come back). */
   external?: boolean;
   icon: ReactNode;
+  /** Full-color platform logo, shown in place of the gold line icon. */
+  logo?: ReactNode;
   /** A second, smaller action on the same row. */
   secondary?: { label: string; href: string };
 };
@@ -96,6 +98,52 @@ const icons = {
   ),
 };
 
+// Each platform's own colors, so the logos are recognisable at a glance
+// (same artwork as the printed A4 sheet).
+const logos = {
+  whatsapp: (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" className="h-7 w-7">
+      <path fill="#25D366" d="M3 21l1.4-4.6A9.2 9.2 0 1 1 7.8 19.8L3 21Z" />
+      <path fill="#fff" d="M9 7.6c.2-.5.5-.6.8-.6h.6c.2 0 .4.1.5.4l.8 1.9c.1.2 0 .5-.1.7l-.6.7c-.1.1-.1.3 0 .5.7 1.2 1.6 2.1 2.8 2.8.2.1.4.1.5 0l.7-.7c.2-.2.4-.2.6-.1l1.9.9c.2.1.3.3.3.5v.5c0 .4-.2.9-.7 1.1-.7.3-1.6.5-2.7.1a10.6 10.6 0 0 1-5.5-5.5c-.4-1.1-.3-2.1.1-2.8Z" />
+    </svg>
+  ),
+  youtube: (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" className="h-7 w-7">
+      <rect x="1.5" y="5" width="21" height="14" rx="4" fill="#FF0000" />
+      <path fill="#fff" d="M10 9v6l5.2-3L10 9Z" />
+    </svg>
+  ),
+  facebook: (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" className="h-7 w-7">
+      <circle cx="12" cy="12" r="10.5" fill="#1877F2" />
+      <path fill="#fff" d="M13.4 22.4v-7.6h2.5l.4-3h-2.9V9.9c0-.9.3-1.5 1.5-1.5h1.6V5.7c-.3 0-1.2-.1-2.3-.1-2.3 0-3.9 1.4-3.9 4v2.2H7.8v3h2.5v7.4c1 .3 2.1.3 3.1.2Z" />
+    </svg>
+  ),
+  instagram: (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" className="h-7 w-7">
+      <defs>
+        <radialGradient id="ig-a" cx="0.3" cy="1.07" r="1.3">
+          <stop offset="0" stopColor="#FFDD55" />
+          <stop offset=".1" stopColor="#FFDD55" />
+          <stop offset=".5" stopColor="#FF543E" />
+          <stop offset="1" stopColor="#C837AB" />
+        </radialGradient>
+        <linearGradient id="ig-b" x1="0" y1="0" x2=".3" y2=".6">
+          <stop offset="0" stopColor="#3771C8" />
+          <stop offset="1" stopColor="#6600FF" stopOpacity="0" />
+        </linearGradient>
+      </defs>
+      <rect x="1.5" y="1.5" width="21" height="21" rx="6" fill="url(#ig-a)" />
+      <rect x="1.5" y="1.5" width="21" height="21" rx="6" fill="url(#ig-b)" />
+      <g fill="none" stroke="#fff" strokeWidth="1.7">
+        <rect x="5.5" y="5.5" width="13" height="13" rx="3.8" />
+        <circle cx="12" cy="12" r="3.2" />
+      </g>
+      <circle cx="15.9" cy="8.1" r=".95" fill="#fff" />
+    </svg>
+  ),
+};
+
 const groups: { eyebrow: string; title: string; links: ConnectLink[] }[] = [
   {
     eyebrow: "Community",
@@ -107,6 +155,7 @@ const groups: { eyebrow: string; title: string; links: ConnectLink[] }[] = [
         href: site.social.whatsapp,
         external: true,
         icon: icons.whatsapp,
+        logo: logos.whatsapp,
       },
       {
         title: "YouTube",
@@ -114,6 +163,7 @@ const groups: { eyebrow: string; title: string; links: ConnectLink[] }[] = [
         href: "https://www.youtube.com/@MasjidIbrahimSpring",
         external: true,
         icon: icons.youtube,
+        logo: logos.youtube,
         secondary: {
           label: "Subscribe",
           href: "https://www.youtube.com/@MasjidIbrahimSpring?sub_confirmation=1",
@@ -125,6 +175,7 @@ const groups: { eyebrow: string; title: string; links: ConnectLink[] }[] = [
         href: site.social.facebook,
         external: true,
         icon: icons.facebook,
+        logo: logos.facebook,
       },
       {
         title: "Instagram",
@@ -132,6 +183,7 @@ const groups: { eyebrow: string; title: string; links: ConnectLink[] }[] = [
         href: site.social.instagram,
         external: true,
         icon: icons.instagram,
+        logo: logos.instagram,
       },
     ],
   },
@@ -221,9 +273,15 @@ function LinkRow({ link }: { link: ConnectLink }) {
     : {};
   return (
     <li className="relative flex items-center gap-4 px-4 py-4 transition-colors hover:bg-cream-100/70 sm:px-6 sm:py-5">
-      <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-navy-950 text-gold-200 ring-1 ring-gold-300/25">
-        <Icon className="h-5 w-5">{link.icon}</Icon>
-      </span>
+      {link.logo ? (
+        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white ring-1 ring-gold-600/25">
+          {link.logo}
+        </span>
+      ) : (
+        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-navy-950 text-gold-200 ring-1 ring-gold-300/25">
+          <Icon className="h-5 w-5">{link.icon}</Icon>
+        </span>
+      )}
       <span className="min-w-0 flex-1">
         {/* The overlay makes the whole row the tap target for the main link. */}
         <a
