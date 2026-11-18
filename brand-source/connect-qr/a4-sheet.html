@@ -3,19 +3,19 @@
 <style>
 @page { size: A4; margin: 0; }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { width: 210mm; height: 297mm; }
-body { font-family: Manrope, sans-serif; color: #0b1648; background: #faf5ea; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-.page { position: relative; width: 210mm; height: 297mm; overflow: hidden; display: flex; flex-direction: column; align-items: center; }
-.head { position: relative; width: 100%; height: 70mm; background: #0b1648; display: flex; align-items: center; justify-content: center; flex-direction: column; }
+html, body { width: 210mm; height: 297mm; overflow: hidden; }
+body { font-family: Manrope, sans-serif; color: #0b1648; background: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.page { position: relative; margin: 8mm auto 0; width: 194mm; height: 280mm; border-radius: 6mm; border: .8mm solid #dcb56a; background: #faf5ea; overflow: hidden; display: flex; flex-direction: column; align-items: center; }
+.head { position: relative; width: 100%; height: 64mm; background: #0b1648; display: flex; align-items: center; justify-content: center; flex-direction: column; }
 .head svg.pat { position: absolute; inset: 0; width: 100%; height: 100%; }
-.head img { position: relative; height: 48mm; }
+.head img { position: relative; height: 43mm; }
 .head .city { position: relative; margin-top: 3mm; font-weight: 800; letter-spacing: .32em; font-size: 9pt; color: #e9cb8a; }
 .rule { width: 100%; height: 2.2mm; background: linear-gradient(90deg,#b8863a,#f1d9a2 50%,#b8863a); }
 .salam { margin-top: 7mm; font-family: "Aref Ruqaa", serif; font-size: 20pt; color: #a87a34; direction: rtl; }
 h1 { margin-top: 3mm; font-weight: 800; font-size: 34pt; letter-spacing: .2em; padding-left: .2em; }
 .sub { margin-top: 2mm; font-family: "Cormorant Garamond", serif; font-style: italic; font-weight: 600; font-size: 19pt; color: #8a6029; }
 .qrbox { margin-top: 6mm; background: #fff; padding: 8mm; border-radius: 7mm; border: .9mm solid #dcb56a; box-shadow: 0 2mm 6mm rgba(11,22,72,.12); }
-.qrbox svg { display: block; width: 76mm; height: 76mm; }
+.qrbox svg { display: block; width: 72mm; height: 72mm; }
 .pill { margin-top: 6mm; background: #0b1648; color: #fff; font-weight: 800; letter-spacing: .3em; font-size: 12pt; padding: 3.2mm 10mm 3.2mm 13mm; border-radius: 99mm; border: .7mm solid #dcb56a; }
 .url { margin-top: 3.5mm; font-size: 10.5pt; font-weight: 700; color: #3b4470; letter-spacing: .02em; }
 .icons { margin-top: 7mm; display: flex; gap: 6mm; }
@@ -24,7 +24,10 @@ h1 { margin-top: 3mm; font-weight: 800; font-size: 34pt; letter-spacing: .2em; p
 .tile svg { width: 11.5mm; height: 11.5mm; }
 .tile b { font-size: 7.5pt; letter-spacing: .14em; text-transform: uppercase; font-weight: 800; }
 .foot { position: absolute; bottom: 6mm; font-size: 8.5pt; color: #5a6185; letter-spacing: .04em; }
-</style></head><body><div class="page">
+/* ?bleed — edge-to-edge version for print shops that trim to size. */
+body.bleed .page { margin: 0; width: 210mm; height: 297mm; border: 0; border-radius: 0; }
+body.bleed .head { height: 70mm; } body.bleed .head img { height: 48mm; } body.bleed .qrbox svg { width: 76mm; height: 76mm; }
+</style></head><body><script>if(location.search.includes("bleed"))document.body.className="bleed"</script><div class="page">
 <div class="head">
  <svg class="pat" aria-hidden="true"><defs><pattern id="p" width="46" height="46" patternUnits="userSpaceOnUse"><g fill="none" stroke="#dcb56a" stroke-opacity=".16" stroke-width="1"><rect x="11" y="11" width="24" height="24"/><rect x="11" y="11" width="24" height="24" transform="rotate(45 23 23)"/></g></pattern><linearGradient id="f" x1="0" x2="1"><stop offset="0" stop-color="#fff"/><stop offset=".3" stop-color="#000"/><stop offset=".7" stop-color="#000"/><stop offset="1" stop-color="#fff"/></linearGradient><mask id="m"><rect width="100%" height="100%" fill="url(#f)"/></mask></defs><rect width="100%" height="100%" fill="url(#p)" mask="url(#m)"/></svg>
  <img src="../../public/brand/logo-mark.png" alt="Masjid Ibrahim">
@@ -42,6 +45,6 @@ h1 { margin-top: 3mm; font-weight: 800; font-size: 34pt; letter-spacing: .2em; p
  <div class="tile"><span class="box"><svg viewBox="0 0 24 24"><rect x="1.5" y="5" width="21" height="14" rx="4" fill="#FF0000"/><path fill="#fff" d="M10 9v6l5.2-3L10 9Z"/></svg></span><b>YouTube</b></div>
  <div class="tile"><span class="box"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10.5" fill="#1877F2"/><path fill="#fff" d="M13.4 22.4v-7.6h2.5l.4-3h-2.9V9.9c0-.9.3-1.5 1.5-1.5h1.6V5.7c-.3 0-1.2-.1-2.3-.1-2.3 0-3.900 1.4-3.900 4v2.2H7.8v3h2.5v7.4c1 .3 2.1.3 3.1.2Z"/></svg></span><b>Facebook</b></div>
  <div class="tile"><span class="box"><svg viewBox="0 0 24 24"><defs><radialGradient id="ig" cx="0.3" cy="1.07" r="1.3"><stop offset="0" stop-color="#FFDD55"/><stop offset=".1" stop-color="#FFDD55"/><stop offset=".5" stop-color="#FF543E"/><stop offset="1" stop-color="#C837AB"/></radialGradient><linearGradient id="ig2" x1="0" y1="0" x2=".3" y2=".6"><stop offset="0" stop-color="#3771C8"/><stop offset="1" stop-color="#6600FF" stop-opacity="0"/></linearGradient></defs><rect x="1.5" y="1.5" width="21" height="21" rx="6" fill="url(#ig)"/><rect x="1.5" y="1.5" width="21" height="21" rx="6" fill="url(#ig2)"/><g fill="none" stroke="#fff" stroke-width="1.7"><rect x="5.5" y="5.5" width="13" height="13" rx="3.8"/><circle cx="12" cy="12" r="3.2"/></g><circle cx="15.9" cy="8.1" r=".95" fill="#fff"/></svg></span><b>Instagram</b></div>
- <div class="tile"><span class="box"><svg viewBox="0 0 24 24"><path fill="#E0245E" d="M12 21.2 4.6 14C3 12.4 1.8 10.8 1.8 8.5A5.3 5.3 0 0 1 7.1 3.2c1.9 0 3.3.8 4.9 2.4 1.6-1.6 3-2.4 4.9-2.4a5.3 5.3 0 0 1 5.3 5.3c0 2.3-1.2 3.9-2.8 5.5L12 21.2Z"/></svg></span><b>Donate</b></div>
+ <div class="tile"><span class="box"><svg viewBox="1.3 3.4 20.6 18.4" style="width:13mm;height:13mm"><path fill="#E0245E" d="M13 11.4 9.9 8.5C9.1 7.8 8.6 7.1 8.6 6.1a2.3 2.3 0 0 1 4.4-.9 2.3 2.3 0 0 1 4.4.9c0 1-.5 1.7-1.3 2.4L13 11.4Z"/><rect x="1.6" y="13.6" width="3.2" height="7.4" rx=".7" fill="#0b1648"/><path fill="#d9a85a" stroke="#a87a34" stroke-width=".5" stroke-linejoin="round" d="M4.8 14.4 8.6 13c1-.4 2-.3 2.9.1l2.7 1.3c.6.3.9.9.7 1.5-.2.6-.9.9-1.5.7l-2.6-.8 2.3.7c.5.1 1 .1 1.4-.1l4.6-2.4c.8-.4 1.7-.1 2 .6.3.6.1 1.2-.4 1.6l-5.6 3.9c-.7.5-1.5.7-2.3.7H8.3l-3.5 1.1Z"/></svg></span><b>Donate</b></div>
 </div>
 </div></body></html>

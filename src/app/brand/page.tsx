@@ -138,6 +138,9 @@ export default function BrandPage() {
               <a href="/brand/connect-qr-a4.pdf" download className="btn-primary">
                 A4 sheet (PDF)
               </a>
+              <a href="/brand/connect-qr-a4-full-bleed.pdf" download className="btn-outline-navy">
+                A4 edge-to-edge, for print shops
+              </a>
               <a href="/brand/connect-qr.svg" download className="btn-outline-navy">
                 QR code (SVG)
               </a>
