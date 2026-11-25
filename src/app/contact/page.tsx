@@ -102,6 +102,37 @@ export default function ContactPage() {
               </div>
             </Reveal>
 
+            <Reveal delay={105}>
+              <div id="financial-assistance" className="card scroll-mt-28 p-5 sm:p-7">
+                <p className="section-eyebrow">Zakat &amp; Sadaqah</p>
+                <h2 className="mt-2 font-display text-[1.5rem] font-semibold leading-tight text-navy-900 sm:text-[1.75rem]">
+                  Financial Assistance
+                </h2>
+                <p className="mt-2 text-sm leading-relaxed text-navy-700">
+                  Need help? Download the application, fill it in, and email it
+                  with your documents to{" "}
+                  <a
+                    href={`mailto:${site.contact.adminEmail}?subject=Financial%20Assistance%20Application`}
+                    className="break-all font-semibold text-navy-900 underline decoration-gold-500/50 underline-offset-2 hover:text-gold-700"
+                  >
+                    {site.contact.adminEmail}
+                  </a>
+                  .
+                </p>
+                <ul className="mt-3 space-y-1 text-xs leading-relaxed text-navy-500">
+                  <li>Serving zip codes {site.assistance.zipCodes.join(", ")}</li>
+                  <li>Processing takes about one week; funds are subject to Shura approval</li>
+                </ul>
+                <a
+                  href={site.assistance.formUrl}
+                  download="Masjid-Ibrahim-Financial-Assistance-Form.pdf"
+                  className="btn-outline-navy mt-5 w-full sm:w-auto"
+                >
+                  Download Application (PDF)
+                </a>
+              </div>
+            </Reveal>
+
             <Reveal delay={140}>
               <div className="card-dark p-5 sm:p-7">
                 <p className="section-eyebrow text-gold-300 before:bg-gold-400">

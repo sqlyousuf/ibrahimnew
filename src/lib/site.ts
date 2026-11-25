@@ -29,6 +29,11 @@ export const site = {
       url: "https://payments.madinaapps.com/masjidibrahimtx",
     },
   },
+  assistance: {
+    /** Zakat / Sadaqah financial assistance application (PDF). */
+    formUrl: "/forms/financial-assistance-form.pdf",
+    zipCodes: ["77379", "77388", "77389", "77373", "77386"],
+  },
   masjidal: {
     /**
      * Masjidal's public ID for this masjid — the same one its embeddable
