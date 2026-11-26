@@ -126,13 +126,6 @@ export default function Footer() {
           Donate Now
         </Link>
 
-        <Link
-          href="/contact#financial-assistance"
-          className="mt-3 flex min-h-[2.75rem] items-center justify-center text-sm text-cream-100/80 underline decoration-gold-300/40 underline-offset-4"
-        >
-          Need financial help? Apply here
-        </Link>
-
         <p className="mt-6 text-center text-[0.8125rem] leading-relaxed text-cream-100/65">
           {site.address.full}
         </p>
@@ -220,11 +213,6 @@ export default function Footer() {
           <Link href="/events" className="btn-outline mt-3 w-full sm:w-auto">
             Events This Week
           </Link>
-          <p className="mt-3 text-sm">
-            <Link href="/contact#financial-assistance" className={linkClass}>
-              Need financial help? Apply here
-            </Link>
-          </p>
         </div>
       </div>
 

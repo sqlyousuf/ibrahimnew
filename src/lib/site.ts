@@ -32,6 +32,8 @@ export const site = {
   assistance: {
     /** Zakat / Sadaqah financial assistance application (PDF). */
     formUrl: "/forms/financial-assistance-form.pdf",
+    /** Where the "Financial Aid" menu links point (the card on /contact). */
+    formPageHref: "/contact#financial-assistance",
     zipCodes: ["77379", "77388", "77389", "77373", "77386"],
   },
   masjidal: {
@@ -63,6 +65,7 @@ export const navLinks = [
   // Gallery hidden until there are real photos — the page still exists at
   // /gallery (noindex); re-add { href: "/gallery", label: "Gallery" } here.
   { href: "/contact", label: "Contact" },
+  { href: "/contact#financial-assistance", label: "Financial Aid" }, // = site.assistance.formPageHref
 ];
 
 export const leadership = [

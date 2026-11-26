@@ -128,7 +128,7 @@ export default function ContactPage() {
                   download="Masjid-Ibrahim-Financial-Assistance-Form.pdf"
                   className="btn-outline-navy mt-5 w-full sm:w-auto"
                 >
-                  Download Application (PDF)
+                  Download Form (PDF)
                 </a>
               </div>
             </Reveal>

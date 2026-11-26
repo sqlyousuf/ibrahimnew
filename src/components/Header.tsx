@@ -9,6 +9,10 @@ import { LogoMark, PatternField, Rosette, StarGlyph } from "@/components/Ornamen
 const PRAYER_HREF = "/prayer-times";
 // Rendered separately as the featured entry in the phone menu.
 const otherLinks = navLinks.filter((link) => link.href !== PRAYER_HREF);
+/** Financial Aid gets its own button beside Donate on desktop, so the
+    centre nav doesn't overflow; phones list it with the other links. */
+const ASSISTANCE_HREF = site.assistance.formPageHref;
+const desktopNavLinks = navLinks.filter((link) => link.href !== ASSISTANCE_HREF);
 
 function YouTubeGlyph({ className = "" }: { className?: string }) {
   return (
@@ -123,8 +127,8 @@ export default function Header() {
             </span>
           </Link>
 
-          <nav aria-label="Primary" className="hidden items-center gap-5 lg:flex xl:gap-7">
-            {navLinks.map((link) => {
+          <nav aria-label="Primary" className="hidden items-center gap-5 xl:flex">
+            {desktopNavLinks.map((link) => {
               const active = pathname === link.href;
               return (
                 <Link
@@ -132,7 +136,7 @@ export default function Header() {
                   href={link.href}
                   transitionTypes={[link.href === "/" ? "nav-back" : "nav-forward"]}
                   aria-current={active ? "page" : undefined}
-                  className={`group relative whitespace-nowrap py-2 text-[0.75rem] font-semibold uppercase tracking-[0.2em] transition-colors ${
+                  className={`group relative whitespace-nowrap py-2 text-[0.75rem] font-semibold uppercase tracking-[0.16em] transition-colors ${
                     active ? "text-gold-300" : "text-cream-100/80 hover:text-gold-200"
                   }`}
                 >
@@ -149,13 +153,7 @@ export default function Header() {
             })}
           </nav>
 
-          <div className="hidden items-center gap-3 lg:flex xl:gap-4">
-            <a
-              href={site.contact.phoneHref}
-              className="hidden whitespace-nowrap text-sm font-medium tabular-nums text-cream-100/75 transition-colors hover:text-gold-200 2xl:inline"
-            >
-              {site.contact.phone}
-            </a>
+          <div className="hidden items-center gap-3 xl:flex">
             <a
               href={site.social.youtubeLive}
               target="_blank"
@@ -166,6 +164,13 @@ export default function Header() {
             >
               <YouTubeGlyph className="h-4 w-4 shrink-0" />
             </a>
+            <Link
+              href={ASSISTANCE_HREF}
+              transitionTypes={["nav-forward"]}
+              className="btn-outline min-h-[2.75rem] whitespace-nowrap px-4"
+            >
+              Financial Aid
+            </Link>
             <Link href="/donate" className="btn-primary min-h-[2.75rem] px-6">
               Donate
             </Link>
@@ -173,7 +178,7 @@ export default function Header() {
 
           <button
             type="button"
-            className="-mr-1.5 flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-cream-50 transition-colors active:bg-white/10 lg:hidden"
+            className="-mr-1.5 flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-cream-50 transition-colors active:bg-white/10 xl:hidden"
             onClick={() => setOpen((v) => !v)}
             aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
@@ -203,7 +208,7 @@ export default function Header() {
       <div
         id="mobile-menu"
         inert={!open}
-        className={`fixed inset-0 z-40 overflow-hidden bg-navy-975 transition-[opacity,visibility] duration-500 ease-entrance lg:hidden ${
+        className={`fixed inset-0 z-40 overflow-hidden bg-navy-975 transition-[opacity,visibility] duration-500 ease-entrance xl:hidden ${
           open ? "visible opacity-100" : "pointer-events-none invisible opacity-0"
         }`}
       >
