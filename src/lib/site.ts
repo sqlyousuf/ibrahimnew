@@ -35,6 +35,8 @@ export const site = {
     /** Where the "Financial Aid" menu links point (the card on /contact). */
     formPageHref: "/contact#financial-assistance",
     zipCodes: ["77379", "77388", "77389", "77373", "77386"],
+    /** Where applicants email the completed form and documents. */
+    email: "admin@masjidibrahimspring.org",
   },
   masjidal: {
     /**

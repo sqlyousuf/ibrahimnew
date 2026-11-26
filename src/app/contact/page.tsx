@@ -112,10 +112,10 @@ export default function ContactPage() {
                   Need help? Download the application, fill it in, and email it
                   with your documents to{" "}
                   <a
-                    href={`mailto:${site.contact.adminEmail}?subject=Financial%20Assistance%20Application`}
+                    href={`mailto:${site.assistance.email}?subject=Financial%20Assistance%20Application`}
                     className="break-all font-semibold text-navy-900 underline decoration-gold-500/50 underline-offset-2 hover:text-gold-700"
                   >
-                    {site.contact.adminEmail}
+                    {site.assistance.email}
                   </a>
                   .
                 </p>
