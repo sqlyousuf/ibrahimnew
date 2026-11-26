@@ -13,7 +13,7 @@
  */
 
 import { getMasjidDateKey } from "@/lib/prayerTimes";
-import { programs } from "@/lib/site";
+import { featuredEvents, monthlyFliers, programs } from "@/lib/site";
 import type { CalendarEvent } from "@/lib/site";
 
 export type CalendarDisplayEntry = {
@@ -42,6 +42,12 @@ export type CalendarDay = {
 };
 
 const DAY_MS = 86_400_000;
+
+/** /admin (KV) entries plus the code-managed `featuredEvents`; KV wins on slug clashes. */
+function withFeatured(calendarEvents: CalendarEvent[]): CalendarEvent[] {
+  const slugs = new Set(calendarEvents.map((e) => e.slug));
+  return [...calendarEvents, ...featuredEvents.filter((e) => !slugs.has(e.slug))];
+}
 
 export type ShowcaseFlier = {
   key: string;
@@ -73,7 +79,7 @@ export function getFlierShowcase(
   referenceDate: Date = new Date(),
 ): ShowcaseFlier[] {
   const todayKey = getMasjidDateKey(referenceDate);
-  const withFlier = calendarEvents.filter((e) => e.flier?.src);
+  const withFlier = withFeatured(calendarEvents).filter((e) => e.flier?.src);
 
   const oneOff = withFlier
     .filter((e): e is Extract<CalendarEvent, { recurrence: "once" }> =>
@@ -127,7 +133,18 @@ export function getFlierShowcase(
       : [],
   );
 
-  return [...oneOff, ...programFliers, ...weekly];
+  const monthly = monthlyFliers
+    .filter((m) => m.from <= todayKey && todayKey <= m.until)
+    .map((m): ShowcaseFlier => ({
+      key: `monthly-${m.slug}`,
+      title: m.title,
+      tag: m.tag,
+      schedule: m.schedule,
+      detail: m.detail,
+      flier: m.flier,
+    }));
+
+  return [...oneOff, ...monthly, ...programFliers, ...weekly];
 }
 
 export function getWeekCalendar(
@@ -164,7 +181,7 @@ export function getWeekCalendar(
       });
     }
 
-    for (const event of calendarEvents) {
+    for (const event of withFeatured(calendarEvents)) {
       const matches =
         event.recurrence === "weekly"
           ? event.daysOfWeek.includes(weekday)

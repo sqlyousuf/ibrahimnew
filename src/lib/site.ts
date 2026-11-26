@@ -361,6 +361,72 @@ type OneOffCalendarEvent = CalendarEventBase & {
  */
 export type CalendarEvent = RecurringCalendarEvent | OneOffCalendarEvent;
 
+/**
+ * Special events kept here in code (alongside the /admin entries in KV) so
+ * a flier can ship with a normal commit. They show on the homepage flier
+ * rail until their date passes and on "This Week" during their week. If
+ * /admin has an entry with the same slug, the /admin one wins.
+ */
+export const featuredEvents: CalendarEvent[] = [
+  {
+    slug: "art-of-quranic-recitation-2026",
+    recurrence: "once",
+    date: "2026-12-03",
+    title: "The Art of Quranic Recitation",
+    time: "After Isha · 7:30 PM",
+    location: "Masjid Ibrahim, 5500 FM 2920, Spring, TX 77388",
+    description:
+      "An evening of Quranic recitation with Shaykh Ibrahim Bakeer, hosted by Shaykh Mamdouh Mahmoud. Refreshments will be served.",
+    flier: {
+      src: "/fliers/art-of-quranic-recitation.jpg",
+      alt: "Masjid Ibrahim and Hamd flier: The Art of Quranic Recitation with Shaykh Ibrahim Bakeer, hosted by Shaykh Mamdouh Mahmoud, with photos of both shaykhs. Thursday, December 3rd, after Isha at 7:30 PM. Refreshments will be served. Masjid Ibrahim, 5500 FM 2920, Spring, TX 77388. masjidibrahimspring.org.",
+    },
+  },
+  {
+    slug: "father-son-lock-in-2026",
+    recurrence: "once",
+    date: "2026-12-04",
+    title: "Father-Son Masjid Lock-In & Sirah Competition",
+    time: "Isha to Fajr · 7:30 PM – 7:30 AM",
+    location: "5500 FM 2920, Spring, TX 77388",
+    description:
+      "A night of faith, brotherhood and connection, starting after Isha with a Community & Kids Sirah Competition. Talks for parents and kids, joint and individual sessions, fireside bonding, games and activities. Dinner and a live breakfast served. Boys ages 9 and up; father-son attendance preferred; adult supervision and registration required.",
+    flier: {
+      src: "/fliers/father-son-lock-in.jpg",
+      alt: "Masjid Ibrahim flier: Father-Son Masjid Lock-In, a night of faith, brotherhood and connection. After Isha: Community and Kids Sirah Competition. Friday, December 4, 2026, Isha to Fajr, 7:30 PM to 7:30 AM. Talks for parents and kids, joint and individual sessions, fireside bonding, games and activities. Dinner and live breakfast will be served. Ages 9 and up, boys only. Father-son attendance preferred; adult supervision and registration required. 5500 FM 2920, Spring, TX 77388. masjidibrahimspring.org.",
+    },
+  },
+];
+
+/**
+ * Month-at-a-glance calendar fliers for the homepage rail, shown from
+ * `from` through `until` (ISO dates, masjid time).
+ */
+export const monthlyFliers: {
+  slug: string;
+  title: string;
+  tag: string;
+  from: string;
+  until: string;
+  schedule?: string;
+  detail?: string;
+  flier: { src: string; alt: string };
+}[] = [
+  {
+    slug: "december-2026-calendar",
+    title: "December 2026 Programs & Events",
+    tag: "December",
+    from: "2026-11-20",
+    until: "2026-12-31",
+    schedule: "Weekly programs, daily reminders & special events",
+    detail: "Daily reminders Mon–Thu after Isha (7:30 PM)",
+    flier: {
+      src: "/fliers/december-2026-calendar.jpg",
+      alt: "Masjid Ibrahim Upcoming Programs and Events, December 2026 calendar. Weekly programs: every Friday, Life of the Nabi with Shaykh Hamza Mehter, 7:30 PM; every Sunday after Fajr, Gardens of the Righteous with Shaykh Mamdouh Mahmoud, 6:05 AM; every Sunday after Isha, Beyond the Recitation with Shaykh Yousuf Ahmed, 7:30 PM. Daily reminders after Isha (7:30 PM): Monday, Question of the Week with Shaykh Yousuf Ahmed; Tuesday, Adab al Mufrad with Shaykh Hamza Mehter; Wednesday, Stories of the Sahaba with Hafiz Hamza Kasim; Thursday, Gems from the Quran with Shaykh Mamdouh Mahmoud. Special events: December 3, The Art of Quranic Recitation with Shaykh Ibrahim Bakeer, after Isha 7:30 PM; December 4, Sirah Kahoot Competition for the community and for kids, after Isha 7:30 PM; December 4, Masjid Ibrahim Annual Father Son Lock In, Isha 8:30 PM to Ishraq; December 11, Open House, educational offerings at Masjid Ibrahim, after Isha 7:30 PM; December 18 to 20, Winter Intensive, Holding Firm: Protecting our Faith in Times of Trial. @masjidibrahimspring on YouTube, Facebook and Instagram.",
+    },
+  },
+];
+
 export const galleryImages = [
   {
     src: "https://images.unsplash.com/photo-1577561426384-62154a1e9457?auto=format&fit=crop&w=1200&q=80",

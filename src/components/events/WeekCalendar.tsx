@@ -100,7 +100,9 @@ export default function WeekCalendar({ days }: { days: CalendarDay[] }) {
             alt={openFlier.alt}
             width={1200}
             height={1500}
-            sizes="90vw"
+            // Fliers are served as-is (see imageLoader.ts), so skip the srcset:
+            // its 3840w descriptor made browsers shrink the image to a thumbnail.
+            unoptimized
             className="max-h-[85vh] w-auto max-w-full rounded-lg object-contain shadow-panel"
             onClick={(e) => e.stopPropagation()}
           />
