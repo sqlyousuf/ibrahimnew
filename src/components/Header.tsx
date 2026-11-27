@@ -7,8 +7,11 @@ import { navLinks, site } from "@/lib/site";
 import { LogoMark, PatternField, Rosette, StarGlyph } from "@/components/Ornament";
 
 const PRAYER_HREF = "/prayer-times";
-// Rendered separately as the featured entry in the phone menu.
-const otherLinks = navLinks.filter((link) => link.href !== PRAYER_HREF);
+// Phone menu: Salah Times is rendered separately as the featured entry, and
+// Home/About are left out (the logo goes home; About is reachable via Our
+// Leadership and the footer).
+const PHONE_MENU_HIDDEN = new Set([PRAYER_HREF, "/", "/about"]);
+const otherLinks = navLinks.filter((link) => !PHONE_MENU_HIDDEN.has(link.href));
 /** Financial Aid gets its own button beside Donate on desktop, so the
     centre nav doesn't overflow; phones list it with the other links. */
 const ASSISTANCE_HREF = site.assistance.formPageHref;
@@ -70,7 +73,8 @@ export default function Header() {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") setOpen(false);
     };
-    const desktop = window.matchMedia("(min-width: 1024px)");
+    // Tailwind's xl breakpoint, where the full desktop nav takes over.
+    const desktop = window.matchMedia("(min-width: 1280px)");
     const onBreakpoint = () => {
       if (desktop.matches) setOpen(false);
     };
@@ -108,6 +112,14 @@ export default function Header() {
           <Link
             href="/"
             transitionTypes={["nav-back"]}
+            onClick={(event) => {
+              // Already home: a link to "/" would do nothing, so go back to the top.
+              if (pathname !== "/") return;
+              event.preventDefault();
+              setOpen(false);
+              const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+              window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
+            }}
             className="group flex items-center gap-3 rounded-lg"
             aria-label={`${site.name} — home`}
           >
@@ -261,14 +273,8 @@ export default function Header() {
                     transitionTypes={[link.href === "/" ? "nav-back" : "nav-forward"]}
                     aria-current={active ? "page" : undefined}
                     onClick={() => setOpen(false)}
-                    className="group flex min-h-[3.5rem] items-center gap-4"
+                    className="group flex min-h-[3.5rem] items-center"
                   >
-                    <span
-                      aria-hidden="true"
-                      className="w-6 shrink-0 font-body text-[0.625rem] font-semibold tabular-nums tracking-[0.2em] text-gold-400/70"
-                    >
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
                     <span
                       className={`font-display text-[1.75rem] font-medium leading-none transition-colors ${
                         active ? "italic text-gold-300" : "text-cream-50 group-active:text-gold-200"
